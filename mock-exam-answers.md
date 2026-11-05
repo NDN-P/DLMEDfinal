@@ -36,10 +36,9 @@
 ### 2.2 (4)
 - **Backbone + transfer learning** (1.5): CNN pretrained ImageNet เช่น ResNet-50 / DenseNet-121 / EfficientNet; **เปลี่ยน output layer** เป็น 3 nodes เสมอ; ใช้ **fine-tuning แบบ type 3**: freeze ชั้นต้น (edge/สี ใช้ร่วมกันได้ทุกภาพ) และ train ชั้นหลัง + classifier เพราะ X-ray ไม่เหมือนภาพธรรมชาติใน ImageNet; fixed feature extraction ไม่ค่อยใช้ในงานแพทย์
 - **Grayscale / ขนาด** (1): **duplicate 1 channel → 3 channels** (อย่าแก้ conv แรก ไม่งั้นเสีย pretrained weights); ใช้ normalisation แบบ ImageNet; **pad เป็นสี่เหลี่ยมจัตุรัสก่อนแล้วค่อย resize** (เช่น 224 หรือ 256) เพื่อไม่ให้สัดส่วนอวัยวะเพี้ยน
-- **Augmentation** (1): ใช้ **ตอน train เท่านั้น** (val/test ใช้แค่ standardisation เดียวกัน); เลือกระดับ mild: rotate ±5–10°, translate/scale เล็กน้อย, brightness/contrast เล็กน้อย; **ไม่ควร**: horizontal flip (หัวใจย้ายไปขวา ทำให้ cardiomegaly/กายวิภาคผิดความหมาย), rotate มาก ๆ, very strong augmentation ที่เปลี่ยนความหมายภาพ; label มีน้อย (effusion 6%) ใช้ augmentation เพิ่มตัวอย่าง class น้อยได้
-- **ViT vs CNN** (0.5): "ขึ้นกับ dataset และ application"; ViT ไม่มี inductive bias ของ locality จึงมักต้องการข้อมูล/pre-training มากกว่า ข้อมูล 8,000 ภาพ CNN pretrained เป็นจุดเริ่มที่ปลอดภัย ถ้าจะใช้ ViT ควรใช้ตัวที่ pretrained แล้วและเทียบบน validation
+- **Augmentation** (1.5): ใช้ **ตอน train เท่านั้น** (val/test ใช้แค่ standardisation เดียวกัน); เลือกระดับ mild: rotate ±5–10°, translate/scale เล็กน้อย, brightness/contrast เล็กน้อย; **ไม่ควร**: horizontal flip (หัวใจย้ายไปขวา ทำให้ cardiomegaly/กายวิภาคผิดความหมาย), rotate มาก ๆ, very strong augmentation ที่เปลี่ยนความหมายภาพ; label มีน้อย (effusion 6%) ใช้ augmentation เพิ่มตัวอย่าง class น้อยได้
 
-ที่มา: `Chapter 8/notes.md` → 2. Data Augmentation: purpose, 4. Weak → Strong levels, 5. Transfer Learning (ตาราง 3 patterns, Freeze) · `Chapter 10/notes.md` → 9. Pretrained backbone, 11. Fitting images (pad ก่อน resize, grayscale), Transforms emphasis · `Chapter 15/notes.md` → 12. CNN vs Transformer
+ที่มา: `Chapter 8/notes.md` → 2. Data Augmentation: purpose, 4. Weak → Strong levels, 5. Transfer Learning (ตาราง 3 patterns, Freeze) · `Chapter 10/notes.md` → 9. Pretrained backbone, 11. Fitting images (pad ก่อน resize, grayscale), Transforms emphasis
 
 ### 2.3 (3)
 - **ปัญหา** (1.5): สุ่มรายภาพ → ภาพ follow-up ของผู้ป่วยคนเดียวกันไปอยู่ทั้ง train และ test (หน้าตาคล้ายมาก) โมเดลจำผู้ป่วยได้ → คะแนน test สูงเกินจริง = **data leakage**

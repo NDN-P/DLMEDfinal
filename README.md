@@ -1,4 +1,4 @@
-# DL in MED: final exam prep (Ch 8–15)
+# DL in MED: final exam prep (Ch 8–14)
 
 Study material for the final exam of *Deep Learning in Medicine* (KMITL).
 
@@ -8,7 +8,7 @@ Study material for the final exam of *Deep Learning in Medicine* (KMITL).
 3. `Chapter N/notes.md`: per-chapter notes with concepts, formulas, what the teacher emphasised (with timestamps), likely questions and traps
 4. [mock-exam.md](mock-exam.md) → [mock-exam-answers.md](mock-exam-answers.md): practice exam in the real format; all numbers checked in Python
 
-Exam questions 3–7 come from Chapters 10–13; Chapters 8, 9, 14 and 15 feed the case-study question.
+Exam questions 3–7 come from Chapters 10–13; Chapters 8, 9 and 14 feed the case-study question. **Chapter 15 (Transformers) is not on the exam.**
 
 ## Chapters and lecture videos
 | Folder | Topic | Lecture |
@@ -20,7 +20,7 @@ Exam questions 3–7 come from Chapters 10–13; Chapters 8, 9, 14 and 15 feed t
 | Chapter 12 | Image segmentation | [YouTube](https://www.youtube.com/watch?v=l9Zrj877P9E) |
 | Chapter 13 | Deep learning for video processing | [YouTube](https://www.youtube.com/watch?v=Aul0nwvG_9I) |
 | Chapter 14 | Evaluation metrics (TA session) | [YouTube](https://www.youtube.com/watch?v=2_O0rgWbvxg) |
-| Chapter 15 | Transformers for computer vision | [YouTube](https://www.youtube.com/watch?v=NT0VGFoJxi0) |
+| Chapter 15 | Transformers for computer vision (**not on the exam**) | [YouTube](https://www.youtube.com/watch?v=NT0VGFoJxi0) |
 
 ## What each chapter folder contains
 | File | Content |

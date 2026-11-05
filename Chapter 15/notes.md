@@ -1,5 +1,7 @@
 # Chapter 15 — Understanding Transformers for Computer Vision
 
+> **Not on the final exam** (confirmed by the teacher). Kept for reference only.
+
 A Transformer uses **attention** to (1) learn relationships between tokens and (2) exchange/aggregate information between tokens, which gives context-aware features. ViT applies this to images: split into patches → patch embedding → add positional information → stack of Encoder Blocks (MHSA + MLP + skip connections + LayerNorm) → one image vector → classification head.
 
 > Source note: the title slide of the PDF says "Chapter 14", but this is the course's Chapter 15 topic. Formulas, shapes and diagrams were checked against the rendered slide images; page numbers are given as (p.N). Lines marked *(standard fact)* are general DL knowledge that is not stated in the slides or lecture.

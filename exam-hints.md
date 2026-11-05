@@ -1,4 +1,4 @@
-# Exam hints: quick sheet (Ch 8–15)
+# Exam hints: quick sheet (Ch 8–14)
 
 Full notes are in each folder's `notes.md`. **Exam = 7 written questions: project, case study, video, segmentation, transposed conv by hand, object detection, coding. See `exam-structure.md`.**
 
@@ -20,11 +20,10 @@ Full notes are in each folder's `notes.md`. **Exam = 7 written questions: projec
 | 11 | spoken | ~30,000 anchors on 50×50 | 50·50·9 = 22,500 |
 | 12 | p.41 | "more padding → bigger output" (transposed conv) | Output = (H−1)·s − 2p + k, so more padding gives a **smaller** output (the deck's own p.46–47 agree) |
 | 13 | 3D-conv steps | −21, −37, −22 | −20, −36, −18 |
-| 15 | spoken | "add then LayerNorm" | Slide: **Pre-LN**: U = X + MHA(LN(X)), Y = U + MLP(LN(U)) |
 
 ## Recurring themes the teacher pushed in every chapter
 - Output layer by task: multiclass → softmax + CE; multilabel → sigmoid per node + threshold + BCE; regression → linear + L1/L2. Output nodes = classes / values.
-- "It depends on the dataset/application": no fixed best answer for L1 vs L2, CNN vs Transformer, or video architectures. Explain the trade-off.
+- "It depends on the dataset/application": no fixed best answer for L1 vs L2 or video architectures. Explain the trade-off.
 - Medical data: recall matters for screening; accuracy misleads on imbalanced data; split by patient to avoid **data leakage**; augmentation on train only.
 - Expect "why" questions, not just "what".
 

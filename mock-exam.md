@@ -52,7 +52,6 @@
 - จะใช้ backbone อะไร ใช้ **transfer learning** แบบใด (freeze ส่วนไหน train ส่วนไหน) และเพราะอะไร
 - ภาพเป็น grayscale 1 channel แต่ pretrained model รับ 3 channels จะทำอย่างไร ภาพมีขนาด/สัดส่วนไม่เท่ากันจะปรับขนาดอย่างไร
 - เลือก **data augmentation** อะไรบ้าง ใช้ตอนไหน และ augmentation อะไรที่ **ไม่ควรใช้** กับ chest X-ray (ให้เหตุผล)
-- เพื่อนเสนอให้ใช้ Vision Transformer (ViT) แทน CNN นักศึกษาจะตอบอย่างไร
 
 **2.3 (3 คะแนน)** การแบ่งข้อมูล:
 - นักศึกษาคนหนึ่งใช้ `train_test_split(images, labels, test_size=0.2)` แบบสุ่มภาพ บอกปัญหาของวิธีนี้ และวิธีที่ถูกต้อง
