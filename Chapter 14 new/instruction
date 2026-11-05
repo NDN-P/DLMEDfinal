@@ -1,0 +1,5 @@
+
+ขั้นตอน	รวมข้อมูลอะไร
+Linear สร้าง Q, K, V	ผสม Channels ภายในแต่ละ Token
+AV	รวมข้อมูลระหว่าง Tokens แยกทีละ Channel
+Linear Wo หลัง Concatenate	ผสม Channels จากหลาย Heads สำหรับ Token เดียวกัน

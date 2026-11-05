@@ -3,7 +3,7 @@
 Study material for the final exam of *Deep Learning in Medicine* (KMITL).
 
 ## Start here
-**[STUDY-GUIDE.md](STUDY-GUIDE.md): everything you need for the exam in one file: per question, the must-know facts, worked calculations, model answers and traps, plus the study order.**
+**[STUDY-GUIDE.md](STUDY-GUIDE.md) (ภาษาไทย): everything you need for the exam in one file: per question, the must-know facts, worked calculations, model answers and traps, plus the study order.**
 
 1. [exam-structure.md](exam-structure.md): the exam's 7 written questions, each mapped to what to study
 2. [exam-hints.md](exam-hints.md): in-class quiz answers, errors on the slides, recurring themes

@@ -1,0 +1,10 @@
+ลิงค์ Download ไฟล์โปรแกรมและ Dataset ต่างๆ
+https://drive.google.com/drive/folders/1JBMezqtTQBTxbkvWhU1gNhZLXT8_CwRi?usp=sharing
+คำอธิบายรายละเอียด
+(1) ตัวอย่างโปรแกรมอยู่ใน code/6-Video Classification
+conv2d_lstm_train.ipynb สำหรับฝึกสอนแบบจำลอง
+conv2d_lstm_inference.ipynb   สำหรับเรียกใช้งานทีละ video หลังผ่านกระบวนการฝึกสอน
+conv2d_lstm_evaluation.ipynb สำหรับเรียกใช้งานทีละหลาย video หลังผ่านกระบวนการฝึกสอน
+(2) ฐานข้อมูลสำหรับฝึกใช้งาน dataset/
+video_classification_dataset.zip สำหรับงานทางด้าน video classification
+ 

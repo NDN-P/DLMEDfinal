@@ -1,0 +1,9 @@
+ลิงค์ Download ไฟล์โปรแกรมและ Dataset ต่างๆ
+https://drive.google.com/drive/folders/1JBMezqtTQBTxbkvWhU1gNhZLXT8_CwRi?usp=sharing
+คำอธิบายรายละเอียด
+(1) ตัวอย่างโปรแกรมอยู่ใน code/4-Object Detection
+object_detection_yolo_train.ipynb สำหรับฝึกสอนแบบจำลอง
+object_detection_yolo_inference.ipynb   สำหรับเรียกใช้งานทีละภาพ หลังผ่านกระบวนการฝึกสอน
+object_detection_yolo_evaluation.ipynb สำหรับเรียกใช้งานทีละหลายภาพ หลังผ่านกระบวนการฝึกสอน
+(2) ฐานข้อมูลสำหรับฝึกใช้งาน dataset/
+object-detection-yolo-dataset.zip สำหรับงานทางด้าน Object Detection
