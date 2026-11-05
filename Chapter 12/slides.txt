@@ -1,0 +1,1230 @@
+##### 6abef7046b5bafb530cc3dd1.pdf (96 pages)
+--- page 1 ---
+บรรยายโดย ผศ.ดร.ธราวิเชษฐ์  ธิติจรูญโรจน์
+คณะเทคโนโลยีสารสนเทศ 
+สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
+Chapter 12: Image Segmentation 
+Using Autoencoder Architectures
+--- page 2 ---
+การประยุกต์ใช้งาน CNN สําหรับ Image
+--- page 3 ---
+Emek Soylu B, Guzel MS, Bostanci GE, Ekinci F, Asuroglu T, Acici K. Deep-Learning-Based Approaches for Semantic Segmentation of Natural Scene Images: A Review. Electronics. 2023; 12(12):2730. 
+Image Classification
+Object Detection
+Instance Segmentation
+Semantic Segmentation
+Panoptic Segmentation
+ตรวจจับวัตถุที่มีอยู่ในภาพโดยไม่พิจารณาตําแหน่งของวัตถุ
+ไม่เพียงแต่รับรู้ว่าวัตถุใดบ้างที่อยู่ในภาพ แต่ยังรู้ด้วยว่าวัตถุเหล่านั้นอยู่ที่ใดใน
+ภาพ สามารถจดจําวัตถุและระบุตําแหน่งด้วยกรอบสี่เหลี่ยมล้อมรอบ
+พิกเซลของแต่ละวัตถุจะถูกระบุแยกกัน ในตัวอย่างนี้ พิกเซลของรถคัน
+หนึ่งนําเสนอด้วยสีส้ม รถอีกคันนําเสนอด้วยสีชมพู และรถอีกคันนําเสนอ
+ด้วยสีเขียว แต่ background หรือ สิ่งที่ไม่ใช่วัตถุ จะไม่ได้ถูกทํา 
+segmentation และไม่ได้บอก semantic ครอบคลุมทั้งภาพ (ยังเหลือ 
+pixel ที่ไม่ถูก label)
+ผสานการแบ่งส่วนเชิงความหมายและการแบ่งส่วนเชิงอินสแตนซ์เพื่อให้
+เข้าใจฉากได้อย่างครอบคลุมทั้งในระดับความหมาย (รถยนต์, อาคาร, 
+ถนน, ฯลฯ) และระดับอินสแตนซ์(รถยนต์ 1, รถยนต์ 2, ฯลฯ)  
+การแบ่งส่วนเชิงความหมาย (semantic segmentation) จะจัดการกับวัตถุที่
+อยู่ในคลาสเดียวกันในภาพให้เป็นป้ายกํากับเดียวกัน ในขณะที่การแบ่งส่วน
+ตามอินสแตนซ์ (instance segmentation) จะจัดการกับวัตถุที่อยู่ในคลาส
+เดียวกันเป็นอินสแตนซ์แยกกัน
+--- page 4 ---
+Emek Soylu B, Guzel MS, Bostanci GE, Ekinci F, Asuroglu T, Acici K. Deep-Learning-Based Approaches for Semantic Segmentation of Natural Scene Images: A Review. Electronics. 2023; 12(12):2730. 
+Instance Segmentation
+Semantic Segmentation
+Panoptic Segmentation
+คือ การรวม Semantic Segmentation และ 
+Instance Segmentation เข้าด้วยกัน
+ทุกพิกเซลในภาพ
+ต้องถูกกําหนด label
+Stuff 
+คือ สิ่งไม่มีขอบเขตชัดเจน เช่น 
+ท้องฟ้า ถนน นํ้า จะทํา segmentation 
+แบบ semantic (ทุก pixel ของ sky = 
+class sky)
+Thing คือ วัตถุที่นับเป็นชิ้น เช่น คน 
+รถ เก้าอี้ จะทํา segmentation แบบ 
+instance 
+(แต่ละคน/รถ ได้ mask 
+แยกกัน)
+--- page 5 ---
+หัวข้อ
+•แนวคิดสถาปัตยกรรม Autoencoder
+•สถาปัตยกรรม Autoencoder ที่น่าสนใจ
+•วิธีการใช้งานชุดคําสั่ง Segmentation Models
+--- page 6 ---
+หัวข้อ
+•แนวคิดสถาปัตยกรรม Autoencoder
+•สถาปัตยกรรม Autoencoder ที่น่าสนใจ
+•วิธีการใช้งานชุดคําสั่ง Segmentation Models
+--- page 7 ---
+Autoencoder คืออะไร
+คือ feedforward neural networks ประเภทหนึ่งที่ขนาดของข้อมูล input และ output มีขนาดเท่ากัน สถาปัตยกรรมแบบ Autoencoders จะทําการ
+สกัดหรือบีบอัด input ให้อยู่ในรูปแบบรหัสข้อมูลที่มีมิติที่น้อยกว่า (Lower-dimensional Code) และใช้รหัสดังกล่าวเพื่อสร้าง output กลับมาจากรหัส
+ดังกล่าว หรือสามารถกล่าวได้ว่าเป็นแบบจําลอง Neural Network ประเภทหนึ่งที่เรียนรู้ข้อมูล Input แล้วให้ผลลัพธ์ Output ออกมาเป็นข้อมูลเดิม (หรือ
+อย่างน้อย width และ height เท่าเดิม) โดยทั่วไปจะประกอบด้วยกัน 3 ส่วน ได้แก่ encoder, code และ decoder ซึ่งการสร้างแบบจําลอง จําเป็นต้อง
+อาศัยวิธีการ encoder วิธีการ decoder และ loss function เพื่อเปรียบเทียบ input กับ output
+อ้างอิง https://towardsdatascience.com/applied-deep-learning-part-3-autoencoders-1c083af4d798
+Encode
+input (𝑥)
+output ("𝑥)
+Decode
+Code
+--- page 8 ---
+Autoencoder คืออะไร
+สถาปัตยกรรมแบบ Autoencoders ได้รับความนิยมใช้งานทางด้านการลดขนาด (Dimensionality Reduction) หรือการบีบอัดข้อมูล (Data Compression) ที่มี
+คุณสมบัติที่สําคัญ 3 ประการ ได้แก่
+• ความเฉพาะของข้อมูล (Data-specific) 
+แบบจําลอง Autoencoders สามารถบีบอัดข้อมูลที่คล้ายกับข้อมูลที่ได้รับการฝึกสอนเท่านั้นเนื่องจากแบบจําลอง Autoencoders ได้เรียนรู้คุณลักษณะเฉพาะจากชุด
+ข้อมูลการฝึกสอนมา ทําให้แบบจําลอง Autoencoders จึงแตกต่างจากวิธีการบีบอัดข้อมูลมาตรฐานทั่วไป อาทิเช่น zip, winrar, 7zip ดังนั้น แบบจําลอง 
+Autoencoders ที่ฝึกสอนจากชุดข้อมูลตัวเลขที่เขียนด้วยลายมือจะไม่สามารถบีบอัดภาพทิวทัศน์ได้
+• การบีบอัดแบบสูญเสีย (Lossy)
+เป็นการตัดข้อมูลบางส่วนออกไปเพื่อลดขนาดของข้อมูล โดยข้อมูลที่ซํ้าซ้อนจะถูกตัดทิ้งอย่างถาวรซึ่ง Output ของแบบจําลอง Autoencoders จะไม่เหมือนกับ 
+Input ทุกประการ แต่จะเป็นลักษณะที่ใกล้เคียง (อาจจะเสื่อมโทรม) 
+• ไม่มีผู้สอน (Unsupervised)
+การฝึกสอนแบบจําลอง Autoencoders ต้องอาศัยเพียง Input เท่านั้น และไม่จําเป็นต้องให้ Label (สําหรับงานบีบอัด แต่งานประเภทอื่น Label ยังคงมีความจําเป็น) 
+ซึ่งถือว่าสถาปัตยกรรมแบบ Autoencoders มีลักษณะการเรียนรู้แบบไม่มี แต่แบบจําลองจะดําเนินการสร้าง Label จากข้อมูลฝึกสอนด้วยตนเอง เพื่อให้แบบจําลองมี
+ความแม่นยํามากยิ่งขึ้น
+อ้างอิง https://towardsdatascience.com/applied-deep-learning-part-3-autoencoders-1c083af4d798
+--- page 9 ---
+หลักการ Autoencoder
+Input layer
+Hidden layer
+Output layer
+encode
+decode
+input (𝑥)
+output ("𝑥)
+ประกอบด้วย 3 ส่วน ได้แก่
+• การเข้ารหัส (Encoder) คือ การบีบอัดข้อมูลและสร้างรหัสข้อมูล
+• รหัส (Code) คือ ตัวนําเสนอข้อมูล input แบบ "สรุป" หรือ "บีบอัด” ที่มี
+ความกระชับ หรือที่เรียกว่า”การแสดงพื้นที่แบบแฝง (latent-space 
+representation)”
+• การถอดรหัส (Decoder) คือ กระบวนการสร้างอินพุทกลับมาใหม่จาก
+รหัสข้อมูลที่บีบอัดได้
+จุดประสงค์เพื่อ Minimize 𝑥−#𝑥
+! เข้าใกล้ 0 โดยที่ 
+• กระบวนการ Encode คือ ขั้นตอนการนําเข้า 𝑥 และส่งต่อให้ Hidden 
+Layer
+• ผลลัพธ์จาก Hidden Layer ถือว่าเป็น Code
+• กระบวนการ Decode คือ ขั้นตอนการนําเข้า Code และส่งต่อให้ 
+Output Layer
+𝑤
+𝑤!
+--- page 10 ---
+หลักการ Autoencoder
+Input layer
+Hidden layer
+Output layer
+encode
+decode
+input (𝑥)
+output ("𝑥)
+𝑤
+𝑤!
+Encode
+input (𝑥)
+output ("𝑥)
+Decode
+Code
+• โดยปกติแล้วขนาดของ 𝑥 จะเท่ากับขนาด #𝑥 แต่ขนาดของ Code จะเล็กกว่า 𝑥 และ #𝑥 
+• ค่าสัมประสิทธิ 𝑤
+และ 𝑤"ในส่วนของ Encode และ Decode จะได้รับจากการฝึกสอน
+--- page 11 ---
+หลักการ Autoencoder
+Input Layer
+input (𝑥)
+output ("𝑥)
+Decode
+Code 
+Layer
+• สําหรับ Deep Autoencoder สามารถมีจํานวนชั้นที่ลึกได้
+• สถาปัตยกรรมของ Encode และ Decode ไม่จําเป็นต้องสมมาตร (Symmetric) กันเสมอไป
+• สถาปัตยกรรมส่วน Encode นิยมค่อย ๆ ลดมิติของข้อมูลลงทุกเลเยอร์ด้วย Multilayer Neural Network และ Small 
+Central Layer
+Layer
+Layer
+𝑤"
+𝑤#
+𝑤$
+𝐶𝑜𝑑𝑒
+Layer
+𝑤$!
+Layer
+𝑤"
+!
+𝑤#
+!
+อ้างอิง Hinton et al. "Reducing the dimensionality of data with neural networks." Science 313.5786 (2006): 504-507
+--- page 12 ---
+หลักการ Autoencoder
+ในการออกแบบสถาปัตยกรรม Deep Autoencoder สําหรับข้อมูลประเภทภาพ นิยมทําให้ในส่วนของ Encoder มักลดมิติของข้อมูลลงทุกเลเยอร์ในขณะที่ 
+ในส่วนของ Decoder นิยมเพิ่มมิติของข้อมูลขึ้นทุกเลเยอร์เนื่องจาก
+• การเรียนรู้คุณสมบัติที่สําคัญ (Feature Learning) เป็นการลดมิติของข้อมูลในแต่ละเลเยอร์ของ Encoder ทําให้เครือข่ายสามารถเรียนรู้และสกัด
+คุณสมบัติที่สําคัญของภาพได้ดีขึ้น โดยเฉพาะคุณสมบัติที่เป็นเอกลักษณ์และสามารถนําไปใช้แยกแยะได้ในระดับสูง
+• การลดความซับซ้อนของข้อมูล (Dimensionality Reduction) เป็นการค่อย ๆ ลดมิติของข้อมูลในส่วนของ Encoder ช่วยในการบีบอัดข้อมูล ทําให้
+ข้อมูลมีขนาดเล็กลงและง่ายต่อการประมวลผล ทั้งยังช่วยลด noise หรือข้อมูลที่ไม่สําคัญออกไป
+• การขยายข้อมูลกลับ (Reconstruction) ในส่วนของ Decoder การค่อย ๆ เพิ่มมิติของข้อมูลในแต่ละเลเยอร์ช่วยให้สามารถขยายข้อมูลกลับมาเป็น
+รูปแบบดั้งเดิมได้อย่างละเอียดอ่อนและเป็นระเบียบมากขึ้น การเพิ่มมิติค่อยเป็นค่อยไปช่วยรักษาโครงสร้างและรายละเอียดของภาพ
+• การรักษาความสัมพันธ์เชิงพื้นที่ (Spatial Relationships) การใช้ convolutional layers ในส่วนของ Encoder และ deconvolutional layers หรือ 
+upsampling layers ในส่วนของ Decoder ช่วยรักษาความสัมพันธ์เชิงพื้นที่ของภาพ ทําให้การสร้างภาพใหม่มีความแม่นยํามากขึ้น
+• การเรียนรู้ที่ค่อยเป็นค่อยไป (Progressive Learning) การค่อย ๆ ลดและเพิ่มมิติของข้อมูลช่วยให้เครือข่ายสามารถเรียนรู้และปรับตัวกับข้อมูลได้อย่างมี
+ประสิทธิภาพ และสามารถสร้างภาพใหม่ได้ใกล้เคียงกับภาพต้นฉบับมากที่สุด
+อ้างอิง Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning. MIT Press. และ Hinton, G. E., & Salakhutdinov, R. R. (2006). Reducing the Dimensionality of Data with Neural Networks. Science, 313(5786), 504-507.
+--- page 13 ---
+หลักการ Autoencoder
+ตัวอย่างการบีบอีดภาพ (Image Compression) ระหว่าง PCA และ Autoencoder
+Original Image
+Principal Component Analysis 
+Deep Autoencoder
+ถ้ามีการใช้ Component จํานวนเท่ากันจะพบว่า Autoencoder ให้ผลลัพธ์ที่ดีกว่า PCA ในกรณีที่ Autoencoder 
+มีค่า Initial Weight ที่ดีและเหมาะสม
+--- page 14 ---
+สมมติ Code มีขนาดเป็น 2 มิติ
+Input Layer (784)
+input (𝑥)
+output ("𝑥)
+Code 
+Layer (2)
+Layer#1 (1000)
+𝐶𝑜𝑑𝑒
+Layer#2 (500)
+Layer#3 (250)
+Output Layer (784)
+Layer#6 (1000)
+Layer#5 (500)
+Layer#4 (250)
+Input Layer (784)
+input (𝑥)
+output ("𝑥)
+Code 
+Layer (2)
+𝐶𝑜𝑑𝑒
+Output Layer (784)
+--- page 15 ---
+หลักการ Autoencoder
+• Encode และ Decode นิยมพัฒนาด้วย fully-connected feedforward neural networks แต่ถ้าสําหรับ
+ภาพจะเป็น Convolutional Neural Network
+• Code เป็นเลเยอร์เดียวของ ANN ซึ่งจํานวนโหนดในเลเยอร์จะเรียกว่า code size ถือว่าเป็น Hyperparameter
+ที่ต้องกําหนดก่อนฝึกสอน ซึ่งพอจะเทียบเคียงได้กับการกําหนดจํานวน Principal Component ที่เลือกใน PCA 
+อ้างอิง Hinton et al. "Reducing the dimensionality of data with neural networks." Science 313.5786 (2006): 504-507
+Input Layer (784)
+input (𝑥)
+output ("𝑥)
+Code 
+Layer (2)
+Layer#1 (1000)
+𝐶𝑜𝑑𝑒
+Layer#2 (500)
+Layer#3 (250)
+Output Layer (784)
+Layer#6 (1000)
+Layer#5 (500)
+Layer#4 (250)
+--- page 16 ---
+หลักการ Autoencoder
+สถาปัตยกรรมแบบ Autoencoder จะมี Hyperparameter ที่สําคัญจํานวน 4 ตัว ได้แก่
+Hyperparameter
+คําอธิบาย
+Code Size 
+จํานวนโหนดในชั้น Code Layer ขนาดที่เล็กลงส่งผลให้มีการบีบอัดมากขึ้น
+Number of Layers
+สถาปัตยกรรมแบบ Autoencoder สามารถมีความลึกได้เท่าที่ต้องการ โดยไม่คํานึงถึงขนาดของ Input และ Output 
+Number of Nodes per 
+Layer 
+สถาปัตยกรรมแบบ Autoencoder มักจะมีการเรียงตัวแบบซ้อน (Stack) เนื่องจากเลเยอร์ต่าง ๆ จะถูกซ้อนกันทีละชั้น 
+จํานวนโหนดต่อเลเยอร์จะลดลงตามแต่ละเลเยอร์ถัดไปในส่วนของ Encoder และเพิ่มกลับเข้าไปในส่วนของ Decoder 
+นอกจากนี้ ฝั่ง Encoder และ Decoder มักจะสมมาตรกัน แต่ไม่จําเป็น 
+Loss Function
+สถาปัตยกรรมแบบ Autoencoder มักนิยมใช้งานค่า mean squared error (MSE) หรือค่า binary cross-entropy เป็น 
+Loss Function ถ้าหากค่า Input อยู่ในช่วง 0 ถึง 1 นิยมใช้งาน cross-entropy
+สถาปัตยกรรมแบบ Autoencoder จะได้รับการฝึกสอนด้วยวิธีการ backpropagation เช่นเดียวกัน ANN และ CNN
+--- page 17 ---
+ข้อควรระวัง
+• ประสิทธิภาพของสถาปัตยกรรมแบบ Autoencoder ขึ้นกับการปรับค่า Hyperparameter ต่าง ๆ โดยที่ Code 
+Size คือตัวที่สําคัญที่สุด การเพิ่มค่าของ Hyperparameter ส่งผลให้แบบจําลอง Autoencoder สามารถเรียนรู้
+การเข้ารหัสที่ซับซ้อนได้มากขึ้น แต่ไม่ควรปรับให้มีค่ามากเกินไป มิฉะนั้นแบบจําลองจะเรียนรู้ที่จะคัดลอก 
+(Copy) Input ไปยัง Output โดยไม่ต้องเรียนรู้ที่จะสกัด Code ที่มีความสามารถในการนําเสนอข้อมูลได้ ส่งผล
+ให้แบบจําลอง Autoencoder จะสร้าง Output ขึ้นมาใหม่เหมือนกับ Input ได้อย่างสมบูรณ์แบบ สิ่งนี้ทําให้
+เกิดเหตุการณ์ Overfitting ขึ้นมาได้ 
+• ดังนั้น จึงนิยมให้ Code มีขนาดเล็กกว่าขนาดของ Input ส่งผลให้รูปแบบสถาปัตยกรรมเป็นรูปโบว์หรือนาฬิกา
+ทราย ทําให้แบบจําลอง Autoencoder ไม่สามารถคัดลอก Input ไปยัง Output ได้โดยตรง ถือว่าเป็นบังคับให้
+แบบจําลองเรียนรู้ Feature ที่เหมาะสมและสําคัญออกมาได้ 
+อ้างอิง Hinton et al. "Reducing the dimensionality of data with neural networks." Science 313.5786 (2006): 504-507
+--- page 18 ---
+ข้อควรระวัง
+อย่างไรก็ตาม หากข้อมูล Input มีรูปแบบ (Pattern) อาทิเช่น เลข “1” มีลักษณะเป็นเส้นตรงและเลข “0” มี
+ลักษณะเป็นวงกลม แบบจําลองจะเรียนรู้รูปแบบและความสัมพันธ์ดังกล่าวได้ แต่หากข้อมูล Input เป็นรูปแบบสุ่ม
+โดยสมบูรณ์ กล่าวคือไม่มีความสัมพันธ์ภายใน (Internal Correlation) หรือการอ้างอิง (Dependency) จะส่งผล
+ให้แบบจําลอง Autoencoder ไม่สามารถสร้าง Output ใหม่จาก Code ได้อย่างสมบูรณ์
+อ้างอิง Hinton et al. "Reducing the dimensionality of data with neural networks." Science 313.5786 (2006): 504-507
+--- page 19 ---
+Convolutional Autoencoder
+สถาปัตยกรรม
+Autoencoder ที่ใช้
+งานConvolution 
+Operation 
+แทน
+การใช้งาน
+Fully 
+Connected Layer 
+ได้รับการคิดค้นโดย
+Zeiler และคณะใน
+ปีค.ศ. 2013
+อ้างอิง https://github.com/arthurmeyer/Saliency_Detection_Convolutional_Autoencoder
+--- page 20 ---
+Convolutional Autoencoder
+สถาปัตยกรรม Convolutional Autoencoder รองรับ Input ในรูปแบบ 3D Vectors หรือ 
+Input Image ในสถาปัตยกรรมนี้ภาพ Input จะถูก Downsampling ให้อยู่ในรูปแบบ Latent 
+Representation (หรือเรียกว่า Spatial Information) ที่มีขนาดเล็ก โดยสถาปัตยกรรม 
+Convolutional Autoencoder สามารถนําไปประยุกต์ใช้งานทางด้าน Image and Video 
+Compression, image denoising, และ image synthesis
+--- page 21 ---
+เทคนิค Upsampling ใน Autoencoder 
+ใน CNN Autoencoder ส่วนของ Encoder จะลดขนาดของข้อมูล (Downsampling/Pooling) เพื่อลดมิติและดึงคุณลักษณะ
+สําคัญออกมา แต่ในส่วนของ Decoder เราต้องการขยายภาพกลับ (Upsampling) ให้ได้ขนาดเท่าเดิม โดยมักจะใช้เทคนิคการ
+ขยายภาพกลับ ได้แก่
+• การประมาณค่า (Interpolation) อาทิเช่น Nearest Neighbor Upsampling, Bilinear Interpolation,
+• การคอนโวลูชันแบบย้อนกลับ (Transposed Convolution)
+• การยกเลิกการพูลลิ่ง(Unpooling)
+--- page 22 ---
+เทคนิคการ Nearest Neighbor Interpolation
+ขั้นตอนที่ 1 คํานวณพิกัดต้นทาง src(row) และ src(column) แล้ว “ปัดไปพิกเซลอินพุตที่ใกล้ที่สุด”
+พิจารณาจากเดิม [0,1] ไปเป็น [0,0.25,0.5,0.75,1]
+ขั้นตอนที่ 2 ใช้กฎ nearest = ⌊src+0.5⌋ เพื่อคุมไม่ให้เกินขอบ
+nearest = [⌊0+0.5⌋, ⌊0.25+0.5⌋, ⌊0.5+0.5⌋, ⌊0.75+0.5⌋, ⌊1+0.5⌋] = [0, 0, 1, 1, 1]
+กําหนดให้ข้อมูลเดิม x มีขนาด 2x2 และต้องการขยายขนาดเป็น 5x5
+--- page 23 ---
+เทคนิคการ Nearest Neighbor Interpolation
+ขั้นตอนที่ 3 การแทนค่า
+• เมื่อพิจารณาจาก src(col) = [0, 0, 1, 1, 1] แล้วจะกําหนดให้แถว 0 และ 1 ของ Y กําหนดให้ใช้แถวที่ 0 ของ X 
+และแถว 2 ถึง 4 ของ Y กําหนดให้ใช้แถวที่ 1 ของ X 
+• เมื่อพิจารณาจาก src(row) = [0, 0, 1, 1, 1] แล้วจะกําหนดให้คอลัมน์ 0 และ 1 ของ Y กําหนดให้ใช้คอลัมน์ที่ 0 
+ของ X และคอลัมน์ 2 ถึง 4 ของ Y กําหนดให้ใช้คอลัมน์ที่ 1 ของ X 
+กําหนดให้ข้อมูลเดิม x มีขนาด 2x2 เป็น Y ที่มีการขยายขนาดเป็น 5x5
+0,
+0,
+1, 
+1, 
+1 
+0, 
+0, 1, 
+1, 
+1 
+(0,0) (0,1)
+(1,0) (1,1)
+--- page 24 ---
+เทคนิคการ Bilinear Interpolation Interpolation
+กําหนดให้ข้อมูลเดิม x มีขนาด 2x2 และต้องการขยายขนาดเป็น 5x5
+--- page 25 ---
+Transpose Convolutional Layer 
+Transpose Convolution (หรือ Deconvolution) เป็นกระบวนการทํากลับของการทําConvolution ซึ่ง
+กระบวนการ Transpose Convolution ด้วย Kernel ขนาด 3x3 จะแปลงข้อมูล Input ขนาด 1x1 ไปเป็นภาพ
+ผลลัพธ์ขนาด 3x3
+หลักการทํางานของ Transpose 
+Convolution จะมีหลักการทํางานคล้ายคลึงกัน Convolution โดยขยับ 
+Kernel ไปคํานวณคูณแบบจุดต่อจุดบนภาพ Input ก่อนนําผลลัพธ์ที่ได้ทั้งหมดมาบวกกัน ผลลัพธ์ที่ได้จะมีขนาด
+ใหญ่กว่าข้อมูล Input ขึ้นอยู่กับพารามิเตอร์เกี่ยวกับ stride และ padding 
+--- page 26 ---
+Transposed Convolutional Layer 
+ขั้นตอนที่ 1 คูณกระจาย Input กับ Kernel ในแต่ละส่วนดังภาพ (stride = 1) 
+อ้างอิง https://towardsdatascience.com/understand-transposed-convolutions-and-build-your-own-transposed-convolution-layer-from-scratch-4f5d97b2967
+Input
+Kernel
+Output
+--- page 27 ---
+Transposed Convolutional Layer 
+ขั้นตอนที่ 2 บวกผลลัพธ์เข้าด้วยกันดังภาพ 
+อ้างอิง https://towardsdatascience.com/understand-transposed-convolutions-and-build-your-own-transposed-convolution-layer-from-scratch-4f5d97b2967
+--- page 28 ---
+Transposed Convolutional Layer 
+อ้างอิง https://medium.com/@marsxiang/convolutions-transposed-and-deconvolution-6430c358a5b6
+--- page 29 ---
+Transposed Convolutional Layer 
+2
+--- page 30 ---
+Transposed Convolutional Layer 
+--- page 31 ---
+Transposed Convolutional Layer 
+--- page 32 ---
+Transposed Convolutional Layer 
+--- page 33 ---
+Transposed Convolutional Layer 
+--- page 34 ---
+Transposed Convolutional Layer 
+--- page 35 ---
+Transposed Convolutional Layer 
+--- page 36 ---
+Transposed Convolutional Layer 
+--- page 37 ---
+Transposed Convolutional Layer 
+--- page 38 ---
+Transposed Convolutional Layer 
+--- page 39 ---
+Transposed Convolutional Layer 
+--- page 40 ---
+Transposed Convolutional Layer 
+--- page 41 ---
+หลักการทํางาน Transposed Convolutions
+ตัวดําเนินการ Transposed Convolutions ซึ่งเป็นการดําเนินการตรงข้ามกับ Convolution ปกติ กล่าวคือ Transposed Convolution 
+จะพยายามเพิ่มขนาดของภาพเข้าไป (up-sampling) แทนที่จะลดขนาดลง (down-sampling) อย่าง Convolution ทั่วไป การทํางานของ 
+Transposed Convolution นี้มีความสําคัญโดยเฉพาะในการสร้างภาพหรือข้อมูลที่มีความละเอียดสูงขึ้น เช่น ในกระบวนการถอดรหัสใน 
+Autoencoder หรือในการสร้างภาพใหม่ใน Generative Adversarial Networks (GANs) การกําหนดค่า Padding และ Stride ที่แตกต่าง
+กันจะมีผลกระทบต่อขนาดของผลลัพธ์ที่ได้จากการทําTransposed Convolution
+• Padding ทําหน้าที่ในการเพิ่มค่าเทียมรอบ ๆ ข้อมูลเริ่มต้น โดยค่า Padding จะช่วยควบคุมขอบของภาพที่ได้จากการคํานวณคอนโวลูชัน 
+ยิ่งค่า Padding มากขึ้น ขนาดของภาพผลลัพธ์จะยิ่งขยายใหญ่ขึ้น
+• Stride เป็นการกําหนดจํานวนก้าวในการเลื่อนตัวกรองไปตามข้อมูล โดย Stride ที่มากขึ้นจะทําให้ผลลัพธ์มีการขยายขนาดมากขึ้นเช่นกัน 
+และอาจมีช่องว่างเพิ่มขึ้นระหว่างพิกเซลของภาพผลลัพธ์ แต่ Stride ที่น้อยจะทําให้การขยายภาพมีความละเอียดสูงกว่า
+การกําหนดค่า Padding 
+และ Stride 
+ที่แตกต่างกันส่งผลต่อคุณสมบัติของภาพที่ได้อย่างมาก นักศึกษาจึงต้องเข้าใจว่าค่าต่าง ๆ เหล่านี้
+สามารถควบคุมขนาดและลักษณะของข้อมูลที่ถูกขยายได้อย่างไร
+หมายเหตุ ไม่หมุนตัวกรอง
+--- page 42 ---
+ตัวอย่างโปรแกรม Transposed Convolutions
+import torch
+from torch import nn
+import seaborn as sn
+X = torch.tensor([[1.0, 1.0, 1.0, 1.0], [1.0, 1.0, 1.0, 1.0], [1.0, 1.0, 1.0, 1.0], [1.0, 1.0, 1.0, 1.0]])
+K = torch.tensor([[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]])
+X = X.reshape(1, 1, 4, 4)
+K = K.reshape(1, 1, 3, 3)
+tconv = nn.ConvTranspose2d(1, 1, kernel_size=3, padding=2, stride=2, bias=False)
+tconv.weight.data = K
+out1 = tconv(X)
+out1 = out1.squeeze()
+sn.heatmap(out1.detach().numpy(), annot=True)
+--- page 43 ---
+ตัวอย่างการสร้างข้อมูลและตัวกรอง
+// สร้างข้อมูล
+// สร้าง Filter
+--- page 44 ---
+ตัวอย่างการทํางาน Transposed Convolutions 
+Padding = 0, Stride = 1
+Padding = 0, Stride = 2
+--- page 45 ---
+ตัวอย่างการทํางาน Transposed Convolutions 
+Padding = 0, Stride = 3
+--- page 46 ---
+ตัวอย่างการทํางาน Transposed Convolutions 
+Padding = 1, Stride = 1
+Padding = 2, Stride = 1
+--- page 47 ---
+ตัวอย่างการทํางาน Transposed Convolutions 
+Padding = 1, Stride = 2
+Padding = 2, Stride = 2
+--- page 48 ---
+การยกเลิกการพูลลิ่ง(Unpooling)
+Max Unpooling คือกระบวนการ "ย้อนกลับ" การทําMax Pooling โดยอาศัย
+ข้อมูลตําแหน่ง (Pooling Indices หรือ Mask) ที่จดไว้ตั้งแต่ตอนทํา Max 
+Pooling ว่าค่าที่ถูกเลือก (maximum) มาจากตําแหน่งใด เมื่อทํา Max 
+Unpooling ค่าดังกล่าวจะถูกนํากลับไปใส่ในตําแหน่งเดิม ส่วนตําแหน่งอื่น ๆ จะ
+ถูกเติมด้วยค่า 0
+แนวคิดหลักของ Max Unpooling คือการทําหน้าที่เป็น Upsampler เพื่อกู้คืน
+โครงสร้างเชิงพื้นที่ของข้อมูลที่ถูกย่อขนาดลงด้วย Max Pooling ให้กลับมามี
+ขนาดใหญ่ขึ้น อย่างไรก็ตาม วิธีการนี้มักไม่ถูกใช้งานมากนักในปัจจุบัน แม้จะเคย
+มีงานวิจัยบางส่วนเลือกใช้ในอดีต เหตุผลก็คือ แม้จะได้ข้อมูลที่ถูกขยายขนาด
+กลับมา แต่ยังคงจําเป็นต้องใช้เลเยอร์Convolution ตามมาช่วย "สร้าง" 
+รายละเอียดของผลลัพธ์ให้ครบถ้วนและใกล้เคียงกับข้อมูลต้นฉบับ
+https://www.oreilly.com/library/view/hands-on-convolutional-neural/9781789130331/6476c4d5-19f2-455f-8590-c6f99504b7a5.xhtml
+--- page 49 ---
+เทคนิค Padding
+เทคนิค Padding ได้รับความนิยมนํามาใช้เพื่อเพิ่มมิติของ Input เพื่อไม่ให้มิติของ Output จาก 
+Convolution ลดลง โดยปกติบริเวณขอบของ Input จะเติมข้อมูลด้วย 0 ซึ่งจะไม่ส่งผลต่อ Dot Product
+อ้างอิง https://medium.com/@marsxiang/convolutions-transposed-and-deconvolution-6430c358a5b6
+--- page 50 ---
+เทคนิค Stride
+เทคนิค Stride คือการกําหนดขนาดความกว้างในการขยับในทุกครั้ง โดยที่ Stride ยิ่งมีค่าสูงทําให้การ
+บีบอัดผลลัพธ์ (Output) เพิ่มมากขึ้น โดยส่วนใหญ่จะกําหนดค่า Stride เท่ากับหนึ่ง
+อ้างอิง https://medium.com/@marsxiang/convolutions-transposed-and-deconvolution-6430c358a5b6
+--- page 51 ---
+เทคนิค Stride (Cont.)
+ถ้ากําหนด Strides แบบ 2 x 2 จะทําให้เพิ่มขนาดของ Input จาก 3 x 3 เป็น Output ขนาด 5 x 5
+อ้างอิง https://medium.com/@marsxiang/convolutions-transposed-and-deconvolution-6430c358a5b6
+--- page 52 ---
+เทคนิค Dilation
+เทคนิค Dilations ใช้คํานวณและควบคุมขนาดของ Output แต่จุดประสงค์หลักเพื่อขยายขอบเขตของ 
+Kernel สามารถมองเห็นเพื่อจับรายละเอียดของภาพในรูปแบบที่ใหญ่ขึ้นได้ 
+อ้างอิง https://medium.com/@marsxiang/convolutions-transposed-and-deconvolution-6430c358a5b6
+--- page 53 ---
+เทคนิค Dilation
+https://www.researchgate.net/publication/338780378/ และ https://www.researchgate.net/publication/336002670
+--- page 54 ---
+สถาปัตยกรรม U-Net
+อ้างอิง https://doi.org/10.5281/zenodo.1133969.
+Encoder ประกอบด้วยชุดของเลเยอร์การคอนโวลูชัน (Convolution) และ
+การพูลลิ่ง (Pooling) ที่ค่อย ๆ ลดขนาดของภาพอินพุตเพื่อดึงลักษณะเฉพาะ
+ในหลายสเกล(Scale) ออกมา ใน Encoder ขนาด (Width และ Height) 
+ของภาพจะค่อย ๆ ลดลง ในขณะที่ ความลึก (Dept หรือ Channel) ค่อย ๆ 
+เพิ่มขึ้น ซึ่งหมายความว่าเครือข่ายจะเรียนรู้ข้อมูล "WHAT" ในภาพ แต่จะ
+สูญเสียข้อมูล "WHERE" ไป
+Decoder ประกอบด้วยชุดของเลเยอร์การคอนโวลูชันและการอัพแซมปลิง 
+(Upsampling) ที่ขยายแผนที่ลักษณะเฉพาะไปยังขนาดของภาพอินพุตเดิม 
+พร้อมทั้งรวมลักษณะเฉพาะที่มีความละเอียดสูง (Copy and Crop) จาก 
+Encoder สิ่งนี้ทําให้ Decoder สามารถสร้างมาสก์ (Mark) การแบ่งส่วนที่มี
+ขนาดเดียวกับภาพอินพุตเดิม ใน Decoder ขนาดของภาพ (Width และ 
+Height) จะค่อย ๆ เพิ่มขึ้นในขณะที่ความลึกค่อย ๆ ลดลง ซึ่งหมายความว่า
+เครือข่ายจะเรียนรู้ข้อมูล "WHERE" ในภาพ โดยค่อย ๆ ใช้การอัพแซมปลิง
+--- page 56 ---
+อ้างอิง https://doi.org/10.5281/zenodo.1133969.
+จากรูปเป็นสถาปัตยกรรมที่แบ่งแยกเพียง2 
+คลาสแบบ 1 พิกเซลเป็นได้เพียง 1 คลาส ใน
+กรณีนี้ Final Layer สามารถสร้างได้ 2 รูปแบบ
+• แบบที่ 1 ตัวกรอง ณ Final Layer จํานวน 
+1 ตัวและกําหนด Activation Function 
+เป็นแบบ Sigmoid***
+• แบบที่ 2  ตัวกรอง ณ Final Layer จํานวน 
+2 ตัวและกําหนด Activation Function 
+เป็นแบบ Softmax
+สถาปัตยกรรม U-Net สําหรับ Binary
+--- page 57 ---
+อ้างอิง https://www.analyticsvidhya.com/blog/2021/01/auto-encoders-for-computer-vision-an-endless-world-of-possibilities/
+จากรูปเป็นสถาปัตยกรรมที่แบ่งแยกเพียง
+2 คลาสแบบ 1 พิกเซลเป็นได้เพียง 1 คลาส ใน
+กรณีนี้ Final Layer สามารถสร้างได้ 2 รูปแบบ
+• แบบที่ 1 ตัวกรอง ณ Final Layer จํานวน 
+1 ตัวและกําหนด Activation Function 
+เป็นแบบ Sigmoid
+• แบบที่ 2  ตัวกรอง ณ Final Layer จํานวน 
+2 ตัวและกําหนด Activation Function 
+เป็นแบบ Softmax***
+สถาปัตยกรรม U-Net สําหรับ Binary
+, Softmax
+--- page 58 ---
+แต่ถ้าเป็นสถาปัตยกรรมที่แบ่งแยก
+จํานวน 5 คลาสแบบ 1 พิกเซลเป็นได้
+เพียง 1 คลาส (Multiclassification) 
+ดังนั้น Final Layer จะมี Filter จํานวน 
+5 ตัวและ Activation Function เป็น
+แบบ Softmax
+5
+สถาปัตยกรรม U-Net สําหรับ Multiclass
+, Softmax
+--- page 59 ---
+แต่ถ้าเป็นสถาปัตยกรรมที่แบ่งแยก
+จํานวน 4 คลาสแบบ 1 พิกเซลเป็นได้
+มากกว่า 1 คลาส (Multilabel) ดังนั้น 
+Final Layer จะมี Filter จํานวน 4 ตัว
+และ Activation Function เป็นแบบ 
+Sigmoid
+4
+สถาปัตยกรรม U-Net สําหรับ Multilabel
+, Sigmoid
+--- page 60 ---
+Inputs, Labels และ Outputs
+อ้างอิง http://ronny.rest/tutorials/module/seg_01/segmentation_03_inputs_outputs/
+ข้อมูลป้ายกํากับสําหรับการฝึกอบรมอาจอยู่ในรูปแบบที่แตกต่างกันหลายรูปแบบ ขึ้นอยู่กับชุดข้อมูลที่คุณดาวน์โหลด
+Softmax หรือ Linear
+สําหรับงานทางด้าน Multiclass
+Sigmoid
+สําหรับงานทางด้าน Multilabel
+--- page 61 ---
+รูปแบบของ Labels ในงาน Autoencoder
+Class Label
+One Hot Label
+1
+สมมติว่ามี N classes และ Label แบบ Class Labels คือ
+class 3
+class 2
+class 1
+class N
+--- page 62 ---
+รูปแบบของ Labels ในงาน Autoencoder
+Class Label
+One Hot Label
+1
+0  1  2
+2  0  1
+1  2  0
+1 0 0
+0 1 0
+0 0 1
+0 1 0
+0 0 1
+1 0 0
+0 0 1
+1 0 0
+0 1 0
+สมมติว่ามี 3 classes (ถนน = 0, รถ = 1, คน = 2) และ Label แบบ Class Labels คือ
+ถนน
+รถ
+คน
+--- page 63 ---
+Inputs, Labels และ Outputs
+https://www.analyticsvidhya.com/blog/2021/01/auto-encoders-for-computer-vision-an-endless-world-of-possibilities/
+https://diode-dataset.org/
+--- page 64 ---
+สถาปัตยกรรม U-Net
+Yusiong, John Paul Tan and Prospero C. Naval. “AsiANet: Autoencoders in Autoencoder for Unsupervised Monocular Depth Estimation.” 2019 IEEE Winter Conference on 
+Applications of Computer Vision (WACV) (2019): 443-451.
+https://www.researchgate.net/publication/360462577_CNN-Augmented_Visual-Inertial_SLAM_with_Planar_Constraints
+--- page 65 ---
+การประยุกต์ใช้งาน CNN สําหรับ Image
+--- page 66 ---
+Denoising Autoencoder
+สถาปัตยกรรม
+Autoencoder
+ย่อยรูปแบบหนึ่งที่
+ออกแบบมาสําหรับขจัดสิ่งรบกวนออกจากภาพ
+ได้รับ
+การคิดค้นโดยVincent และคณะในปีค.ศ. 2008 โดย
+ฝึกสอนแบบจําลองด้วย
+Input 
+ที่มีลักษณะเป็น
+Corrupted Data และOutput เป็นClean Data ซึ่ง
+Denoising Autoencoder จะสกัดCode ที่มีความ
+ทนทานต่อสิ่งรบกวน
+หรือสามารถกล่าวได้ว่าจะสกัด
+Code มาจากส่วนData เป็นหลักและอาจจะมีส่วนของ
+noise 
+ปะปนมาด้วยเล็กน้อย
+ซึ่งสถาปัตยกรรมมี
+โครงสร้างคล้ายVanilla Autoencoder แต่จะฝึกสอน
+ด้วยปกติและมีสัญญาณรบกวนปะปนด้วย
+อ้างอิง 10.1007/s10470-019-01446-6. 
+--- page 67 ---
+Denoising Autoencoder
+อ้างอิง (1) https://pyimagesearch.com/2020/02/24/denoising-autoencoders-with-keras-tensorflow-and-deep-learning/ และ (2) DOI: 10.1002/jmri.27255
+--- page 68 ---
+ตัวอย่าง Image Reconstruction
+ภาพที่ได้จากแบบจําลอง Autoencode 
+สําหรับงานด้าน Image Reconstruction
+ของแต่ละ Epoch 
+Epoch ที่ 1
+Epoch ที่ 5
+Epoch ที่ 10
+Epoch ที่ 25
+Epoch ที่ 50
+อ้างอิง https://medium.com/@dopplerz/autoencoder-โมเดลที่เรียนรู้ที่จะเป็นตัวเอง-d2edeb7381a2
+--- page 69 ---
+หัวข้อ
+•แนวคิดสถาปัตยกรรม Autoencoder
+•สถาปัตยกรรม Autoencoder ที่น่าสนใจ
+•วิธีการใช้งานชุดคําสั่ง Segmentation Models
+--- page 70 ---
+สถาปัตยกรรม U-net
+U-Net ได้รับการพัฒนาขึ้นโดย Olaf Ronneberger และคณะในปี 2015 เพื่อการแบ่งส่วนภาพ 
+(Image Segmentation) โดยเฉพาะในการประมวลผลทางการแพทย์ (Medical Image Processing)
+โดยมีโครงสร้างแบบ Encoder-Decoder 
+ซึ่งสามารถดึงลักษณะเชิงพื้นที่และรวมข้อมูลเชิงพื้นที่ที่มี
+ความละเอียดสูงได้อย่างมีประสิทธิภาพ ซึ่งประกอบไปด้วย 3 องค์ประกอบหลัก ได้แก่
+• Encoder (Contraction Path) ทําหน้าที่ดึงลักษณะเชิงพื้นที่โดยใช้ Convolutional Layers 
+และ Max Pooling Layers เพื่อลดขนาดของฟีเจอร์แมปและเพิ่มความลึกของข้อมูล ช่วยให้สร้าง
+แผนที่ลักษณะ (feature map) ที่มีความละเอียดสูงจากภาพอินพุต
+• Decoder (Expansion Path) ทําหน้าที่ถอดรหัสลักษณะเชิงพื้นที่และเพิ่มขนาดของฟีเจอร์แมป
+กลับไปสู่ขนาดเดิมโดยใช้ Transposed Convolutional Layers ช่วยให้รวมข้อมูลจากหลาย
+ระดับความลึกและสร้างผลลัพธ์ที่มีความละเอียดสูง
+• Skip Connections ใช้การเชื่อมต่อข้ามเลเยอร์ระหว่าง Encoder และ Decoder เพื่อรวมข้อมูล
+เชิงพื้นที่ที่มีความละเอียดสูงจาก Encoder 
+กับข้อมูลที่ถอดรหัสใน Decoder ทําให้ช่วยลดการ
+สูญเสียข้อมูลและเพิ่มความแม่นยําในการแบ่งส่วนภาพ
+การรวมข้อมูลจากหลายระดับความลึกด้วยการใช้ Skip Connections ทําให้ U-Net สามารถรวม
+ข้อมูลเชิงพื้นที่จากหลายระดับความลึกเข้าด้วยกัน ซึ่งเพิ่มความแม่นยําในการแบ่งส่วนภาพ อีกทั้ง 
+โครงสร้างแบบ Encoder-Decoder ยังช่วยให้สามารถดึงลักษณะเชิงพื้นที่ที่สําคัญจากภาพและ
+ถอดรหัสลักษณะเชิงพื้นที่เหล่านี้เพื่อสร้างผลลัพธ์ที่มีความละเอียดสูง
+Ronneberger, O., Fischer, P., & Brox, T. (2015). U-Net: Convolutional Networks for Biomedical Image Segmentation. arXiv preprint arXiv:1505.04597.
+--- page 71 ---
+สถาปัตยกรรม PSPNet
+สถาปัตยกรรม Pyramid Scene Parsing Network (PSPNet) สร้างโดย Hengshuang Zhao, Jianping Shi, Xiaojuan Qi, Xiaogang Wang, Jiaya Jia ในปี 2017 เพื่อการแบ่งส่วนภาพ (Image Segmentation)
+PSPNet ได้รับการออกแบบมาเพื่อเพิ่มประสิทธิภาพในการแบ่งส่วนภาพโดยใช้เทคนิคการรวมลักษณะเชิงพื้นที่ (spatial features) จากหลายสเกล(multi-scale) โดยอาศัย Pyramid Pooling Module โมดูลนี้ช่วย
+ในการจับลักษณะเฉพาะที่แตกต่างกันจากหลายสเกลโดยการแบ่งแผนที่ลักษณะ (feature map) ออกเป็นส่วนย่อย (subregions) เช่น 1x1, 2x2, 3x3 เป็นต้น จากนั้น ทําการคอนโวลูชัน (conv 1x1) ในแต่ละ
+ส่วนย่อยเพื่อลดมิติของข้อมูล และรวมผลลัพธ์จากแต่ละส่วนย่อยเข้าด้วยกัน ซึ่งการใช้ Pyramid Pooling Module ทําให้ PSPNet สามารถจับลักษณะเชิงพื้นที่ที่มีความละเอียดสูงจากหลายสเกลทําให้ช่วยเพิ่มความ
+แม่นยําในการแบ่งส่วนภาพ นอกจากนี้ PSPNet ยังพบจุดเด่นอีกมากมาย อาทิเช่น
+• Multi-Scale Feature Extraction: ความสามารถในการดึงลักษณะเชิงพื้นที่จากหลายสเกลช่วยให้สามารถจัดการกับวัตถุที่มีขนาดและรูปร่างที่แตกต่างกันในภาพเดียวได้อย่างมีประสิทธิภาพ
+• Pyramid Pooling Module: การใช้โมดูลนี้ช่วยให้สามารถรวมข้อมูลจากหลายสเกลเข้าด้วยกัน ซึ่งเพิ่มความแม่นยําในการแบ่งส่วนภาพ
+• การใช้ Dice Loss: ช่วยให้การฝึกสอนโมเดลมีประสิทธิภาพมากขึ้น โดยเฉพาะในกรณีที่ข้อมูลมีการกระจายที่ไม่สมดุล
+Zhao, H., Shi, J., Qi, X., Wang, X., & Jia, J. (2017). Pyramid Scene Parsing Network. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) 2017, 2881-2890.
+--- page 72 ---
+สถาปัตยกรรม Linknet
+Linknet ถูกสร้างโดย Abhishek Chaurasia และคณะ ในปี 2017 เพื่อใช้ในงานการแบ่งส่วนเชิงความหมาย 
+(semantic segmentation) Linknet ถูกออกแบบมาเพื่อให้มีประสิทธิภาพสูงในการประมวลผล และสามารถ
+ทํางานได้รวดเร็ว อีกทั้ง ยังใช้ทรัพยากรน้อยเนื่องจากการออกแบบที่เน้นความเรียบง่าย ทําให้โมเดลใช้ทรัพยากร
+ในการประมวลผลน้อยลง ซึ่งเหมาะสมกับการใช้งานในระบบที่มีข้อจํากัดเรื่องทรัพยากร นอกจากนี้ ยังมีการนํา
+หลักการเชื่อมต่อข้ามเลเยอร์(Skip Connection) เข้ามาช่วยลดการสูญเสียข้อมูลและเพิ่มความแม่นยําในการ
+ทํานายผลลัพธ์ Linknet ได้รับการพัฒนามาจาก 5 ส่วน ได้แก่
+• Initial 
+Block ทําหน้าที่ในการเตรียมข้อมูลอินพุตให้พร้อมสําหรับการประมวลผลในส่วนถัดไป รวมถึงการ
+ปรับขนาดและการปรับค่าพิกเซลของภาพ
+• Encoder Block ทําหน้าที่ดึงลักษณะเฉพาะจากภาพ (Feature Extraction) โดยใช้ Convolutional 
+Layers คล้ายกับส่วน Encoder ในโมเดลการเรียนรู้เชิงลึกอื่น อาทิเช่น U-Net
+• Decoder Block ทําหน้าที่ถอดรหัสลักษณะเฉพาะ (Decode Feature) กลับไปเป็นภาพ โดยอาศัย 
+Transposed Convolutions หรือ Deconvolutions เพื่อเพิ่มขนาดของแผนที่ลักษณะ (Feature Map) 
+กลับไปสู่ขนาดเดิม
+• Final Block ทําหน้าที่ทํานายผลลัพธ์สุดท้ายของการแบ่งส่วนภาพ (Predict Output) นิยมใช้การคอนโวลู
+ชันขนาด 1x1 เพื่อทําการแปลงแผนที่ลักษณะเป็นแผนที่ผลลัพธ์
+• Skip Connection ช่วยส่งข้อมูลบางส่วนจากเลเยอร์Encoder ไปยังเลเยอร์Decoder เพื่อช่วยลดการ
+สูญเสียข้อมูลและเพิ่มประสิทธิภาพของการทํานายผลลัพธ์
+•
+Yokoya, Naoto et al. (2020). Breaking Limits of Remote Sensing by Deep Learning From Simulated Data for Flood and Debris-Flow Mapping. 
+IEEE Transactions on Geoscience and Remote Sensing. PP. 1-15.. 
+•
+Chaurasia, A., & Culurciello, E. (2017). LinkNet: Exploiting Encoder Representations for Efficient Semantic Segmentation. arXiv preprint 
+arXiv:1707.03718.
+--- page 73 ---
+สถาปัตยกรรม PAN
+Li, H., Xiong, P., An, J., & Wang, L. (2018). Pyramid Attention Network for Semantic Segmentation. arXiv preprint arXiv:1805.10180. และ https://sh-tsang.medium.com/review-pan-pyramid-attention-network-for-semantic-segmentation-semantic-segmentation-8d94101ba24a
+เส้นสีนํ้าเงินแสดงถึงการ downsample ซึ่งเป็นการลดขนาดของ Feature map ขณะที่ เส้นสีแดงแสดงถึงการ upsample ซึ่งเป็นการเพิ่มขนาด
+ของ Feature map สุดท้าย PAN จะทํา Batch Normalization หลังจากแต่ละเลเยอร์คอนโวลูชัน เป็นกระบวนการที่ช่วยปรับปรุงการฝึกโมเดลให้
+มีเสถียรภาพและเร็วขึ้นโดยการทําให้ค่าฟีเจอร์ต่าง ๆ มีการกระจายที่เหมาะสมในแต่ละแบตช์
+Pyramid Attention Network (PAN) ได้รับการพัฒนาขึ้นโดย Hanchao Li, 
+Pengfei Xiong, Jie An, Lingxue Wang ในปี 2018 PAN ถูกออกแบบมาเพื่อ
+เพิ่มประสิทธิภาพในการแบ่งส่วนภาพโดยการรวมข้อมูลจากหลายสเกลและให้
+ความสําคัญกับบริบทที่มีความสําคัญของภาพ ซึ่งประกอบไปด้วย 3 องค์ประกอบ
+หลัก ได้แก่
+• Encoder Block ทําหน้าที่ดึงลักษณะเฉพาะจากภาพ (Feature 
+Extraction) โดยใช้ Convolutional Layers คล้ายกับ Encoder ในโมเดล
+การเรียนรู้เชิงลึกอื่น อาทิเช่น U-net, ResNet เป็นต้น
+• Feature Pyramid Attention (FPA) ทําหน้าที่รวมลักษณะเชิงพื้นที่ 
+(Features) จากหลายระดับ (Multi-scale Features) โดยการแบ่ง Feature 
+Map ออกเป็นส่วนย่อยต่างๆ และรวมข้อมูลจากหลายระดับเข้าด้วยกัน
+เพื่อให้ได้ลักษณะเชิงพื้นที่ที่ครอบคลุมและมีความละเอียดสูงขึ้น FPA ช่วยให้
+สามารถจับลักษณะเชิงพื้นที่จากหลายระดับ ทําให้สามารถจัดการกับวัตถุที่มี
+ขนาดและรูปร่างที่แตกต่างกันในภาพเดียวได้อย่างมีประสิทธิภาพ
+• Global Attention Upsample (GAU) ทําหน้าที่ให้ความสําคัญกับ
+บริเวณหรือข้อมูลที่มีความสําคัญสูง (Global Context) และนําข้อมูลเหล่านี้
+ไปช่วยปรับนํ้าหนักให้กับลักษณะเชิงพื้นที่ระดับตํ่า (Low-level Features)
+เพื่อช่วยเพิ่มความแม่นยําในการแบ่งส่วนภาพโดยการใช้บริบทที่สําคัญจาก
+ภาพทั้งหมด
+--- page 74 ---
+สถาปัตยกรรม DeeplabV3
+Chen, L.-C., Papandreou, G., Schroff, F., & Adam, H. (2017). Rethinking Atrous Convolution for Semantic Image Segmentation. arXiv preprint arXiv:1706.05587.. และ https://medium.com/@itberrios6/deeplabv3-c0c8c93d25a4
+DeepLabV3 สร้างโดย Liang-Chieh Chen และคณะ ในปี 2017 เป็นโมเดลที่ใช้ใน
+การแบ่งส่วนภาพ โดยมีการนําเทคนิคการคอนโวลูชันที่พัฒนาขึ้นเพื่อให้สามารถดึง
+ลักษณะเชิงพื้นที่จากหลายระดับได้อย่างมีประสิทธิภาพ ซึ่งประกอบไปด้วย 2 
+องค์ประกอบหลัก ได้แก่
+• Atrous Convolution หรือ Dilated Convolution เป็นเทคนิคที่ปรับความ
+ห่างระหว่างพิกเซลในการคอนโวลูชัน ทําให้สามารถรับลักษณะเชิงพื้นที่ที่กว้างขึ้น
+โดยไม่สูญเสียความละเอียดของภาพ ทําให้ช่วยเพิ่มฟีลด์รับรู้ (receptive field) 
+ของฟิลเตอร์คอนโวลูชันโดยไม่ต้องเพิ่มจํานวนพารามิเตอร์ ช่วยให้สามารถจับ
+ลักษณะเชิงพื้นที่ได้ดีขึ้น
+• Atrous 
+Spatial 
+Pyramid 
+Pooling 
+(ASPP) เป็นการใช้ Atrous 
+Convolution หลายสเกลในการดึงลักษณะเชิงพื้นที่ (Multi-scale Feature 
+Extraction) โดยการคอนโวลูชันที่มีขนาด Dilated ต่างๆ กัน ส่งผลให้สามารถ
+รวมลักษณะเชิงพื้นที่จากหลายสเกลเข้าด้วยกัน ทําให้สามารถจัดการกับวัตถุที่มี
+ขนาดและรูปร่างแตกต่างกันในภาพเดียวได้อย่างมีประสิทธิภาพ
+ดังนั้น DeepLabV3 สามารถดึงลักษณะเชิงพื้นที่ที่กว้างขึ้นด้วยการใช้ Atrous 
+Convolution ทําให้สามารถดึงลักษณะเชิงพื้นที่ที่กว้างขึ้นโดยไม่สูญเสียความละเอียด
+ของภาพ อีกทั้ง ยังสามารถรวมลักษณะเชิงพื้นที่จากหลายสเกลด้วย ASPP ทําให้
+สามารถรวมลักษณะเชิงพื้นที่จากหลายสเกลเข้าด้วยกัน ซึ่งเพิ่มความแม่นยําในการ
+แบ่งส่วนภาพ
+--- page 75 ---
+สถาปัตยกรรม DeeplabV3+
+Chen, L.-C., Zhu, Y., Papandreou, G., Schroff, F., & Adam, H. (2018). Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation. arXiv preprint arXiv:1802.02611. และ https://sh-tsang.medium.com/review-deeplabv3-atrous-separable-convolution-semantic-
+segmentation-a625f6e83b90
+DeepLabV3+ พัฒนาขึ้นโดย Liang-Chieh Chen และคณะในปี 2018 ซึ่งเป็น
+การพัฒนาต่อยอดจากสถาปัตยกรรม DeepLabV3 โดยการเพิ่มโมดูล Decoder 
+เพื่อพัฒนาโครงสร้างให้เป็นแบบ encoder-decoder ซึ่งช่วยให้การแบ่งส่วนภาพมี
+ความละเอียดและแม่นยํามากขึ้น ซึ่งประกอบไปด้วย 3 องค์ประกอบหลัก ได้แก่
+• Atrous Convolution
+• Atrous Spatial Pyramid Pooling (ASPP)
+• Decoder Module ทําหน้าที่ถอดรหัสลักษณะเชิงพื้นที่ที่ได้จาก Encoder ให้
+กลับไปมีขนาดเท่ากับ Input 
+เพื่อทํานายผลการแบ่งส่วนภาพ สิ่งนี้ช่วยเพิ่ม
+ความละเอียดและความแม่นยําในการแบ่งส่วนภาพ ทําให้ผลลัพธ์สุดท้ายมี
+ความละเอียดสูงและตรงกับขนาดของภาพต้นฉบับ
+การที่ DeepLabV3+ มีโครงสร้างแบบ Encoder-Decoder 
+ช่วยให้การ
+ประมวลผลลักษณะเชิงพื้นที่และการถอดรหัสลักษณะเชิงพื้นที่ทําได้อย่างมี
+ประสิทธิภาพมากขึ้นด้วยการใช้โมดูล Decoder ทําให้ผลลัพธ์สุดท้ายมีความ
+ละเอียดสูงและตรงกับขนาดของภาพต้นฉบับ
+Backbone
+Network
+--- page 76 ---
+หัวข้อ
+•แนวคิดสถาปัตยกรรม Autoencoder
+•สถาปัตยกรรม Autoencoder ที่น่าสนใจ
+•วิธีการใช้งานชุดคําสั่ง Segmentation Models
+--- page 77 ---
+ชุดคําสั่ง Segmentation Models ถูกพัฒนาขึ้นด้วยภาษา Python โดยคุณ Pavel Iakubovskii สําหรับงานทางด้าน Image Segmentation 
+ที่ประยุกต์ใช้ชุดคําสั่ง PyTorch โดยเป็นชุดคําสั่งสําเร็จรูป (High level API) ที่มีทั้งโมเดลที่ฝึกฝนแล้วให้เลือกใช้งาน ตัวชี้วัด (Metric) รวมถึง 
+Loss ที่สามารถนํามาใช้งานได้
+ชุดคําสั่ง Segmentation Models คืออะไร
+--- page 78 ---
+หัวข้อ
+•แนวคิดสถาปัตยกรรม Autoencoder
+•ชุดคําสั่ง Segmentation Models คืออะไร
+•วิธีการใช้งาน Segmentation Models
+--- page 79 ---
+วิธีการใช้งาน Segmentation Models
+• วิธีการติดตั้งจาก The Python Package Index (PyPI) ใช้ Package manager ของ Python
+วิธีการใช้งาน Segmentation Models
+$ pip install git+https://github.com/qubvel/segmentation_models.pytorch
+• วิธีการติดตั้งจาก Github โดยตรง
+ในบางครั้งวิธีการนี้จะได้เวอร์ชันที่ใหม่กว่าติดตั้งจาก The Python Package Index (PyPI) 
+pip install segmentation-models-pytorch
+--- page 80 ---
+วิธีการใช้งาน Segmentation Models
+อ้างอิง : https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
+ข้อ
+คําอธิบาย
+1 
+กําหนด Dataset ที่จะนํามาใช้ในการฝึกสอนโมเดล
+2
+กําหนด Convolutional Neural Network สําหรับการฝึกสอนโมเดล
+3
+เลือก Loss Function และ Optimizer ที่เหมาะสมกับงานของเรา
+4
+การฝึกสอนโมเดล
+5
+การทดสอบและวัดผลโมเดล
+สําหรับการสร้างโมเดล Image Segmentation สามารถประกอบไปด้วย 5 ขั้นตอนดังนี้
+--- page 81 ---
+1. กําหนด Dataset ที่ใช้ในการฝึกสอนโมเดล
+ในงาน Image Segmentation จะมีรายละเอียดที่แตกต่าง
+จากวิธีการตรวจจับภาพอื่น ๆ คือ เฉลย (Label) 
+ที่นิยม
+เรียกว่า Mask จะมีขนาดเท่ากับภาพที่นํามาฝึกสอน โดย
+ลักษณะเฉลยจะประกอบด้วยค่า 0 หรือ 1 เพื่อบอกบริเวณ
+วัตถุ
+โดยภาพต้นฉบับและ Mask 
+สามารถใช้ transform ตัว
+เดียวกันได้ ซึ่งคําสั่งtransform ต้องใช้ version 2 ขึ้นไป 
+from torch.utils.data import Dataset
+from PIL import Image
+import os
+class CustomImageDataset(Dataset):
+    def __init__(self, img_dir, mask_dir, transform=None):
+        self.img_dir = img_dir
+        self.mask_dir = mask_dir
+        self.img_id = os.listdir(img_dir)
+        self.transform = transform
+    def __len__(self):
+        return len(self.img_dir)
+    def __getitem__(self, idx):
+        img_path =  os.path.join(self.img_dir, self.img_id[idx]) 
+        mask_path = os.path.join(self.mask_dir, self.img_id[idx])
+        # Load image
+        image = Image.open(img_path).convert('RGB')
+        mask = Image.open(mask_path)
+        # Convert to black and white
+        thresh = 128
+        fn = lambda x: 255 if x > thresh else 0
+        mask = mask.convert('L').point(fn,mode='1')
+        if self.transform:
+            image, mask = self.transform(image, mask) 
+        return image, mask
+วิธีการใช้งาน Segmentation Models
+อ้างอิงภาพ : https://raw.githubusercontent.com/dmlc/webdata/master/mxnet/doc/tutorials/data_aug/outputs/with_mask/masks.png
+--- page 82 ---
+ตัวอย่างการนํามาใช้กับชุดข้อมูล Retina Blood Vessel
+จากเว็บไซต์ Kaggle 
+ตัวอย่างภาพ
+import torchvision.transforms.v2 as transforms
+import numpy as np
+import torch
+transform = transforms.Compose([
+    transforms.ToImage(),
+    transforms.ToDtype(torch.float32, scale=True),
+    ])
+train_img_dir = './RetinaBloodVessel/train/image’
+train_mask_dir = './RetinaBloodVessel/train/mask’
+val_img_dir = './RetinaBloodVessel/val/image’
+val_mask_dir = './RetinaBloodVessel/val/mask'
+train_dataset = CustomImageDataset(train_img_dir , train_mask_dir , 
+transform=transform)
+valid_dataset = CustomImageDataset(val_img_dir , val_mask_dir , 
+transform=transform)
+train_loader = torch.utils.data.DataLoader(train_dataset, 
+batch_size=8, shuffle=True, num_workers=0)
+valid_loader = torch.utils.data.DataLoader(valid_dataset, 
+batch_size=8, shuffle=False, num_workers=0)
+ภาพ
+Mask
+ชุดข้อมูล : https://www.kaggle.com/datasets/abdallahwagih/retina-blood-vessel
+วิธีการใช้งาน Segmentation Models
+--- page 83 ---
+ตัวอย่างการนําภาพและ Mask ออกมาแสดงจากที่เรานําไป
+สร้าง (Build) เป็น Dataset สําหรับ Pytorch แล้ว
+ตัวอย่างผลลัพธ์
+import matplotlib.pyplot as plt
+# helper function for data visualization
+def visualize(**images):
+    """PLot images in one row."""
+    n = len(images)
+    plt.figure(figsize=(16, 5))
+    for i, (name, image) in enumerate(images.items()):
+        plt.subplot(1, n, i + 1)
+        plt.xticks([])
+        plt.yticks([])
+        plt.title(' '.join(name.split('_')).title())
+        plt.imshow(image)
+    plt.show()
+image, mask = train_dataset[0] # get some sample
+image, mask = image.numpy(), mask.numpy()
+image, mask = image.transpose(1, 2, 0), mask.transpose(1, 2, 0)
+visualize(
+    image = image, 
+    blood_vessel = mask,
+)
+วิธีการใช้งาน Segmentation Models
+--- page 84 ---
+2. กําหนด Convolutional Neural Network สําหรับ
+การฝึกสอนโมเดล
+สําหรับการสร้างโมเดล สามารถกําหนดรายละเอียด โดยใส่
+เป็นพารามิเตอร์ลงในโมเดลที่ต้องการได้เลย
+ตัวอย่าง ENCODER
+import torch
+import numpy as np
+import segmentation_models_pytorch as smp
+from segmentation_models_pytorch import utils
+ENCODER = 'resnet50'
+ENCODER_WEIGHTS = 'imagenet'
+CLASSES = ['blood_vessel']
+ACTIVATION = 'sigmoid’ 
+DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# create segmentation model with pretrained encoder
+model = smp.FPN(
+    encoder_name=ENCODER, 
+    encoder_weights=ENCODER_WEIGHTS, 
+    classes=len(CLASSES), 
+    activation='sigmoid’)
+ENCODER
+WEIGHTS
+resnet50
+imagenet / ssl / swsl
+densenet121
+imagenet
+inceptionresnetv2
+imagenet / 
+imagenet+background
+efficientnet-b0
+imagenet
+mobilenet_v2
+imagenet
+สําหรับ ENCODER เพิ่มเติม: 
+https://github.com/qubvel/segmentation_models.pytorch
+วิธีการใช้งาน Segmentation Models
+--- page 85 ---
+2. กําหนดสถาปัตยกรรมที่จะเรียกใช้งาน
+สําหรับชุดคําสั่ง Segmentation Models มีสถาปัตยกรรม
+ทีให้เรียกใช้งานได้หลากหลาย ได้แก่ 
+• Unet 
+• Unet++
+• MAnet 
+• FPN 
+• DeepLabV3 
+• DeepLabV3+
+import torch
+import numpy as np
+import segmentation_models_pytorch as smp
+from segmentation_models_pytorch import utils
+ENCODER = 'resnet50'
+ENCODER_WEIGHTS = 'imagenet'
+CLASSES = ['blood_vessel']
+ACTIVATION = 'sigmoid’ 
+# excute Model on CPU or GPU
+DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# create segmentation model with pretrained encoder
+model = smp.FPN(
+    encoder_name=ENCODER, 
+    encoder_weights=ENCODER_WEIGHTS, 
+    classes=len(CLASSES), 
+    activation='sigmoid’)
+# or another option
+aux_params=dict(
+    pooling='avg',             # one of 'avg', 'max'
+    dropout=0.5,               # dropout ratio, default is None
+    activation='sigmoid',      # activation function, default is None
+    classes= len(CLASSES)     # define number of output labels
+)
+model = smp.Unet(encoder_name=ENCODER, aux_params=aux_params)
+สําหรับ Model เพิ่มเติม: https://github.com/qubvel/segmentation_models.pytorch
+วิธีการใช้งาน Segmentation Models
+--- page 86 ---
+import torch
+import numpy as np
+import segmentation_models_pytorch as smp
+from segmentation_models_pytorch import utils
+ENCODER = 'resnet50'
+ENCODER_WEIGHTS = 'imagenet'
+CLASSES = ['blood_vessel']
+ACTIVATION = 'sigmoid’ 
+# excute Model on CPU or GPU
+DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# create segmentation model with pretrained encoder
+model = smp.FPN(
+    encoder_name=ENCODER, 
+    encoder_weights=ENCODER_WEIGHTS, 
+    classes=len(CLASSES), 
+    activation='sigmoid’)
+# or another option
+aux_params=dict(
+    pooling='avg’, 
+dropout=0.5,               # dropout ratio, default is None
+    activation='sigmoid',      # activation function, default is None
+    classes= len(CLASSES)     # define number of output labels
+)
+model = smp.Unet(encoder_name=ENCODER, aux_params=aux_params)
+สําหรับ Model เพิ่มเติม: https://github.com/qubvel/segmentation_models.pytorch
+วิธีการใช้งาน Segmentation Models
+# one of 'avg', 'max'
+คือการกําหนดวิธีแปลงข้อมูลให้กลายเป็นข้อมูล 1 มิติ ก่อนผ่านกระบวนการ flatten จากนั&น จึง
+ส่งไปทํานายผลลัพธ์ด้วย fully connected ต่อไป
+--- page 87 ---
+กําหนดสถาปัตยกรรมสําหรับ Multiclass Classification
+ให้นักศึกษากําหนด Activation Function เป็น softmax2d
+จากนั้น ค่อยกําหนดจํานวนคลาสและชื่อคลาสจาก
+พารามิเตอร์ CLASSES ในรูปแบบ List
+import torch
+import numpy as np
+import segmentation_models_pytorch as smp
+from segmentation_models_pytorch import utils
+ENCODER = 'resnet50'
+ENCODER_WEIGHTS = 'imagenet'
+CLASSES = [‘XXX’, ‘yyy’, ‘zzz’] # Edit Here
+ACTIVATION = 'softmax2d’  
+# Edit Here
+# excute Model on CPU or GPU
+DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# create segmentation model with pretrained encoder
+model = smp.FPN(
+    encoder_name=ENCODER, 
+    encoder_weights=ENCODER_WEIGHTS, 
+    classes=len(CLASSES), 
+    activation='sigmoid’)
+สําหรับ Model เพิ่มเติม: https://github.com/qubvel/segmentation_models.pytorch
+วิธีการใช้งาน Segmentation Models
+--- page 88 ---
+กําหนดสถาปัตยกรรมสําหรับ Multilabel Classification
+ให้นักศึกษากําหนด Activation Function เป็น Sigmoid
+จากนั้น ค่อยกําหนดจํานวนคลาสและชื่อคลาสจาก
+พารามิเตอร์ CLASSES ในรูปแบบ List
+import torch
+import numpy as np
+import segmentation_models_pytorch as smp
+from segmentation_models_pytorch import utils
+ENCODER = 'resnet50'
+ENCODER_WEIGHTS = 'imagenet'
+CLASSES = [‘XXX’, ‘yyy’, ‘zzz’] # Edit Here
+ACTIVATION = Sigmoid’  
+# Edit Here
+# excute Model on CPU or GPU
+DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# create segmentation model with pretrained encoder
+model = smp.FPN(
+    encoder_name=ENCODER, 
+    encoder_weights=ENCODER_WEIGHTS, 
+    classes=len(CLASSES), 
+    activation='sigmoid’)
+สําหรับ Model เพิ่มเติม: https://github.com/qubvel/segmentation_models.pytorch
+วิธีการใช้งาน Segmentation Models
+--- page 89 ---
+กําหนดสถาปัตยกรรมสําหรับ Binary Classification
+ให้นักศึกษากําหนด Activation Function เป็น Sigmoid
+จากนั้น ค่อยกําหนดจํานวนคลาสและชื่อคลาสจาก
+พารามิเตอร์ CLASSES ในรูปแบบ List ซึ่งจะมีเพียง 1 คลาส
+เท่านั้น
+import torch
+import numpy as np
+import segmentation_models_pytorch as smp
+from segmentation_models_pytorch import utils
+ENCODER = 'resnet50'
+ENCODER_WEIGHTS = 'imagenet'
+CLASSES = [‘XXX’] 
+# Edit Here
+ACTIVATION = Sigmoid’  
+# Edit Here
+# excute Model on CPU or GPU
+DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# create segmentation model with pretrained encoder
+model = smp.FPN(
+    encoder_name=ENCODER, 
+    encoder_weights=ENCODER_WEIGHTS, 
+    classes=len(CLASSES), 
+    activation='sigmoid’)
+สําหรับ Model เพิ่มเติม: https://github.com/qubvel/segmentation_models.pytorch
+วิธีการใช้งาน Segmentation Models
+--- page 90 ---
+กําหนดสถาปัตยกรรมสําหรับ Binary Classification
+ให้นักศึกษากําหนด Activation Function เป็น Sigmoid
+จากนั้น ค่อยกําหนดจํานวนคลาสและชื่อคลาสจาก
+พารามิเตอร์ CLASSES ในรูปแบบ List ซึ่งจะมีเพียง 2 คลาส
+เท่านั้น
+import torch
+import numpy as np
+import segmentation_models_pytorch as smp
+from segmentation_models_pytorch import utils
+ENCODER = 'resnet50'
+ENCODER_WEIGHTS = 'imagenet'
+CLASSES = [‘XXX’, ‘YYYY’] 
+# Edit Here
+ACTIVATION = Softmax’  
+# Edit Here
+# excute Model on CPU or GPU
+DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# create segmentation model with pretrained encoder
+model = smp.FPN(
+    encoder_name=ENCODER, 
+    encoder_weights=ENCODER_WEIGHTS, 
+    classes=len(CLASSES), 
+    activation='sigmoid’)
+สําหรับ Model เพิ่มเติม: https://github.com/qubvel/segmentation_models.pytorch
+วิธีการใช้งาน Segmentation Models
+--- page 91 ---
+3. เลือก Loss Function และ Optimizer ที่เหมาะสม
+สําหรับชุดคําสั่ง Segmentation Models มี Loss Function
+สําหรับการทําImage Segmentation ให้เรียกใช้งานได้จาก
+ชุดคําสั่งโดยตรง ได้แก่ Jaccard Loss หรือ Dice loss ซึ่ง Loss 
+Function ทั้ง 2 ตัว ได้รับการออกแบบมาสําหรับงานแบ่งส่วน
+ภาพ (image 
+segmentation) 
+ที่รองรับการทํางานในกรณี
+แบบไบนารี (binary), มัลติคลาส (multiclass) และมัลติเลเบล
+(multilabel)
+จากนั้น นักศึกษาค่อยกําหนด Optimizer และ Learning Rate 
+ตามความเหมาะสมของงาน
+# Dice loss for image segmentation task. It supports binary, 
+multiclass, and multilabel cases.
+loss = utils.losses.DiceLoss()
+# Jaccard loss for image segmentation task. It supports binary, 
+multiclass, and multilabel cases.
+# loss = utils.losses.JaccardLoss()
+optimizer = torch.optim.Adam([ 
+    dict(params=model.parameters(), lr=0.0001),
+])
+วิธีการใช้งาน Segmentation Models
+--- page 92 ---
+4. การฝึกสอนโมเดล
+ในการฝึกสอนโมเดลของชุดข้อมูล Segmentation 
+Models จะใช้ฟังก์ชันสําเร็จรูปของชุดคําสั่ง โดยรับ
+อาร์กิวเมนต์เป็นรายละเอียดของการฝึกสอน และการ 
+Validation พร้อมกับ Metric ที่ต้องใช้สําหรับการวัดผล
+ระหว่างการ Validation ได้แก่ 
+• F1 Score
+• IoU Score
+• Accuracy
+• Precision
+• Recall
+metrics = [
+    utils.metrics.IoU(threshold=0.5),
+]
+# create epoch runners 
+# it is a simple loop of iterating over dataloader`s samples
+# verbose คือการกําหนดการแสดงข้อมูลรายละเอียดระหว่างการทํางานโดยที; True คือแสดงและFalse คือไม่แสดง
+train_epoch = smp.utils.train.TrainEpoch(
+    model, 
+    loss=loss, 
+    metrics=metrics, 
+    optimizer=optimizer,
+    device=DEVICE,
+    verbose=True,
+)
+valid_epoch = smp.utils.train.ValidEpoch(
+    model, 
+    loss=loss, 
+    metrics=metrics, 
+    device=DEVICE,
+    verbose=True,
+)
+วิธีการใช้งาน Segmentation Models
+อ้างอิง https://github.com/qubvel/segmentation_models.pytorch/blob/master/segmentation_models_pytorch/utils/metrics.py
+--- page 93 ---
+metrics = [
+    utils.metrics.IoU(threshold=0.5),
+]
+# create epoch runners 
+# it is a simple loop of iterating over dataloader`s samples
+# verbose คือการกําหนดการแสดงข้อมูลรายละเอียดระหว่างการทํางานโดยที; True คือแสดงและFalse คือไม่แสดง
+train_epoch = smp.utils.train.TrainEpoch(
+    model, 
+    loss=loss, 
+    metrics=metrics, 
+    optimizer=optimizer,
+    device=DEVICE,
+    verbose=True,
+)
+valid_epoch = smp.utils.train.ValidEpoch(
+    model, 
+    loss=loss, 
+    metrics=metrics, 
+    device=DEVICE,
+    verbose=True,
+)
+วิธีการใช้งาน Segmentation Models
+อ้างอิง https://github.com/qubvel/segmentation_models.pytorch/blob/master/segmentation_models_pytorch/utils/metrics.py
+หมายเหตุ ถ้ากําหนดให้verbose มีค่าเป็นTrue โปรแกรมจะแสดงข้อมูลรายละเอียดระหว่างการฝึกสอนแบบจําลองแต่ถ้า
+verbose มีค่าเป็นFalse โปรแกรมจะไม่แสดงข้อมูลรายละเอียดระหว่างการทํางาน
+--- page 94 ---
+หลังจากนั้น นําโมเดลไปฝึกสอนด้วยชุดคําสั่งทางด้าน
+ซ้ายมือ เมื่อการฝึกสอนเสร็จสิ้นตามจํานวนรอบที่กําหนด 
+(epoch) โปรแกรมจะบันทึกโมเดลโดยอัตโนมัติ นอกจากนี้ 
+นักศึกษายังสามารถกําหนดให้โปรแกรมบันทึกเฉพาะโมเดล
+ที่มีประสิทธิภาพดีที่สุดได้ โดยการเอาเครื่องหมายความ
+คิดเห็น (uncomment) ออกจากส่วนโปรแกรมที่เป็นสีเขียว 
+และโปรแกรมจะลดค่า learning rate โดยอัตโนมัติเมื่อการ
+ฝึกสอนเกินกว่า 25 รอบ
+# train model for 40 epochs
+max_score = 0
+n_epoch = 40
+for i in range(n_epoch):
+    print('\nEpoch: {}'.format(i))
+    train_logs = train_epoch.run(train_loader)
+    valid_logs = valid_epoch.run(valid_loader)
+    # do something (save model, change lr, etc.)
+    # if max_score < valid_logs['iou_score']:
+    #    max_score = valid_logs['iou_score']
+    #    torch.save(model, './best_model.pth')
+    #    print('Model saved!')
+    # reduce learning rate from 0.0001 to 0.00001
+    if i == 25:
+        optimizer.param_groups[0]['lr'] = 1e-5
+        print('Decrease decoder learning rate to 1e-5!’)
+torch.save(model, './best_model.pth')
+print('Model saved!')
+วิธีการใช้งาน Segmentation Models
+--- page 95 ---
+5. การทดสอบและวัดผลโมเดล
+ในการการทดสอบและวัดผลโมเดล สามารถใช้ฟังก์ชัน
+สําเร็จรูปจากชุดคําสั่งเช่นเดียวกับขั้นตอนก่อนหน้า โดยรับ
+อาร์กิวเมนต์เป็นรายละเอียดของการทดสอบ และการ 
+Metric ต่าง ๆ และ Dataloader ที่สร้างมาจากชุดข้อมูล
+ทดสอบ
+transform = transforms.Compose([
+    transforms.ToImage(),
+    transforms.ToDtype(torch.float32, scale=True),
+    ])
+DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+best_model = torch.load('./best_model.pth')
+img_dir = './RetinaBloodVessel/test/image'
+mask_dir = './RetinaBloodVessel/test/mask'
+test_dataset = CustomImageDataset(img_dir, mask_dir, transform=transform)
+test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=1, 
+shuffle=False, num_workers=0)
+loss = utils.losses.DiceLoss()
+metrics = [
+    utils.metrics.IoU(threshold=0.5),
+]
+# evaluate model on test set
+test_epoch = smp.utils.train.ValidEpoch(
+    model=best_model,
+    loss=loss,
+    metrics=metrics,
+    device=DEVICE
+)
+logs = test_epoch.run(test_dataloader)
+วิธีการใช้งาน Segmentation Models
+--- page 96 ---
+import torch
+# load best saved checkpoint
+best_model = torch.load('./best_model.pth’)
+transform = transforms.Compose([
+    transforms.ToImage(),
+    transforms.ToDtype(torch.float32, scale=True)
+    ])
+img_path = './RetinaBloodVessel/train/image/0.png'
+image = Image.open(img_path).convert('RGB')
+image = transform(image)
+image = image.unsqueeze(0)
+predict_mask = best_model.predict(image)
+image = image.squeeze().numpy()
+predict_mask = predict_mask.squeeze(0).numpy()
+predict_mask = predict_mask.transpose(1, 2, 0)
+# Then save predict_mask or visualize
+xxx
+วิธีการใช้งาน Segmentation Models
+ตัวอย่างโปรแกรมเรียกใช้งานแบบจําลอง

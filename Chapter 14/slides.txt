@@ -1,0 +1,3044 @@
+##### 6ad161586b5bafb530cd5298.pdf (124 pages)
+--- page 1 ---
+CHAPTER 14
+EVALUATION
+METRICS
+METRICS
+METRICS
+Advisor Asst. Prof. Dr. Taravichet Titijaroonroj
+Information Technology | KMITL
+Presented by
+Pitawas Narongsak
+Janya Onpans
+Witchaya Chimsa
+Chetsadaporn Traivinidsreesuk
+Chinnatip Taemkaeo
+1
+--- page 2 ---
+Topics
+Classification
+Video Processing
+Image Segmentation
+Object Detection
+Regression
+Retrieval-Augmented Generation (RAG)
+1
+2
+3
+4
+5
+6
+2
+--- page 3 ---
+Classification
+3
+--- page 4 ---
+Confusion Matrix
+ตารางสรุปผลการทํานายเปรียบเทียบกับค่าจริง (Actual vs. Predicted)
+ตัวอย่าง: COVID Classification
+Positive = ผู้ปdวยทีcติดโควิด
+Negative = ผู้ปdวยทีcไม่ติดโควิด
+TP = โมเดลทำนายว่า เป็น โควิด และผู้ป่วย เป็น จริง
+TN = โมเดลทำนายว่า ไม่เป็น โควิด และผู้ป่วย ไม่เป็น จริง
+FP = โมเดลทำนายว่า ติด โควิด แต่จริง ๆ ไม่เป็น 
+FN = โมเดลทำนายว่า ไม่เป็น โควิด แต่จริง ๆ เป็น 
+True Positive
+(TP)
+False Negative
+(FN)
+True Negative
+(TN)
+False Positive
+(FP)
+Predicted Value
+Actual Value
+ป่วยโควิด
+ไม่ปdวยโควิด
+ไม่ปdวยโควิด
+ป่วยโควิด
+4
+--- page 5 ---
+80
+True Positive
+(TP)
+Confusion Matrix
+ตารางสรุปผลการทํานายเปรียบเทียบกับค่าจริง (Actual vs. Predicted)
+20
+False Negative
+(FN)
+885
+True Negative
+(TN)
+15
+False Positive
+(FP)
+Predicted Value
+Actual Value
+ประโยชน์ของ Confusion Matrix
+แสดงผลการทำนายอย่างละเอียด
+เป็นพืfนฐานของตัวชีfวัดประสิทธิภาพ
+Accuracy
+Precision
+Recall
+ช่วยวิเคราะห์ประเภทของความผิดพลาด
+ป่วยโควิด
+ไม่ปdวยโควิด
+ไม่ปdวยโควิด
+ป่วยโควิด
+5
+--- page 6 ---
+100
+Confusion Matrix
+ตารางสรุปผลการทํานายเปรียบเทียบกับค่าจริง (Actual vs. Predicted)
+0
+70
+0
+0
+0
+50
+30
+50
+หมา
+แมว
+เสือ
+หมา
+แมว
+เสือ
+Predicted Value
+Actual Value
+6
+--- page 7 ---
+True Positive
+(TP)
+False Negative
+(FN)
+True Negative
+(TN)
+False Positive
+(FP)
+Accuracy
+โมเดลทำนายถูกต้องกีcเปอร์เซ็นต์ของข้อมูลทัfงหมด
+Predicted Value
+Actual Value
+Accuracy 
+สัดส่วนของจำนวนตัวอย่างที่โมเดลทำนายได้ถูกต้องทั้งหมด
+เมื่อเทียบกับจํานวนตัวอย่างทัfงหมด
+มักมีค่าอยู่ในช่วง 0 ถึง 1
+Accuracy สูง หมายความว่าโมเดลทํานายถูกต้องโดยรวมเปqนสัดส่วนสูง
+Accuracy ต่ำ หมายความว่าโมเดลทํานายผิดพลาดจํานวนมาก
+7
+--- page 8 ---
+0
+True Positive
+(TP)
+100
+False Negative
+(FN)
+900
+True Negative
+(TN)
+0
+False Positive
+(FP)
+Accuracy
+ปัญหาของ Accuracy เมืcอข้อมูล Imbalanced
+Predicted Value
+Actual Value
+ป่วยโควิด
+ไม่ปdวยโควิด
+ไม่ปdวยโควิด
+ป่วยโควิด
+ตัวอย่าง: COVID Classification
+ตัวอย่างข้อมูลผู้ป่วย 1000 คน 
+ป่วยโควิด - 100 คน
+ไม่ป่วยโควิด - 900 คน (Imbalanced)
+8
+--- page 9 ---
+True Positive
+(TP)
+False Negative
+(FN)
+True Negative
+(TN)
+False Positive
+(FP)
+Recall
+จากเคสที่เปqน Positive ทัfงหมด โมเดลสามารถตรวจพบได้ครบไหม
+Predicted Value
+Actual Value
+Recall
+สัดส่วนของตัวอย่างที่เป็น Positive จริง ซึ่งโมเดลสามารถ
+ตรวจพบได้ถูกต้อง หรือ ความสามารถในการตรวจพบผลบวก
+ทั้งหมด
+มักมีค่าอยู่ในช่วง 0 ถึง 1
+Recall สูง
+โมเดลสามารถตรวจพบตัวอย่าง Positive ครบถ้วน
+โอกาสพลาดเคสสำคัญตํcา
+มี False Negative (FN) น้อย
+Recall ต่ำ 
+โมเดลตรวจพบ Positive ได้ไม่ครบ
+โมเดลพลาดตัวอย่างทีcควรตรวจพบ
+มี False Negative (FN) จํานวนมาก
+9
+--- page 10 ---
+Recall
+ตัวอย่างงานทีcให้ความสําคัญกับ Recall
+Malware Detection
+Defect Detection
+Medical Screening
+10
+--- page 11 ---
+True Positive
+(TP)
+False Negative
+(FN)
+True Negative
+(TN)
+False Positive
+(FP)
+Precision
+เมื่อโมเดลบอกว่าเปqน Positive มีโอกาสถูกต้องกีcเปอร์เซ็นต์
+Predicted Value
+Actual Value
+Precision
+สัดส่วนของตัวอย่างที่โมเดลทำนายว่าเป็น Positive แล้วเป็น
+Positive จริง หรือ ความน่าเชื่อถือของการทำนายผลบวก 
+มักมีค่าอยู่ในช่วง 0 ถึง 1
+Precision สูง
+โมเดลทำนายว่าเป็น Positive ได้อย่างแม่นยำ 
+โมเดลมีความน่าเชืcอถือสูง
+มี False Positive (FP) น้อย
+Precision ต่ำ 
+โมเดลทำนายว่าเปqน Positive บ่อยเกินจริง
+โมเดลมีการทํานายผิดจํานวนมาก
+มี False Positive (FP) จํานวนมาก
+11
+--- page 12 ---
+Precision
+ตัวอย่างงานทีcให้ความสําคัญกับ Precision
+Email Spam Detection
+Face Recognition
+Medical Confirmatory
+Test
+12
+--- page 13 ---
+True Positive
+(TP)
+False Negative
+(FN)
+True Negative
+(TN)
+False Positive
+(FP)
+F1 Score
+โมเดลมีความสมดุลระหว่าง Precision และ Recall มากน้อยแค่ไหน
+Predicted Value
+Actual Value
+F1 Score
+ค่าเฉลีcยแบบ Harmonic Mean ของ Precision และ Recall
+มักมีค่าอยู่ในช่วง 0 ถึง 1
+F1 Score สูง
+โมเดลมี Precision และ Recall ดีทัfงคู่
+โมเดลสามารถทำนาย Positive ได้อย่างแม่นยําและครบถ้วน
+มีทัfง False Positive (FP) และ False Negative (FN) ในระดับตํcา
+F1 Score ต่ำ 
+อย่างน้อยหนึ่งในสองตัวชีfวัด (Precision หรือ Recall) มีค่าตํcา
+ประสิทธิภาพโดยรวมของโมเดลยังไม่สมดุล
+มีทัfง False Positive (FP) และ False Negative (FN) สูง
+13
+--- page 14 ---
+F1 Score
+ตัวอย่างงานทีcให้ความสําคัญกับ F1 Score
+Medical
+Recall ต้องสูง
+ลดการพลาดผู้ปdวย
+เพิ่มโอกาสรักษาได้ทันท่วงที
+ลดความรุนแรงของโรคในระยะยาว
+ลดความเสี่ยงต่อการเสียชีวิต
+Precision ต้องสูง
+ลดการวินิจฉัยผิด
+ได้การรักษาโดยไม่จําเปqน
+คนไข้เกิดความเครียดและความกังวล
+ลดต้นทุนและใช้ทรัพยากรทางการแพทย์
+14
+--- page 15 ---
+ROC Curve (Receiver Operating Characteristic Curve)
+โมเดลสามารถแยกตัวอย่าง Positive ออกจาก Negative ได้ดีแค่ไหน
+image source: https://commons.wikimedia.org/w/index.php?curid=109730045
+ROC Curve
+กราฟที่ใช้ประเมินประสิทธิภาพของโมเดล Classification โดยแสดง
+ความสัมพันธ์ระหว่าง True Positive Rate (TPR) และ False
+Positive Rate (FPR) เมื่อปรับค่า Threshold ของโมเดล
+ลักษณะกราฟ ROC Curve ทีcดี
+เส้นอยู่ใกล้มุมซ้ายบน
+TPR สูง FPR ตํcา
+15
+--- page 16 ---
+AUC (Area Under the Curve)
+โมเดลสามารถแยกตัวอย่าง Positive ออกจาก Negative ได้ดีแค่ไหน
+AUC (Area Under the Curve) 
+พื้นที่ใต้เส้น ROC Curve และใช้วัดว่าโมเดลสามารถ แยกกลุ่ม
+Positive กับ Negative ได้ดีแค่ไหน
+ความหมายของ AUC
+ค่า AUC เข้าใกล้ 1 หมายถึงแบบจําลองแยกได้ดีมาก
+ค่า AUC เท่ากับ 0.5 หมายถึงแยกไม่ได้ ดีกว่าการสุ่มไม่มาก
+ค่า AUC ตํcากว่า 0.5 หมายถึงแบบจําลองแยกผิดทิศทาง
+16
+--- page 17 ---
+Object Detection
+17
+--- page 18 ---
+Object Detection
+ผลลัพธ์ทีcได้จาก Object Detection ประกอบด้วย
+Object Detection คือ กระบวนการระบุตำแหน่งของวัตถุที่สนใจภายในภาพโดยประมาณ พร้อมทั้งจำแนก
+ประเภทของวัตถุนัfน
+Bounding Box แสดงตำแหน่งของวัตถุ
+Class Label ระบุประเภทของวัตถุ
+Confidence Score แสดงระดับความมัcนใจของโมเดล
+dog 0.98
+cat 0.85
+18
+--- page 19 ---
+Class
+x
+y
+w
+h
+Cat
+5
+40
+160
+300
+Dog
+140
+180
+280
+220
+Ground Truth ของ Object Detection
+Ground Truth ของ  Object Detection ประกอบด้วย
+Bounding Box
+Class Label
+ตัวอย่าง กำหนด Bounding Box แบบ Top-left and Width/Height 
+5,40
+140,180
+w=160
+w=280
+h=220
+h=300
+Bounding Box มีรูปแบบการกําหนดพิกัดได้หลายแบบ
+Corner coordinates 
+กำหนดพิกัดมุมซ้ายบนและมุมขวาล่าง
+Center and Width/Height 
+กำหนดพิกัดจุดกึcงกลาง, ความกว้าง และความสูง
+Top-left and Width/Height 
+กำหนดพิกัดมุมซ้ายบน, ความกว้าง และความสูง
+19
+--- page 20 ---
+Evaluation Metrics สำหรับ Object Detection
+Intersection over Union (IoU)
+TP, FP, FN, and TN
+Precision
+Recall
+F1-Score
+Average Precision (AP)
+Mean Average Precision (mAP)
+20
+--- page 21 ---
+Intersection over Union (IoU)
+IoU ใช้วัดความซ้อนทับระหว่าง Bounding Box ที่โมเดลทำนาย
+(Prediction) และ Bounding Box จริง (Ground Truth)
+ตัวอย่าง
+Area of Overlap = 85 pixel
+Area of Union = 100 pixel
+กำหนด IoU Threshold เปqนเกณฑ์ในการตัดสิน
+ถ้า IoU ≥ 0.5 (หรือค่า Threshold ที่กำหนด) และทำนายคลาสถูก → ถือว่าตรวจจับถูกต้อง
+ถ้า IoU ต่ำกว่า Threshold → ถือว่าตรวจจับไม่ถูกต้อง
+Predicted
+Ground Truth
+IoU มีค่าอยู่ในช่วง 0 ถึง 1 โดย ค่ายิ่งสูงยิ่งดี แสดงว่าโมเดลสามารถระบุ
+ตำแหน่งของวัตถุได้อย่างแม่นยํา
+21
+--- page 22 ---
+TP, FP, FN, and TN
+TP (True Positive):
+ทำนายพบวัตถุ ถูกคลาส
+และ IoU ≥ Threshold
+FP (False Positive):
+ทำนายพบวัตถุ แต่คลาสผิด
+หรือ IoU < Threshold หรือไม่มีวัตถุจริง
+FN (False Negative):
+มีวัตถุจริง แต่โมเดลตรวจไม่พบ
+True Negative (TN):
+ไม่มีวัตถุจริง และโมเดลก็ไม่ได้ตรวจพบ
+วัตถุในบริเวณนั้น แต่มักไม่นำ TN มาใช้
+เพราะจำนวนพื้นที่ที่ไม่มีวัตถุมีมากและไม่
+สามารถกำหนดได้ชัดเจน
+22
+--- page 23 ---
+Precision
+Precision ใช้วัดความแม่นยํา โดยพิจารณาจากวัตถุทีcโมเดลตรวจพบทัfงหมด มีจํานวนเท่าใดทีcตรวจพบถูกต้อง
+ตัวอย่าง โมเดลตรวจพบ bird 12 ตัว
+ถูกต้อง 10 ตัว
+ผิด 2 ตัว
+มีค่าอยู่ในช่วง 0 ถึง 1 ค่าสูงแสดงว่า Bounding Box ทีcโมเดลตรวจพบส่วนใหญ่ถูกต้อง
+23
+--- page 24 ---
+Recall
+Recall ใช้วัดความสามารถในการตรวจพบวัตถุ โดยพิจารณาจากวัตถุจริงทัfงหมด โมเดลสามารถตรวจพบได้กีcตัว
+ตัวอย่าง มี bird จริงทัfงหมด 15 ตัว
+ตรวจพบถูกต้อง 10 ตัว
+พลาดหรือไม่พบ 5 ตัว
+มีค่าอยู่ในช่วง 0 ถึง 1 ค่าสูงแสดงว่า โมเดลสามารถตรวจพบวัตถุจริงได้ครบถ้วน
+24
+--- page 25 ---
+F1-Score
+F1-Score เป็นค่าเฉลี่ยแบบ Harmonic Mean ของ Precision และ Recall ใช้สำหรับวัดสมดุลระหว่างความแม่นยำ (Precision) และ
+ความสามารถในการตรวจพบวัตถุ (Recall)
+ตัวอย่าง
+Precision = 0.833
+Recall = 0.667
+มีค่าอยู่ในช่วง 0 ถึง 1 ค่าสูงแสดงว่าโมเดลมีความสมดุลระหว่างการตรวจจับได้ถูกต้องและการตรวจจับได้ครบถ้วน
+หรือ
+25
+--- page 26 ---
+เมื่อต้องการวัดว่าโมเดลมีประสิทธิภาพอย่างไรภายใต้ Confidence Threshold ทีcแตกต่างกัน
+Average Precision (AP) พิจารณาทั้ง Precision และ Recall พร้อมกัน โดยคำนวณจากผลการตรวจจับเมื่อ
+เปลี่ยนค่า Confidence Threshold หลาย ๆ ค่า
+AP คือ พื้นที่ใต้กราฟ Precision–Recall Curve ที่ใช้ประเมินประสิทธิภาพของโมเดล Object Detection
+สำหรับวัตถุหนึ่งคลาส 
+Precision
+Recall
+1
+1
+AP
+Average Precision (AP)
+มีค่าอยู่ในช่วง 0 ถึง 1 ยิ่งค่าสูงแสดงว่าสามารถรักษาทั้ง
+Precision และ Recall ให้อยู่ในระดับสูงได้ดี
+Confidence Threshold
+26
+--- page 27 ---
+Confidence
+Threshold
+TP
+FP
+FN
+Precision
+Recall
+≥ 0.95
+2
+0
+18
+1.00
+0.10
+≥ 0.90
+4
+0
+16
+1.00
+0.20
+≥ 0.85
+6
+1
+14
+0.86
+0.30
+≥ 0.80
+8
+2
+12
+0.80
+0.40
+≥ 0.75
+10
+3
+10
+0.77
+0.50
+≥ 0.70
+12
+5
+8
+0.71
+0.60
+≥ 0.65
+14
+7
+6
+0.67
+0.70
+≥ 0.60
+16
+10
+4
+0.62
+0.80
+≥ 0.50
+18
+14
+2
+0.56
+0.90
+≥ 0.40
+20
+20
+0
+0.50
+1.00
+Average Precision (AP)
+ตัวอย่าง กำหนดให้มี bird จริงทัfงหมด 20 ตัว
+27
+--- page 28 ---
+Class
+AP
+Bird
+0.773
+Car
+0.883
+Dog
+0.842
+Mean Average Precision (mAP)
+Mean Average Precision (mAP) คือ ค่าเฉลีcยของ AP ทุกคลาส
+ตัวอย่าง
+คำนวณ AP แยกแต่ละคลาส และหาค่าเฉลีcย
+28
+--- page 29 ---
+Image Segmentation
+29
+--- page 30 ---
+Image Segmentation
+Image Segmentation คือ การจำแนกหรือกำหนดคลาสให้แต่ละ Pixel ในภาพ เพื่อให้สามารถระบุรูปร่างและขอบเขตของวัตถุได้
+อย่างละเอียด
+ผลลัพธ์ที่ได้จาก Image Segmeatation คือ Pixel Mask 
+Pixel Mask คือการกำหนด Label ให้กับแต่ละ
+Pixel เพื่อบอกว่า Pixel นัfนเปqนของคลาสอะไร
+ตำแหน่งของแต่ละ Pixel ใน Mask จะสอดคล้องกับ
+ตำแหน่งในภาพต้นฉบับ
+30
+--- page 31 ---
+Label Setting
+หลักการ
+ตัวอย่าง
+Binary Segmentation
+แบ่ง Pixel เปqน 2 คลาส 
+เช่น Object / Background
+Multi-class Segmentation
+มีหลายคลาส และแต่ละ Pixel 
+เปqนได้เพียง 1 คลาส
+Multi-label Segmentation
+แต่ละ Pixel สามารถมีได้ มากกว่า 1 คลาส
+พร้อมกัน
+Label Settings in Image Segmentation
+*Multi-label Evaluation: ประเมินแต่ละคลาสแยกกันแบบ Binary Segmentation
+31
+--- page 32 ---
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+1
+0
+0
+0
+0
+0
+0
+0
+1
+1
+1
+0
+0
+0
+0
+0
+0
+0
+1
+1
+1
+2
+2
+2
+2
+0
+0
+0
+1
+1
+1
+2
+2
+2
+2
+0
+0
+1
+1
+1
+1
+2
+2
+2
+2
+2
+0
+1
+1
+1
+1
+2
+2
+2
+2
+2
+1
+1
+1
+1
+0
+0
+2
+0
+2
+2
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+Ground Truth ของ Image Segmentation
+Ground Truth ของ Segmentation เรียกว่า Pixel Mask ทุกพิกเซลจะถูกกําหนดคลาส
+ตัวอย่าง Multi-class Segmentation
+0: background
+1: cat
+2: dog
+32
+--- page 33 ---
+Evaluation Metrics สำหรับ Image Segmentation
+TP, FP, FN, and TN
+Pixel Accuracy
+Intersection over Union (IoU)
+Precision
+Recall
+F1-Score
+ตัวอย่าง
+Binary Segmentation
+Multi-class Segmentation
+33
+--- page 34 ---
+Metric
+ความหมาย
+True Positive (TP)
+พิกเซลทีcเปqน วัตถุจริง (Ground Truth) และโมเดลทํานายว่าเปqน วัตถุ ได้
+False Positive (FP)
+พิกเซลทีcเปqน พืfนหลังจริง แต่โมเดลทํานายว่าเปqน วัตถุ
+False Negative (FN)
+พิกเซลทีcเปqน วัตถุจริง แต่โมเดลทํานายว่าเปqน พืfนหลัง
+True Negative (TN)
+พิกเซลทีcเปqน พืfนหลังจริง และโมเดลทํานายว่าเปqน พืfนหลัง ได้ถูกต้อง
+TP, FP, FN, and TN
+34
+--- page 35 ---
+Metric
+สมการ
+ความหมาย
+Pixel Accuracy
+Pixel ทัfงหมด โมเดลทํานายถูกมีสัดส่วนเท่าไร
+Precision
+Pixel ทีcโมเดลทํานายว่าเปqนวัตถุ มีสัดส่วนทีcถูกต้องเท่าไร
+Recall
+Pixel ของวัตถุจริง โมเดลสามารถตรวจพบได้ครบแค่ไหน
+F1-score
+วัดความสมดุลระหว่าง Precision และ Recall
+IoU
+วัดความซ้อนทับระหว่าง Prediction และ Ground Truth
+Evaluation Metrics
+โดย Metrics เหล่านีfมีค่าอยู่ในช่วง 0 ถึง 1 ค่ายิcงสูง แสดงว่าโมเดลมีประสิทธิภาพในการ Segmentation ทีcดีขึfน
+35
+--- page 36 ---
+1
+1
+0
+0
+1
+1
+1
+0
+0
+1
+1
+0
+0
+0
+0
+0
+1
+0
+0
+0
+1
+1
+1
+0
+0
+1
+0
+0
+0
+0
+1
+0
+1
+0
+1
+TP
+FN
+0
+FP
+TN
+Binary Segmentation
+Ground Truth
+(Actual)
+Prediction
+1 = Object (Cat)
+0 = Background
+Predicted
+Ground Truth
+ตัวอย่าง 
+Confusion Matrix
+36
+--- page 37 ---
+1
+1
+0
+0
+1
+1
+1
+0
+0
+1
+1
+0
+0
+0
+0
+0
+1
+0
+0
+0
+1
+1
+1
+0
+0
+1
+0
+0
+0
+0
+1
+0
+1
+0
+1
+TP=5
+FN
+0
+FP
+TN
+Ground Truth
+(Actual)
+Prediction
+Predicted
+Ground Truth
+ตัวอย่าง 
+1 = Object (Cat)
+0 = Background
+Confusion Matrix
+Binary Segmentation
+37
+--- page 38 ---
+1
+1
+0
+0
+1
+1
+1
+0
+0
+1
+1
+0
+0
+0
+0
+0
+1
+0
+0
+0
+1
+1
+1
+0
+0
+1
+0
+0
+0
+0
+1
+0
+1
+0
+1
+TP=5
+FN=2
+0
+FP
+TN
+Ground Truth
+(Actual)
+Prediction
+Predicted
+Ground Truth
+ตัวอย่าง 
+1 = Object (Cat)
+0 = Background
+Confusion Matrix
+Binary Segmentation
+38
+--- page 39 ---
+1
+1
+0
+0
+1
+1
+1
+0
+0
+1
+1
+0
+0
+0
+0
+0
+1
+0
+0
+0
+1
+1
+1
+0
+0
+1
+0
+0
+0
+0
+1
+0
+1
+0
+1
+TP=5
+FN=2
+0
+FP=1
+TN
+Ground Truth
+(Actual)
+Prediction
+Predicted
+Ground Truth
+ตัวอย่าง 
+1 = Object (Cat)
+0 = Background
+Confusion Matrix
+Binary Segmentation
+39
+--- page 40 ---
+1
+1
+0
+0
+1
+1
+1
+0
+0
+1
+1
+0
+0
+0
+0
+0
+1
+0
+0
+0
+1
+1
+1
+0
+0
+1
+0
+0
+0
+0
+1
+0
+1
+0
+1
+TP=5
+FN=2
+0
+FP=1
+TN=8
+Ground Truth
+(Actual)
+Prediction
+Predicted
+Ground Truth
+ตัวอย่าง 
+1 = Object (Cat)
+0 = Background
+Confusion Matrix
+Binary Segmentation
+40
+--- page 41 ---
+1
+0
+1
+TP=5
+FN=2
+0
+FP=1
+TN=8
+Predicted
+Ground Truth
+1
+1
+0
+0
+1
+1
+1
+0
+0
+1
+1
+0
+0
+0
+0
+0
+1
+0
+0
+0
+1
+1
+1
+0
+0
+1
+0
+0
+0
+0
+1
+0
+Ground Truth
+(Actual)
+Prediction
+Binary Segmentation
+41
+--- page 42 ---
+Multi-class Segmentation
+Predicted
+Ground Truth
+คำนวณ TP, FP, FN และ TN แยกสำหรับแต่ละคลาสแบบ One-vs-All 
+จากนั้นจึงหาค่าเฉลี่ยของแต่ละ Metric เช่น Mean Precision, Mean Recall, Mean F1-score, และ Mean IoU 
+42
+--- page 43 ---
+Multi-class Segmentation
+1
+1
+0
+1
+2
+2
+0
+0
+2
+1
+0
+0
+1
+2
+0
+0
+2
+2
+0
+1
+2
+0
+2
+0
+1
+1
+1
+2
+0
+2
+1
+0
+2
+Ground Truth
+(Actual)
+Prediction
+0 = Background
+1 = Cat
+2 = Dog
+Predicted
+Ground Truth
+ตัวอย่าง 
+Confusion Matrix
+43
+--- page 44 ---
+0
+1
+2
+0
+2
+0
+1
+1
+1
+2
+0
+2
+1
+0
+2
+TP=2
+FN=1
+FP=2
+TN=4
+Multi-class Segmentation
+Predicted
+Ground Truth
+ตัวอย่าง Confusion Matrix ของคลาส Background (0) 
+Confusion Matrix
+Confusion Matrix ของคลาส Background (0)
+Background
+Non-Background
+Background
+Non-Background
+44
+--- page 45 ---
+0
+1
+2
+0
+2
+0
+1
+1
+1
+2
+0
+2
+1
+0
+2
+TP=2
+FN=1
+FP=0
+TN=6
+Multi-class Segmentation
+Predicted
+Ground Truth
+ตัวอย่าง Confusion Matrix ของคลาส Cat (1) 
+Confusion Matrix
+Confusion Matrix ของคลาส Cat (1)
+Cat
+Non-Cat
+Cat
+Non-Cat
+45
+--- page 46 ---
+0
+1
+2
+0
+2
+0
+1
+1
+1
+2
+0
+2
+1
+0
+2
+TP=2
+FN=1
+FP=1
+TN=5
+Multi-class Segmentation
+Predicted
+Ground Truth
+ตัวอย่าง Confusion Matrix ของคลาส Dog (2) 
+Confusion Matrix
+Confusion Matrix ของคลาส Dog (2)
+Dog
+Non-Dog
+Dog
+Non-Dog
+46
+--- page 47 ---
+Multi-class Segmentation
+1
+1
+0
+1
+2
+2
+0
+0
+2
+1
+0
+0
+1
+2
+0
+0
+2
+2
+Ground Truth
+(Actual)
+Prediction
+0 = Background
+1 = Cat
+2 = Dog
+ตัวอย่าง 
+47
+--- page 48 ---
+Class
+TP
+FP
+FN
+IoU
+Precision
+Recall
+F1-Score
+Background
+2
+2
+1
+0.400
+0.500
+0.667
+0.571
+Cat
+2
+0
+1
+0.667
+1.000
+0.667
+0.800
+Dog
+2
+1
+1
+0.500
+0.667
+0.667
+0.667
+Metric
+Value
+Pixel Accuracy
+0.667
+mIoU
+0.522
+mPrecision
+0.722
+mRecall
+0.667
+mF1-Score
+0.679
+ตารางผลแต่ละคลาส
+ตารางสรุปค่าเฉลีcย
+Multi-class Segmentation
+48
+--- page 49 ---
+Video Processing
+49
+--- page 50 ---
+จากงานภาพสู่งานวิดีโอ
+source: https://www.superannotate.com/blog/image-segmentation-for-machine-learning
+คำถามต่างกัน → Ground truth และ Output ต่างกัน
+Image Classification
+ภาพนี้คือภาพอะไร?
+Image Segmentation
+แต่ละพิกเซลคืออะไร?
+Object Detection
+วัตถุอะไรและอยู่ตรงไหน?
+1 ภาพ → 1 คลาส
+คลาสของวัตถุ + ตําแหน่ง
+ทุกพิกเซล → 1 คลาส
+50
+--- page 51 ---
+เวลา
+1 เฟรม
+จํานวนข้อมูล
+หลายเฟรม
+ไม่มี
+เวลา
+มี
+ไม่สําคัญ
+ลําดับ
+สําคัญ
+Spatial
+บริบท
+Spatial + Temporal
+ระดับภาพ / พิกเซล / วัตถุ
+ผลลัพธ์
+ระดับคลิปวิดีโอ / เฟรม / ช่วงเวลา
+ภาพ
+วิดีโอ
+ความแตกต่างของภาพและวิดีโอ
+51
+--- page 52 ---
+กำลังนัcงลง
+เวลา
+1
+2
+3
+4
+5
+6
+กำลังลุกขึfน
+เวลา
+1
+2
+3
+4
+5
+6
+ภาพ
+วิดีโอ
+ความแตกต่างของภาพและวิดีโอ
+52
+--- page 53 ---
+Video Classification
+Temporal Action Segmentation
+Temporal Action Localization
+ประเภทของงานวิดีโอ
+Regression
+53
+--- page 54 ---
+กำหนดกรอบ (bounding box) ให้ทุกวัตถุในภาพ
+เวลา
+...
+Object Detection
+กำหนดช่วงเวลาของแต่ละการกระทํา (ช่วงบน timeline) ไม่จําเปqนต้อง label ทุกเฟรม
+นักเตะ
+นักเตะ
+ผู้รักษาประตู
+ลูกบอล
+ผลลัพธ์
+...
+Temporal Action Localization
+ยิงประตู
+ทำฟาวล์
+VS
+ผลลัพธ์ : ช่วงเวลาของแต่ละการกระทํา
+ยิงประตู
+[00:01:15 – 00:01:20]
+0.87
+[00:02:42 – 00:02:48]
+0.92
+ทำฟาวล์
+การกระทำ | ช่วงเวลา [เริ่ม-จบ] | ค่าความมัcนใจ
+เวลา
+เวลา
+เตรียมอาหาร
+หั่น
+ทำอาหาร
+จัดจาาน
+VS
+กำหนด label ให้ทุกพิกเซลในภาพ
+Image Segmentation
+กำหนด label ให้ทุกตำแหน่งเวลา (ทุกเฟรม) 
+Temporal Action Segmentation
+กำหนด label ให้พิกเซล
+ถนน
+อาคาร
+ต้นไม้
+ท้องฟgา
+ทางเท้า
+รถ
+...
+ผลลัพธ์ : label ทุกเฟรม
+งานภาพ + เวลา = มุมมองของงานวิดีโอ
+เวลา
+Image Classification
+กำหนด label ให้ภาพเดียว
+ผลลัพธ์
+ว่ายนํfา
+(label เดียว)
+Video Classification
+รับข้อมูลหลายเฟรม และกําหนด label เดียวให้ทัfงวิดีโอ
+ผลลัพธ์
+ว่ายนํfา
+(label เดียว)
+...
+VS
+54
+--- page 55 ---
+Goal
+Video Classification
+จำแนกว่าวิดีโอทัfงคลิปคือคลาสอะไร
+Input
+Ground Truth
+วิดีโอ/คลิปหนึcงคลิป โดยมักเปqน trimmed clip หรือคลิปทีcมีเนืfอหาหลักชัดเจน
+1 class label ต่อ 1 คลิป เช่น  ว่ายนํfา, ยิงธนู, วิcง เปqนต้น
+เวลา
+ผลลัพธ์
+ว่ายนํfา
+(label เดียว)
+...
+Focus
+ทั้งคลิปวิดีโอ
+55
+--- page 56 ---
+Evaluate
+Metrics
+Evaluation Metrics สำหรับ Video Classification
+ทำนาย คลาสของทัfงวิดีโอ ถูกต้องหรือไม่
+Accuracy - สัดส่วนวิดีโอทีcทํานายคลาสได้ถูกต้องจากทัfงหมด
+ตัวอย่าง จากวิดีโอทัfงหมด 20 วิดีโอ
+TP = 8 : เป็น ว่ายนํfา และโมเดลทาย ว่ายนํfา
+FP = 2 : ไม่ใช่ ว่ายนํfา แต่โมเดลทาย ว่ายนํfา
+FN = 1 : เป็น ว่ายนํfา แต่โมเดลทายเปqนคลาสอืcน
+TN = 9 : ไม่ใช่ ว่ายนํfา และโมเดลไม่ทาย ว่ายนํfา
+มักมีช่วงค่าอยู่ในช่วง 0-1
+ค่าสูง: ทายถูกโดยรวมมาก
+ค่าต่ำ: ทายผิดโดยรวมมาก
+56
+--- page 57 ---
+Evaluate
+Metrics
+Evaluation Metrics สำหรับ Video Classification
+ทำนาย คลาสของทัfงวิดีโอ ถูกต้องหรือไม่
+Precision - จากที่โมเดลทำนายว่าเป็นคลาสนั้น มีจำนวนที่ถูกจริงเท่าไร
+                   - สิ่งทีcโมเดลทํานายออกมา เชืcอถือได้แค่ไหน
+ตัวอย่าง จากวิดีโอทัfงหมด 20 วิดีโอ
+TP = 8 : เป็น ว่ายนํfา และโมเดลทาย ว่ายนํfา
+FP = 2 : ไม่ใช่ ว่ายนํfา แต่โมเดลทาย ว่ายนํfา
+FN = 1 : เป็น ว่ายนํfา แต่โมเดลทายเปqนคลาสอืcน
+TN = 9 : ไม่ใช่ ว่ายนํfา และโมเดลไม่ทาย ว่ายนํfา
+มักมีช่วงค่าอยู่ในช่วง 0-1
+ค่าสูง: False alarm หรือ FP น้อย
+ค่าตํcา: โมเดลทํานายผิดเปqน Positive มาก
+57
+--- page 58 ---
+Evaluate
+Metrics
+Evaluation Metrics สำหรับ Video Classification
+ทำนาย คลาสของทัfงวิดีโอ ถูกต้องหรือไม่
+Recall - จากตัวอย่างของคลาสนัfนทีcมีอยู่จริง โมเดลสามารถหาเจอได้เท่าไร
+ตัวอย่าง จากวิดีโอทัfงหมด 20 วิดีโอ
+TP = 8 : เป็น ว่ายนํfา และโมเดลทาย ว่ายนํfา
+FP = 2 : ไม่ใช่ ว่ายนํfา แต่โมเดลทาย ว่ายนํfา
+FN = 1 : เป็น ว่ายนํfา แต่โมเดลทายเปqนคลาสอืcน
+TN = 9 : ไม่ใช่ ว่ายนํfา และโมเดลไม่ทาย ว่ายนํfา
+มักมีช่วงค่าอยู่ในช่วง 0-1
+ค่าสูง: หา Positive จริงได้ครบ
+ค่าตํcา: มี Positive จริงจํานวนมากทีcโมเดลหาไม่เจอ
+58
+--- page 59 ---
+Evaluate
+Metrics
+Evaluation Metrics สำหรับ Video Classification
+ทำนาย คลาสของทัfงวิดีโอ ถูกต้องหรือไม่
+F1-Score - ค่า Harmonic Mean ของ Precision และ Recall เพืcอดูความสมดุลของทัfงสองค่า
+มักมีช่วงค่าอยู่ในช่วง 0-1
+ค่าสูง: Precision และ Recall ดีทัfงคู่
+ค่าตํcา: Precision หรือ Recall อย่างน้อยหนึcงด้านตํcา
+59
+--- page 60 ---
+ตัวอย่างงาน Video Classification 
+จำแนกชนิดกีฬา
+จำแนกกิจกรรมของคน
+จำแนกท่าออกกําลังกาย
+60
+--- page 61 ---
+Temporal Action Segmentation
+Goal
+จำแนกว่าแต่ละช่วงเวลาหรือแต่ละเฟรมของวิดีโอกําลังทํา action อะไร
+Input
+Ground Truth
+วิดีโอยาวแบบ untrimmed ซึcงภายในวิดีโอมีหลาย action ต่อเนืcองกัน
+Action label ทุก frame/time step ตลอดทั้งวิดีโอ เช่น เตรียมอาหาร, หั่น, 
+ทำอาหาร, จัดจาน เปqนต้น
+Focus
+ทุกเฟรม
+เวลา
+เวลา
+เตรียมอาหาร
+หั่น
+ทำอาหาร
+จัดจาาน
+...
+ผลลัพธ์ : label ทุกเฟรม
+61
+--- page 62 ---
+Evaluate
+Metrics
+Frame-wise Accuracy = จำนวนเฟรมทีcทายถูก
+จำนวนเฟรมทัfงหมด
+A
+A
+A
+A
+A
+B
+B
+B
+B
+B
+C
+C
+C
+C
+C
+D
+D
+D
+D
+D
+A
+A
+A
+A
+B
+B
+B
+B
+B
+B
+C
+C
+B
+B
+C
+D
+D
+D
+D
+D
+เฟรม
+Ground Truth
+Prediction
+1
+2
+3
+4
+5
+...
+20
+19
+18
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Frame-wise Accuracy
+เปรียบเทียบว่าแต่ละเฟรมทํานาย action ถูกต้องหรือไม่
+มักมีช่วงค่าอยู่ในช่วง 0-1
+ค่าสูง: ทายถูกรายเฟรมโดยรวมมาก
+ค่าต่ำ: ทายผิดรายเฟรมโดยรวมมาก
+62
+--- page 63 ---
+Evaluate
+Metrics
+A
+A
+A
+A
+A
+B
+B
+B
+B
+B
+C
+C
+C
+C
+C
+D
+D
+D
+D
+D
+A
+A
+A
+A
+B
+B
+B
+B
+B
+B
+C
+C
+B
+B
+C
+D
+D
+D
+D
+D
+เฟรม
+Ground Truth
+Prediction
+1
+2
+3
+4
+5
+...
+20
+19
+18
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Edit score
+วัดความถูกต้องของ ลําดับ action และช่วยสะท้อนปaญหาการแบ่ง action ย่อยมากเกินไป
+ยุบรวม label ทีcซํfาติดกันให้เหลือเปqน หนึcง action segment เพืcอให้เหลือเฉพาะลําดับของ action
+Ground Truth
+Prediction
+A → B → C → D
+A → B → C → B → C → D
+Prediction มี action เกินเข้ามา ทําให้เกิด over-segmentation
+63
+--- page 64 ---
+Evaluate
+Metrics
+A
+A
+A
+A
+A
+B
+B
+B
+B
+B
+C
+C
+C
+C
+C
+D
+D
+D
+D
+D
+A
+A
+A
+A
+B
+B
+B
+B
+B
+B
+C
+C
+B
+B
+C
+D
+D
+D
+D
+D
+เฟรม
+Ground Truth
+Prediction
+1
+2
+3
+4
+5
+...
+20
+19
+18
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Edit score
+วัดความถูกต้องของ ลําดับ action และช่วยสะท้อนปaญหาการแบ่ง action ย่อยมากเกินไป
+คำนวณ Levenshtein distance - คำนวณจำนวนการแก้ไขขั้นต่ำที่ใช้เปลี่ยนลำดับ Prediction ให้เป็น Ground Truth 
+โดยแบ่งเปqนการนับ 3 แบบ:
+Insertion = เพิ่ม action
+Deletion = ลบ action
+Substitution = เปลี่ยน action หนึcงเปqนอีก action หนึcง
+Ground Truth
+Prediction
+A → B → C → D
+A → B → C → B → C → D
+ลบ 2 action segments นี้ออก
+64
+--- page 65 ---
+Evaluate
+Metrics
+A
+A
+A
+A
+A
+B
+B
+B
+B
+B
+C
+C
+C
+C
+C
+D
+D
+D
+D
+D
+A
+A
+A
+A
+B
+B
+B
+B
+B
+B
+C
+C
+B
+B
+C
+D
+D
+D
+D
+D
+เฟรม
+Ground Truth
+Prediction
+1
+2
+3
+4
+5
+...
+20
+19
+18
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Edit score
+วัดความถูกต้องของ ลําดับ action และช่วยสะท้อนปaญหาการแบ่ง action ย่อยมากเกินไป
+นำ Levenshtein distance ไปปรับให้อยู่ในรูปคะแนนความเหมือน โดยหารด้วยความยาวของลําดับทีcยาวกว่า
+D(P, G) คือ Levenshtein distance ระหว่าง predicted action sequence กับ ground-truth sequence
+โดยที่ :
+Npred คือ จำนวน action segments ของ Prediction หลังยุบรวม label
+Ngt คือ จำนวน action segments ของ Ground Truth หลังยุบรวม label
+65
+--- page 66 ---
+Evaluate
+Metrics
+A
+A
+A
+A
+A
+B
+B
+B
+B
+B
+C
+C
+C
+C
+C
+D
+D
+D
+D
+D
+A
+A
+A
+A
+B
+B
+B
+B
+B
+B
+C
+C
+B
+B
+C
+D
+D
+D
+D
+D
+เฟรม
+Ground Truth
+Prediction
+1
+2
+3
+4
+5
+...
+20
+19
+18
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Edit score
+วัดความถูกต้องของ ลําดับ action และช่วยสะท้อนปaญหาการแบ่ง action ย่อยมากเกินไป
+นำ Levenshtein distance ไปปรับให้อยู่ในรูปคะแนนความเหมือน โดยหารด้วยความยาวของลําดับทีcยาวกว่า
+มักมีช่วงค่าอยู่ในช่วง 0-1
+ค่าสูง: ลําดับขัfนตอนใกล้เคียงกับเฉลยและมีการแตก segment เกินน้อย
+ค่าตํcา: action หาย เกิน สลับลําดับ หรือแตกเปqน segment จํานวนมาก
+66
+--- page 67 ---
+Evaluate
+Metrics
+A
+A
+A
+A
+A
+B
+B
+B
+B
+B
+C
+C
+C
+C
+C
+D
+D
+D
+D
+D
+A
+A
+A
+A
+B
+B
+B
+B
+B
+B
+C
+C
+B
+B
+C
+D
+D
+D
+D
+D
+เฟรม
+Ground Truth
+Prediction
+1
+2
+3
+4
+5
+...
+20
+19
+18
+Segments
+Frames
+A
+1-5
+B
+6-10
+C
+11-15
+D
+16-20
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Segmental F1@k
+วัดว่าแต่ละช่วง action ที่ทำนาย ซ้อนทับกับ Ground Truth มากพอหรือไม่ โดยกำหนด IoU threshold (k)
+เช่น 10%, 25% หรือ 50%
+กำหนด segments
+Segments
+Frames
+A
+1-4
+B
+5-10
+C
+11-12
+B
+13-14
+C
+15
+D
+16-20
+GT Segments
+Pred Segments
+67
+--- page 68 ---
+Evaluate
+Metrics
+Pred
+Segments
+Frames
+IoU กับ GT A
+(1-5)
+IoU กับ GT B
+(6-10)
+IoU กับ GT C
+(11-15)
+IoU กับ GT D
+(16-20)
+A
+1-4
+4/5 = 0.80
+0
+0
+0
+B
+5-10
+0
+5/6 = 0.83
+0
+0
+C
+11-12
+0
+0
+2/5 = 0.40
+0
+B
+13-14
+0
+0
+0
+0
+C
+15
+0
+0
+1/5 = 0.20
+0
+D
+16-20
+0
+0
+0
+5/5 = 1.00
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Segmental F1@k
+วัดว่าแต่ละช่วง action ที่ทำนาย ซ้อนทับกับ Ground Truth มากพอหรือไม่ โดยกำหนด IoU threshold (k)
+เช่น 10%, 25% หรือ 50%
+คำนวณ IoU ระหว่าง GT Segments และ Pred Segments
+68
+--- page 69 ---
+Evaluate
+Metrics
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Segmental F1@k
+วัดว่าแต่ละช่วง action ที่ทำนาย ซ้อนทับกับ Ground Truth มากพอหรือไม่ โดยกำหนด IoU threshold (k)
+เช่น 10%, 25% หรือ 50%
+จับคู่ Segments เพืcอพิจารณาค่า IoU ตาม Threshold (k) ต่าง ๆ ได้แก่ 10%, 25%, 50%
+*หมายเหตุ: GT 1 segment ถูกนับเปqน TP ได้เพียงครัfงเดียว เพืcอช่วยลงโทษ over-segmentation
+Threshold = 10% = 0.10
+Pred
+Segments
+GT
+Segments
+IoU
+≥ 0.10 ?
+ผลลัพธ์
+A (1-4)
+A (1-5)
+0.80
+TP
+B (5-10)
+B (6-10)
+0.83
+TP
+C (11-12)
+C (11-15)
+0.40
+TP
+B (13-14)
+-
+0
+FP
+C (15)
+C (11-15)*
+0.20
+FP
+(GT C ถูกจับคู่แล้ว)
+D (16-20)
+D (16-20)
+1.00
+TP
+Pred
+Segments
+GT
+Segments
+IoU
+≥ 0.50 ?
+ผลลัพธ์
+A (1-4)
+A (1-5)
+0.80
+TP
+B (5-10)
+B (6-10)
+0.83
+TP
+C (11-12)
+C (11-15)
+0.40
+FP
+(ตํcากว่า 50%)
+B (13-14)
+-
+0
+FP
+C (15)
+C (11-15)*
+0.20
+FP
+(ตํcากว่า 50%)
+D (16-20)
+D (16-20)
+1.00
+TP
+Pred
+Segments
+GT
+Segments
+IoU
+≥ 0.25 ?
+ผลลัพธ์
+A (1-4)
+A (1-5)
+0.80
+TP
+B (5-10)
+B (6-10)
+0.83
+TP
+C (11-12)
+C (11-15)
+0.40
+TP
+B (13-14)
+-
+0
+FP
+C (15)
+C (11-15)*
+0.20
+FP
+(ตํcากว่า 25%)
+D (16-20)
+D (16-20)
+1.00
+TP
+Threshold = 25% = 0.25
+Threshold = 50% = 0.50
+69
+--- page 70 ---
+Evaluate
+Metrics
+Pred
+Segments
+GT
+Segments
+IoU
+≥ 0.10 ?
+ผลลัพธ์
+A (1-4)
+A (1-5)
+0.80
+TP
+B (5-10)
+B (6-10)
+0.83
+TP
+C (11-12)
+C (11-15)
+0.40
+TP
+B (13-14)
+-
+0
+FP
+C (15)
+C (11-15)*
+0.20
+FP
+(GT C ถูกจับคู่แล้ว)
+D (16-20)
+D (16-20)
+1.00
+TP
+Pred
+Segments
+GT
+Segments
+IoU
+≥ 0.50 ?
+ผลลัพธ์
+A (1-4)
+A (1-5)
+0.80
+TP
+B (5-10)
+B (6-10)
+0.83
+TP
+C (11-12)
+C (11-15)
+0.40
+FP
+(ตํcากว่า 50%)
+B (13-14)
+-
+0
+FP
+C (15)
+C (11-15)*
+0.20
+FP
+(ตํcากว่า 50%)
+D (16-20)
+D (16-20)
+1.00
+TP
+Pred
+Segments
+GT
+Segments
+IoU
+≥ 0.25 ?
+ผลลัพธ์
+A (1-4)
+A (1-5)
+0.80
+TP
+B (5-10)
+B (6-10)
+0.83
+TP
+C (11-12)
+C (11-15)
+0.40
+TP
+B (13-14)
+-
+0
+FP
+C (15)
+C (11-15)*
+0.20
+FP
+(ตํcากว่า 25%)
+D (16-20)
+D (16-20)
+1.00
+TP
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Segmental F1@k
+วัดว่าแต่ละช่วง action ที่ทำนาย ซ้อนทับกับ Ground Truth มากพอหรือไม่ โดยกำหนด IoU threshold (k)
+เช่น 10%, 25% หรือ 50%
+จับคู่ Segments เพืcอพิจารณาค่า IoU ตาม Threshold (k) ต่าง ๆ ได้แก่ 10%, 25%, 50%
+*หมายเหตุ: GT 1 segment ถูกนับเปqน TP ได้เพียงครัfงเดียว เพืcอช่วยลงโทษ over-segmentation
+Threshold = 10% = 0.10
+Threshold = 25% = 0.25
+Threshold = 50% = 0.50
+FN = 1
+เนืcองจาก GT C ไม่มี Prediction ทีc overlap ถึง 50%
+FN = 1
+เนื่องจาก GT C ไม่มี Prediction ทีc overlap ถึง 50%
+70
+--- page 71 ---
+Evaluate
+Metrics
+Metrics
+F1@10
+(IoU ≥ 0.10)
+F1@25
+(IoU ≥ 0.25)
+F1@50
+(IoU ≥ 0.50)
+TP
+4
+4
+3
+FP
+2
+2
+3
+FN
+0
+0
+1
+Precision
+0.667
+0.667
+0.500
+Recall
+1.000
+1.000
+0.750
+F1-Score
+0.800 (80%)
+0.800 (80%)
+0.600 (60%)
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Segmental F1@k
+วัดว่าแต่ละช่วง action ที่ทำนาย ซ้อนทับกับ Ground Truth มากพอหรือไม่ โดยกำหนด IoU threshold (k)
+เช่น 10%, 25% หรือ 50%
+คำนวณ Precision, Recall และ F1@10,25,50
+71
+--- page 72 ---
+Evaluate
+Metrics
+Metrics
+F1@10
+(IoU ≥ 0.10)
+F1@25
+(IoU ≥ 0.25)
+F1@50
+(IoU ≥ 0.50)
+TP
+4
+4
+3
+FP
+2
+2
+3
+FN
+0
+0
+1
+Precision
+0.667
+0.667
+0.500
+Recall
+1.000
+1.000
+0.750
+F1-Score
+0.800 (80%)
+0.800 (80%)
+0.600 (60%)
+Evaluation Metrics สำหรับ Temporal Action Segmentation
+ทำนาย action ตลอด timeline ถูกต้อง และแบ่งช่วงของ action ได้ดีหรือไม่
+Segmental F1@k
+วัดว่าแต่ละช่วง action ที่ทำนาย ซ้อนทับกับ Ground Truth มากพอหรือไม่ โดยกำหนด IoU threshold (k)
+เช่น 10%, 25% หรือ 50%
+คำนวณ Precision, Recall และ F1@10,25,50
+มักมีช่วงค่าอยู่ในช่วง 0-1
+@10 ผ่อนปรนทีcสุด: overlap อย่างน้อย 10%
+@25 ปานกลาง
+@50 เข้มงวดทีcสุดในชุดนีf: ขอบเขตต้องซ้อนทับกันอย่างน้อยครึcงหนึcง
+ค่าสูง: action ซ้อนทับกันมาก
+ค่าตํcา: action ซ้อนทับกันน้อย
+72
+--- page 73 ---
+วิเคราะห์
+ขั้นตอนการผ่าตัด
+วิเคราะห์
+ขั้นตอนการทําอาหาร
+วิเคราะห์
+ขั้นตอนการประกอบสินค้าในโรงงาน
+ตัวอย่างงาน Temporal Action Segmentation
+73
+--- page 74 ---
+Temporal Action Localization
+Goal
+ค้นหาว่า action ทีcสนใจเกิดขึfนเมืcอไร และเกิดขึfนในช่วงเวลาใด
+Input
+Ground Truth
+วิดีโอยาวแบบ untrimmed ทีcอาจมีหลายเหตุการณ์และช่วงเวลาทีcไม่สนใจ
+รายการ (class, start_time, end_time) ของแต่ละเหตุการณ์ทีcสนใจ
+เช่น (ยิงประตู, 01.15, 01.20), (ทําฟาวล์, 02.42, 02.48) เปqนต้น
+Focus
+เฉพาะช่วงเหตุการณ์ทีcสนใจ
+เวลา
+...
+ยิงประตู
+ทำฟาวล์
+ผลลัพธ์ : ช่วงเวลาของแต่ละการกระทํา
+ยิงประตู
+[00:01:15 – 00:01:20]
+0.87
+[00:02:42 – 00:02:48]
+0.92
+ทำฟาวล์
+การกระทำ | ช่วงเวลา [เริ่ม-จบ] | ค่าความมัcนใจ
+74
+--- page 75 ---
+Evaluation Metrics สำหรับ Temporal Action Localization
+Evaluate
+Metrics
+หา ประเภท action และช่วงเวลาเริcม–จบ ได้แม่นยําหรือไม่
+Temporal IoU (tIoU) - วัดการซ้อนทับกันระหว่างช่วงเวลาทีcโมเดลทํานายกับ Ground Truth
+0
+10
+20
+30
+40
+50
+60
+70
+80
+90
+100
+เวลา (วินาที)
+10
+20
+45
+52
+Ground Truth
+12
+22
+47
+60
+Prediction
+ยิงประตู
+ทำฟาวล์
+Prediction ยิงประตู
+Prediction ทำฟาวล์
+มักมีช่วงค่าอยู่ในช่วง 0-1
+ค่าสูง: ช่วงเวลาทํานายซ้อนทับกับเฉลยมาก
+ค่าตํcา: ช่วงเวลาทํานายซ้อนทับกับเฉลยน้อย
+คำนวณ Temporal IoU (tIoU)
+75
+--- page 76 ---
+Evaluate
+Metrics
+ยิงประตู
+ทำฟาวล์
+tIoU
+threshold
+ตัวอย่าง ยิงประตู
+(tIoU=0.667)
+ตัวอย่าง ทําฟาวล์
+(tIoU=0.333)
+@0.3
+0.667 ≥ 0.3 → TP
+0.333 ≥ 0.3 → TP
+@0.5
+0.667 ≥ 0.5 → TP
+0.333 < 0.5 → FP
+@0.7
+0.667 < 0.7 → FP
+0.333 < 0.7 → FP
+Evaluation Metrics สำหรับ Temporal Action Localization
+หา ประเภท action และช่วงเวลาเริcม–จบ ได้แม่นยําหรือไม่
+Temporal IoU (tIoU) - วัดการซ้อนทับกันระหว่างช่วงเวลาทีcโมเดลทํานายกับ Ground Truth
+0
+10
+20
+30
+40
+50
+60
+70
+80
+90
+100
+เวลา (วินาที)
+10
+20
+45
+52
+Ground Truth
+12
+22
+47
+60
+Prediction
+พิจารณาว่าเปqน TP หรือ FP ด้วย tIoU threshold
+ถ้าทํานาย Class ถูกต้อง และ tIoU ≥ threshold
+จะนับเปqน → True Positive (TP)
+ถ้าไม่ผ่าน → False Positive (FP)
+76
+--- page 77 ---
+Evaluate
+Metrics
+Class
+AP@0.5
+ยิงประตู
+0.611
+ทําฟาวล์
+0.146
+Evaluation Metrics สำหรับ Temporal Action Localization
+หา ประเภท action และช่วงเวลาเริcม–จบ ได้แม่นยําหรือไม่
+Average Precision (AP)
+- วัดความแม่นยําในการตรวจจับ action ของแต่ละคลาส โดยพิจารณาทัfง confidence และ tIoU
+- AP คือ พืfนทีcใต้กราฟ Precision–Recall Curve
+คำนวณ Precision และ Recall (ต่อ 1 class) ทีc threshold เดียวกัน
+สร้าง Precision-Recall Curve และคํานวณ AP (ต่อ 1 class ทีc tloU เดียวกัน)
+ตัวอย่าง
+Precision
+Recall
+1
+1
+AP
+Confidence Threshold
+77
+--- page 78 ---
+Evaluate
+Metrics
+Evaluation Metrics สำหรับ Temporal Action Localization
+หา ประเภท action และช่วงเวลาเริcม–จบ ได้แม่นยําหรือไม่
+Mean Average Precision (mAP) - ค่าเฉลีcย AP ของทุกคลาส มักรายงานทีcหลายระดับ tIoU
+เช่น mAP@0.5
+mAP@tloU (คำเฉลีcยของ AP ทุก class)
+Class
+AP@0.5
+ยิงประตู
+0.611
+ทําฟาวล์
+0.146
+ตัวอย่าง
+@
+มักมีช่วงค่าอยู่ในช่วง 0-1
+ค่าสูง: ตรวจจับ Action ถูกและช่วงเวลาแม่นยํา
+ค่าตํcา: ตรวจจับผิด/ไม่ครบ หรือช่วงเวลาไม่ตรง Ground Truth
+78
+--- page 79 ---
+ค้นหา
+ช่วงยิงประตูหรือทําฟาวล์ในฟุตบอล
+ค้นหา
+ช่วงทีcผู้สูงอายุล้มจากกล้อง CCTV
+ค้นหา
+ช่วงทีcเกิดอุบัติเหตุในวิดีโอจราจร
+ตัวอย่างงาน Temporal Action Localization
+79
+--- page 80 ---
+Video Classification
+Temporal Action Segmentation
+Temporal Action Localization
+ประเภทของงานวิดีโอ
+Regression
+80
+--- page 81 ---
+Regression
+81
+--- page 82 ---
+Classification Task
+Regression Task
+Apples or Oranges?
+How expensive is this room?
+How old is this man?
+What is heart rate for this man?
+Cats or Dogs?
+What type of building is this?
+82
+--- page 83 ---
+Classification Target
+Fruit type (Apples, Oranges, etc.)
+Animal (Cats, Dogs, etc.)
+Building Type (Residential, Industrial, etc.)
+Gender
+Color
+Regression Target
+Property Value
+Age
+Heart rate
+Test score
+Income
+Difference in Target
+83
+--- page 84 ---
+84
+--- page 85 ---
+MedInc
+HouseAge
+AveRooms
+AveBedrms
+Population
+AveOccup
+Latitude
+Longitude
+MedHouse
+Val
+0
+8.3252
+41.0
+6.984127
+1.023810
+322.0
+2.555556
+37.88
+-122.23
+4.526
+1
+8.3014
+21.0
+6.238137
+0.971880
+2401.0
+2.109842
+37.86
+-122.22
+3.585
+...
+Regression Task
+The California housing dataset
+85
+--- page 86 ---
+MedIn
+c
+HouseAg
+e
+AveRoom
+s
+Linear Regression, Lasso Regression (L1 Regularization),
+Ridge Regression (L2 Regularization), XGBoost, Neural Network
+AveBedrms
+Population
+AveOccu
+p
+Lat
+Long
+MedHouseVal (in 100k USD)
+86
+--- page 87 ---
+87
+--- page 88 ---
+88
+--- page 89 ---
+Actual value
+Predicted value
+fitted line
+residual (error)
+data point
+residual (vertical distance)
+Regression Metrics
+เราสามารถหา Error ได้โดยการนำค่าที่ทำนายได้มาหักลบกับ
+ค่าความจริง
+โดยทั่วไปแลัวจะมี Loss Function ทีcนิยมใช้ดังต่อไปนีf
+Mean Absolute Error
+Mean Squared Error
+Root Mean Squared Error
+89
+--- page 90 ---
+Mean Absolute Error
+Prediction A
+Prediction B
+Prediction C
+Prediction D
+Prediction E
+Prediction F
+Prediction G
+Actual
+50
+55
+60
+65
+70
+75
+80
+Predicted
+55
+47
+66
+61
+77
+70
+102
+Absolute Diff
+5
+8
+6
+4
+7
+5
+22
+90
+--- page 91 ---
+Prediction A
+Prediction B
+Prediction C
+Prediction D
+Prediction E
+Prediction F
+Prediction G
+Actual
+50
+55
+60
+65
+70
+75
+80
+Predicted
+55
+47
+66
+61
+77
+70
+102
+Squared Diff
+25
+64
+36
+16
+49
+25
+484
+Mean Squared Error
+91
+--- page 92 ---
+เปรียบเทียบความต่างระหว่าง
+MAE และ MSE
+92
+--- page 93 ---
+Prediction A
+Prediction B
+Prediction C
+Prediction D
+Prediction E
+Prediction F
+Prediction G
+Actual
+50
+55
+60
+65
+70
+75
+80
+Predicted
+55
+47
+66
+61
+77
+70
+102
+Absolute Diff
+5
+8
+6
+4
+7
+5
+22
+Squared Diff
+25
+64
+36
+16
+49
+25
+484
+MAE = 8.14; MSE = 99.86
+93
+--- page 94 ---
+Absolute Error |e| (MAE)
+Squared Error e² (MSE)
+MAE ≈ 8.1
+MSE ≈ 99.9
+5
+P1
+8
+P2
+6
+P3
+4
+P4
+7
+P5
+5
+P6
+22
+P7
+25
+P1
+64
+P2
+36
+P3
+16
+P4
+49
+P5
+25
+P6
+484
+P7
+outlier point (P7) — one large error
+94
+--- page 95 ---
+Root Mean Squared Error
+Prediction A
+Prediction B
+Prediction C
+Prediction D
+Prediction E
+Prediction F
+Prediction G
+Actual
+50
+55
+60
+65
+70
+75
+80
+Predicted
+55
+47
+66
+61
+77
+70
+102
+Squared Diff
+25
+64
+36
+16
+49
+25
+484
+MAE = 8.14
+MSE = 99.86
+RMSE = 9.99
+95
+--- page 96 ---
+96
+--- page 97 ---
+97
+--- page 98 ---
+98
+--- page 99 ---
+99
+--- page 100 ---
+100
+--- page 101 ---
+ρ ≈ 0.75
+fitted slope ≈ 0.72
+Pearson Correlation Coefficient
+การวัด Performance ของ Regression Model ด้วย Loss
+Function อย่างเดียวนัfนอาจไม่เพียงพอเนืcองด้วยการวัด Loss นัfน
+เปqนการวัดประสิทธภาพในเชิงความแม่นยํา แต่อาจไม่ได้บอกถึงความ
+สอดคล้องกันระหว่าค่าทํานายและค่าความจริง
+101
+--- page 102 ---
+102
+--- page 103 ---
+103
+--- page 104 ---
+104
+--- page 105 ---
+Retrieval-Augmented Generation
+105
+--- page 106 ---
+?
+⌕
+✓
+Retrieval-Augmented Generation (RAG)
+RAG คือ ระบบที่ค้นข้อมูลจากแหล่งภายนอกมาเป็น context ก่อนให้ LLM สร้าง
+คําตอบ
+RAG ทำงานเป็นลําดับแบบนี้
+Query
+คำถามจากผู้ใช้
+Retrieve
+ค้น chunk ที่เกี่ยวข้อง โดย
+ดึงมาเป็นจํานวน Top-K
+Answer
+ตอบคำถามจากหลักฐาน
+กำกับ
+คำถามสําคัญ: ค้นดีแค่ไหน และตอบเกาะหลักฐานแค่ไหน?
+106
+--- page 107 ---
+107
+Google search engine
+ปกติเราสนใจแค่3-5ผลการค้นหาเท่านั้น ไม่
+สนใจผลการค้นหาท้ายๆ ในโลก LLM
+สำหรับการตอบคําถามก็เช่นกัน
+--- page 108 ---
+Retrieval-Augmented Generation (RAG)
+108
+--- page 109 ---
+ประเมิน RAG ให้แยก 2 ช่วง: หา evidence ให้เจอ และใช้ evidence ให้ถูก
+ถ้าวัดแค่ คำตอบ เราอาจไม่รู้ว่าระบบมีปัญหาตรงไหน
+1
+Retrieval
+ได้ context ที่เกี่ยวข้องไหม?
+2
+Answering
+คำตอบมีหลักฐานรองรับไหม?
+!
+Failure
+ผิด / หาย / เติมเกิน
+[วิเคราะห์ปัญหาที่เกิดกับระบบ]
+RETRIEVAL
+q
+→
+d₁  d₂  d₃ d4 d5
+โอกาสที่หลักฐานผิด / หาย
+GROUNDING
+context
+→
+answer
+ตอบผิด
+context
+Retrieval-Augmented Generation (RAG)
+109
+--- page 110 ---
+Retrieval-Augmented Generation (RAG)
+1.Retreival
+2.Answering
+Precision@K
+Recall@K
+MRR
+nDCG@K
+LLM as a Judge
+110
+--- page 111 ---
+Pre-requistic
+ก่อนคํานวณ เราจะใช้ query เดียวกัน และเรียกสิ่งต่าง ๆ ด้วยสัญลักษณ์ชุด
+เดียว
+ตัวอย่าง query และ ranked list
+q
+Query
+ระบบนี้รองรับผู้ใช้กี่คนต่อ batch?
+dᵢ
+Ranked
+docs
+d₁ … dₖ พร้อม relᵢ
+RANKED RESULTS · rel@5
+d1
+rel=2
+d2
+rel=1
+d3
+rel=0
+d4
+rel=0
+d5
+rel=2
+[ 2, 1, 0, 0, 2 ]
+relᵢ = relevance grade      
+R = relevant docs ทั้งหมด 
+111
+--- page 112 ---
+D1
+D2
+D4
+D3
+D5
+D1
+D1
+D2
+D2
+D4
+D4
+D3
+D3
+D5
+D5
+D1
+D1
+D2
+D2
+D4
+D4
+D3
+D3
+D5
+D5
+Recall@K
+Q1
+Q2
+Q4
+Q3
+Q5
+1/1
+1/2
+2/3
+0/1
+1/1
+(1 + ½  + 0 + ⅔  + 1)/5   =  
+score
+0.63
+Recall@K วัดว่าจากเอกสารที่เกี่ยวข้องทั้งหมด ระบบสามารถค้นพบ
+ภายในผลลัพธ์ Top-K ได้มากเพียงใด ค่า Recall สูงหมายถึงระบบพลาด
+เอกสารสำคัญน้อยลง โดย Recall@K จะไม่ลดลงเมื่อเพิ่ม K แต่ผลลัพธ์ที่
+เพิ่มขึ้นอาจมีเอกสารไม่เกี่ยวข้องมากขึ้น ซึ่งต้องพิจารณาร่วมกับ
+Precision@K
+112
+--- page 113 ---
+ในขณะเดียวกัน PrecisionK จะมองว่าในการค้นหาทั้งหมด มีเอกสารที่
+เสียเปล่าคิดเป็นกี่เปอร์เซนต์ ดังนั้น การตั้งค่า K มากเกินไปก็จะทำให้
+คะเเนน  drop ลงอย่างชัดเจน metric นี้จึงช่วยคุม คุณภาพในการเลือกคำ
+ตอบให้ตรงกับเฉลยได้ดี
+Precision@K
+D1
+D2
+D4
+D3
+D5
+D1
+D1
+D2
+D2
+D4
+D4
+D3
+D3
+D5
+D5
+D1
+D1
+D2
+D2
+D4
+D4
+D3
+D3
+D5
+D5
+Q1
+Q2
+Q4
+Q3
+Q5
+1/5
+1/5
+2/5
+0/5
+1/5
+(1/5 + 1/5  + 0 + 2/5 + 1/5)/5   =  
+score
+0.2
+113
+--- page 114 ---
+D1
+∣U∣ = จำนวนเอกสาร (queries)
+rankU​ = ตำแหน่งแรกของรายการที่เกีcยวข้อง
+คุณภาพของการค้นหาเอกสารที่ดีคือ เจอข้อมูลได้เร็ว เเละมีความถูกต้อง
+ที่สุด ดังนั้น MRR จึงไม่เหมาะกับการวัดบริบทของคำตอบทั้งหมดเเต่เหมาะ
+มากกับการวัดว่าระบบค้นหาได้ดีเพียงใด
+(mean reciprocal rank)
+D2
+D4
+D3
+D5
+D1
+D2
+D4
+D3
+D5
+D1
+D2
+D4
+D3
+D5
+MRR
+Q1
+Q2
+Q3
+1st
+2nd
+3rd
+4th
+5th
+1/3
+1/2
+0
+score
+(⅓  + ½ + 0 )/3  =  0.278
+114
+--- page 115 ---
+currrent dcg
+(2 x rel) - 1
+ideal dcg
+log2(index+1)
+iDCG@5 = 7 + 1.8928 + 0.5 =  9.3928
+iDCG (ideal dcg)
+คำนวน dcg ใหม่ ภายใตโอกาสีcจะเกิดคะเเนนสูงทีcสุด
+มีการเรียงลำดับ passage ใหม่ตาม rel score ที่ได้
+มากไปหาน้อย
+9.3928
+8.89
+0.946
+=
+=
+(rel) = relevance score ข้อมูลเกีcยวข้องกับโจทย์ไหม (0-3)
+C  = สัมประสิทธิ์ของตำแหน่งที่ดึงข้อมูล (ยิ่งมี top-k เยอะตัวหารจะยิ่ง
+มาก)
+ค่าเฉลีcยการกระจายของผลการค้นหา
+Discounted Cumulative Gain
+ค่าที่ได้เหมาะกับงานที่มี passage หลายตัวใน
+เอกสาร เพราะมีการ weight ระหว่างคะเเนน
+เฉลี่ยปัจุบัน กับคะเเนนเฉลี่ยในเคสที่เรียง
+ลำดับการ retreive. ได้ดีทีcสุดไว้เเล้ว
+(normalized DCG)
+nDCG
+115
+--- page 116 ---
+3
+2
+1
+0
+สมมติให้
+relative score
+เกี่ยวข้องมาก
+เกี่ยวข้องบางส่วน
+เกี่ยวข้องน้อยมาก
+ไม่เกี่ยวเลย
+nDCG
+ยกตัวอย่างกับชุด
+คำถามเดียว (Q1)
+116
+--- page 117 ---
+Available metrics
+Rank-Eval
+117
+--- page 118 ---
+LLM-as-a-Judge
+2.Answering
+LLM as a Judge
+คือการใช้ LLM ประเมินคุณภาพคำตอบ
+ตามเกณฑ์ เช่น ความถูกต้อง ความ
+เกี่ยวข้อง และความเป็นประโยชน์ เพื่อวัด
+คุณภาพของคำตอบปลายทางที่
+Retrieval Metrics ไม่สามารถสะท้อนได้
+โดยตรง
+118
+--- page 119 ---
+Criteria
+Eval Step
++
+score
+reason
+LLM answer / Ground truth
+LLM-as-a-Judge
+--- page 120 ---
+Input Answer
+GPT-4.1
+Gemini 2.5 Flash
+Correctness (C)
+Relevance (R)
+Helpfulness (H)
+0.17
+0.10
+0.11
+Evaluation: LLM-as-a-Judge with a Clear Rubric
+Dual Judges
+• Metrics evaluated on 0–1 scale. base on GEval
+• Dual judges reduce single-model bias.
+• Scale: 6 models × 226 questions.
+Average score
+120
+--- page 121 ---
+Average MAE
+0.13
+• Human experts rated a balanced
+subset of 40 questions.
+• Low average disagreement (0.13)
+indicates practical reliability.
+• Targeted human review used for
+edge cases.
+ทำไม เราถึงสามารถยอมรับผลการประเมินของ LLM ได้?
+121
+--- page 122 ---
+ทำไม เราถึงสามารถยอมรับผลการประเมินของ LLM ได้?
+122
+--- page 123 ---
+Retreival
+metrics
+nDCG
+Precision
+ผลลัพธ์ที่ค้นมา “ตรงโจทย์” แค่ไหน
+คำตอบตัวแรก “มาเร็ว” แค่ไหน
+ข้อมูลที่ควรเจอ ระบบ “ค้นพบครบ” แค่ไหน
+ผลลัพธ์ถูก “เรียงตามระดับความ
+เกี่ยวข้อง” ดีแค่ไหน
+Recall
+MRR
+คำตอบสุดท้าย “ถูกต้อง ตรงประเด็น และมีประโยชน์” แค่ไหน
+Answering matrics LLM-as-a-Judge
+123
+--- page 124 ---
+THANK YOU
+Information Technology | KMITL
+ANY QUESTIONS?
+124

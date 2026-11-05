@@ -1,10 +1,5 @@
-# Teacher material and large files stay local
+# Lecture audio is too large for GitHub (on YouTube instead)
 *.m4a
-*.pdf
-*.srt
-slides.txt
-lecture*.txt
-instruction
 *.part
 *.log
 friend-reminder.md

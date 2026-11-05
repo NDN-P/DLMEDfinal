@@ -1,0 +1,715 @@
+##### 6aac80426b5bafb530c995d5.pdf (76 pages)
+--- page 1 ---
+บรรยายโดย ผศ.ดร.ธราวิเชษฐ์  ธิติจรูญโรจน์
+คณะเทคโนโลยีสารสนเทศ 
+สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
+Chapter 11: Object Detection 
+with Deep Learning Techniques
+--- page 2 ---
+ความแตกต่างระหว่าง 
+Image Classification และ Object Detection
+--- page 3 ---
+หัวข้อ
+•Multi-Stage Detectors
+• Region-based Convolutional Network (R-CNN)
+• Fast Region-based Convolutional Network (Fast R-CNN)
+• Faster Region-based Convolutional Network (Faster R-CNN)
+•Single-Stage Detectors
+• You Only Look Once (YOLO)
+•การสร้าง YOLOv8 ด้วยชุดคําสั่ง Ultralytics
+--- page 4 ---
+หัวข้อ
+•Multi-Stage Detectors
+• Region-based Convolutional Network (R-CNN)
+• Fast Region-based Convolutional Network (Fast R-CNN)
+• Faster Region-based Convolutional Network (Faster R-CNN)
+•Single-Stage Detectors
+• You Only Look Once (YOLO)
+•การสร้าง YOLOv8 ด้วยชุดคําสั่ง Ultralytics
+--- page 5 ---
+Region-based Convolutional Network (R-CNN)
+เป็นเครื่องหนึ่งในกระบวนการเรียนรู้เชิงลึกสําหรับงานทางด้าน Computer Vision และ Image Processing ที่ได้รับ
+การออกแบบมาเพื่อการตรวจจับวัตถุในภาพ ซึ่งได้รับการคิดค้นโดย Ross Girshick และคณะในปี 2014 วิธีการ R-
+CNN ประกอบไปด้วย 4 ขั้นตอน ได้แก่ (1) การตรวจจับวัตถุในภาพ (2) การปรุงปรับภาพ (3) การสกัดคุณลักษณะ 
+และ (4) การจําแนกภาพ
+--- page 6 ---
+Region-based Convolutional Network (R-CNN)
+ขั้นตอนที่ 1 การตรวจจับวัตถุในภาพด้วยหลักการ Selective Search เป็นการพิจารณาพิกเซลที่ติดกันว่ามีความ
+คล้ายคลึงกันหรือไม่ โดยพิจารณาจาก color, texture, size และ shape compatibility
+--- page 7 ---
+Region-based Convolutional Network (R-CNN)
+ขั้นตอนที่ 1.1  พิจารณาพิกเซลที่ติดกันตามหลักการ graph-based segmentation ที่ได้คิดค้นโดย Felzenszwalb 
+และคณะ ผลลัพธ์ที่ได้จะเรียกว่า Region Proposal
+อ้างอิง https://learnopencv.com/selective-search-for-object-detection-cpp-python/
+--- page 8 ---
+Region-based Convolutional Network (R-CNN)
+ขั้นตอนที่ 1.2 เก็บทุก Regional Proposal ไว้ใน List จากนั้น ให้จัดกลุ่มหรือรวม Regional Proposal ที่ติดกัน
+เข้าด้วยกันโดยอาศัยการวัดความคล้ายจาก color, texture, size และ shape compatibility ดังสมการต่อไปนี้   
+โดยที่ ri และ rj คือ สอง Regional Proposal ที่ติดกัน และ ai ใช้กําหนดนํ้าหนักตัวชี้วัดที่ต้องการ (ค่าเป็น 0 หรือ 
+1) ซึ่งจะได้ผลลัพธ์ประมาณ 1,000 ถึง 2,000 Proposal
+อ้างอิง https://learnopencv.com/selective-search-for-object-detection-cpp-python/
+--- page 9 ---
+Region-based Convolutional Network (R-CNN)
+ขั้นตอนที่ 2 นํา Region Proposal ที่ได้รับมาผ่านกระบวนการ Wrapping เพื่อให้รูปภาพอยู่ในขนาดมาตรฐาน
+เดียวกันแบบจัตุรัสก่อน (224 x 224 พิกเซล) เนื่องจาก ............................................................................................. 
+.......... ผลลัพธ์ที่ได้จะเรียกว่า Wrapping Region
+--- page 10 ---
+Region-based Convolutional Network (R-CNN)
+ขั้นตอนที่ 3 นํา Wrapping Region มาสกัดคุณลักษณะด้วย Convolutional Neural Network (CNN) โดยอาศัย 
+สถาปัตยกรรมแบบ AlexNet แต่จะตัด Fully Connected Layer สุดท้ายทิ้ง และผลลัพธ์ที่ได้จะเรียกว่า Feature 
+Vector
+--- page 11 ---
+Region-based Convolutional Network (R-CNN)
+ขั้นตอนที่ 4 นํา Feature Vector ส่งต่อไปยัง Support Vector Machine (SVM) เพื่อจําแนกว่าเป็นคลาสใด
+กําหนดให้
+• D คือ ข้อมูลตัวอย่าง (Sample data) โดยที่ D = {(xi,yi), .... ,(xi,yi)}
+• xi คือ แอททริบิวของแต่ละข้อมูล โดยที่ xi Î Rd
+• yi คือ กลุ่มหรือคลาสของข้อมูล xi โดยที่ yi Î {-1, +1}
+--- page 12 ---
+Region-based Convolutional Network (R-CNN)
+Humidity
+Temperature
+= play tennis        = do not play tennis
+กําหนดให้
+• D คือ ข้อมูลตัวอย่าง (Sample data) โดยที่ D = {(xi,yi), .... ,(xi,yi)}
+• xi คือ แอททริบิวของแต่ละข้อมูล โดยที่ xi Î Rd
+• yi คือ กลุ่มหรือคลาสของข้อมูล xi โดยที่ yi Î {-1, +1}
+จากภาพจะพบว่าระนาบเกิน (hyperplanes) ของข้อมูลชุดนี้มีจํานวน
+มาก ดังนั้น ระนาบเกินที่มีระยะห่างระหว่างเวกเตอร์สนับสนุนของ
+ข้อมูลทั้งสองกลุ่มมากที่สุดจะถูกเลือกมาใช้งาน
+--- page 13 ---
+Region-based Convolutional Network (R-CNN)
+Humidity
+Temperature
+= play tennis        = do not play tennis
+กําหนดให้
+• D คือ ข้อมูลตัวอย่าง (Sample data) โดยที่ D = {(xi,yi), .... ,(xi,yi)}
+• xi คือ แอททริบิวของแต่ละข้อมูล โดยที่ xi Î Rd
+• yi คือ กลุ่มหรือคลาสของข้อมูล xi โดยที่ yi Î {-1, +1}
+จากภาพจะพบว่าระนาบเกิน (hyperplanes) ของข้อมูลชุดนี้มีจํานวน
+มาก ดังนั้น ระนาบเกินที่มีระยะห่างระหว่างเวกเตอร์สนับสนุนของ
+ข้อมูลทั้งสองกลุ่มมากที่สุดจะถูกเลือกมาใช้งาน
+--- page 14 ---
+Region-based Convolutional Network (R-CNN)
+สามารถคํานวณหาระนาบเกินได้จากสมการเส้นตรงต่อไปนี้
+𝑊𝑋+ 𝑏= 0
+โดยที่x คือแอททริบิวของแต่ละข้อมูลW คือตัวแปรควบคุมระนาบ
+เกิน และb คือค่าคงที่
+กําหนดให้
+• H1 คือระนาบขอบเขตของข้อมูลกลุ่ม1 ซึ่งสามารถเขียนสมการ
+กํากับได้ดังนี้𝑊𝑋! + 𝑏≥ +1 ก็ต่อเมื่อ𝑌! เท่ากับ+1
+• H2 คือระนาบขอบเขตของข้อมูลกลุ่ม2 ซึ่งสามารถเขียนสมการ
+กํากับได้ดังนี้𝑊𝑋! + 𝑏≤−1 ก็ต่อเมื่อ𝑌! เท่ากับ-1
+โดยที่ข้อมูลที่อยู่บนระนาบขอบเขตจะเรียกว่าเวกเตอร์สนับสนุน
+(Support Vector) 
+--- page 15 ---
+Region-based Convolutional Network (R-CNN)
+การคํานวณหาระยะห่างระหว่างH1 และH2 จะคํานวณได้จาก
+สมการต่อไปนี้
+𝑀= 𝑑! + 𝑑"
+โดยที่ 𝑑! คือระยะทางที่สั้นที่สุดจากH1 ถึงระนาบเกินขณะที่𝑑" 
+คือระยะทางที่สั้นที่สุดจากH2 ถึงระนาบเกิน
+--- page 16 ---
+Region-based Convolutional Network (R-CNN)
+Humidity
+Temperature
+= play tennis        = do not play tennis
+M1
+M2
+M3
+จากนั้นเราจะกําหนดระนาบส่วนเกินสําหรับข้อมูลชุดนี้โดยพิจารณา
+จากระนาบส่วนเกินที่มีค่าM มากที่สุด
+--- page 17 ---
+Region-based Convolutional Network (R-CNN)
+--- page 18 ---
+Region-based Convolutional Network (R-CNN)
+อ้างอิง https://analyticsindiamag.com/r-cnn-vs-fast-r-cnn-vs-faster-r-cnn-a-comparative-guide/
+--- page 19 ---
+หัวข้อ
+•Multi-Stage Detectors
+• Region-based Convolutional Network (R-CNN)
+• Fast Region-based Convolutional Network (Fast R-CNN)
+• Faster Region-based Convolutional Network (Faster R-CNN)
+•Single-Stage Detectors
+• You Only Look Once (YOLO)
+•การสร้าง YOLOv8 ด้วยชุดคําสั่ง Ultralytics
+--- page 20 ---
+Fast Region-based Convolutional Network (Fast R-CNN)
+อ้างอิง https://towardsdatascience.com/r-cnn-fast-r-cnn-faster-r-cnn-yolo-object-detection-algorithms-36d53571365e
+หลังจากนั้น Ross Girshick และคณะได้พัฒนา Fast R-CNN เพื่อลดเวลาที่ใช้ในการคํานวณลง ซึ่งมีขั้นตอนการทํางานคล้ายกับ
+วิธีการ R-CNN
+--- page 21 ---
+Fast Region-based Convolutional Network (Fast R-CNN)
+อ้างอิง https://analyticsindiamag.com/r-cnn-vs-fast-r-cnn-vs-faster-r-cnn-a-comparative-guide/
+วิธีการ Fast R-CNN ประกอบไปด้วย 8 ขั้นตอนการทํางาน 
+Convolution Operation
+(Feature Extraction)
+Selective Search
+(Region Proposal) 
+Map and 
+Cropping
+RoI Pooling
+Flatten
+Fully 
+Connected
+Softmax Function
+(Classification)
+Linear Regression
+(Bounding Box Adjustment)
+x, y, w และ h
+class
+image
+--- page 22 ---
+Fast Region-based Convolutional Network (Fast R-CNN)
+อ้างอิง https://analyticsindiamag.com/r-cnn-vs-fast-r-cnn-vs-faster-r-cnn-a-comparative-guide/
+ขั้นตอนที่ 1 นําเข้าทั้งภาพ (Whole Image) เข้าสู่ CNN ส่วน Feature Extraction เท่านั้น เพื่อสกัด Feature Map จากทั้งภาพ 
+แทนที่จะส่งเข้าทีละ Region Proposal สิ่งนี้ ทําให้วิธีการ Fast R-CNN จะเรียกใช้ Convolution Operation 1 ครั้งต่อ 1 ภาพ 
+เท่านั้น ผลลัพธ์ที่ได้ คือ Feature Map 
+ขั้นตอนที่ 2 ตรวจจับวัตถุในภาพด้วย Selective Search จากทั้งภาพ (Whole Image) ผลลัพธ์ที่ได้ คือ Region Proposal
+ขั้นตอนที่ 3 นําตําแหน่งของแต่ละ Region Proposal ได้แก่ (x, y) width และ height ไปทาบลง Feature Map และ Cropping 
+บริเวณดังกล่าว เพื่อให้ได้รับ Feature Map ของแต่ละ Region Proposal ที่มีขนาดไม่เท่ากัน ด้วยหลักการ ROI projection
+ขั้นตอนที่ 4 ปรับขนาดและรูปร่างของ Feature Map ให้อยู่ในขนาดเดียวกันแบบจัตุรัสด้วยหลักการ RoI Pooling 
+ขั้นตอนที่ 5 ปรับรูปแบบ Feature Map ของแต่ละ Region Proposal ให้อยู่ในรูปแบบ Feature Vector ก่อนส่งต่อเข้าสู่ Fully 
+Connected Layer
+ขั้นตอนที่ 6 ส่ง Feature Vector เข้าสู่ Fully Connected Layer
+ขั้นตอนที่ 7 จําแนกคลาสของ Feature Vector ในแต่ละ Region Proposal ด้วย Softmax Function
+ขั้นตอนที่ 8 ปรับเปลี่ยนตําแหน่งของ Region Proposal ให้สอดคล้องกับวัตถุขึ้นด้วย Linear Regression จาก x, y, w และ h
+--- page 23 ---
+Fast Region-based Convolutional Network (Fast R-CNN)
+อ้างอิง  https://towardsdatascience.com/understanding-fast-r-cnn-and-faster-r-cnn-for-object-detection-adbb55653d97
+หลักการ ROI projection
+ผู้ใช้งานจะได้รับตําแหน่ง (x,yw,h) 
+ของแต่ละ Region 
+Proposal จาก
+การทําSelective Search จากนั้น 
+ต้องการนําคํานวณหาตําแหน่งบน 
+Feature Map โดยอาศัยการคํานวณ
+เทียบตําแหน่งและสัดส่วน นี้คือ
+เหตุผลหลักว่าทําไมวิธีการ Fast 
+R-
+CNN ถึงจําเป็นต้องกําหนดขนาดภาพ
+นําเข้าแบบตายตัว
+--- page 24 ---
+Fast Region-based Convolutional Network (Fast R-CNN)
+0.85 0.84
+0.97 0.96
+ขั้นตอนการทํางานของ ROI Pooling ประกอบด้วย 3 ขั้นตอน
+ขั้นตอนที่ 4.1 นําตําแหน่งของแต่ละ Region Proposal ไปทาบลง Feature Map และ Cropping บริเวณดังกล่าว เพื่อให้ได้รับ 
+Feature Map ของแต่ละ Region Proposal ที่มีขนาดไม่เท่ากัน
+ขั้นตอนที่ 4.2 แบ่ง Feature Map บริเวณดังกล่าวออกเป็นส่วน ด้วยการคํานวณจาก 
+#
+$ โดยที่ m ความสูงหรือความกว้างและ 
+n คือ จํานวนชิ้นส่วนที่ต้องการแบ่ง
+ขั้นตอนที่ 4.3 หาค่าสูงสุดในแต่ละส่วน (Max Pooling)
+https://towardsdatascience.com/region-of-interest-pooling-f7c637f409af
+--- page 25 ---
+Fast Region-based Convolutional Network (Fast R-CNN)
+Fan, Xiaochuan & Guo, Hao & Zheng, Kang & Feng, Wei & Wang, Song. (2018). Object Detection with Mask-based Feature Encoding. 
+--- page 26 ---
+Fast Region-based Convolutional Network (Fast R-CNN)
+เหตุผลที่วิธีการ Fast R-CNN ทํางานได้รวดเร็วกว่าวิธีการ R-CNN เนื่องจากไม่ต้องสกัด Feature Map ที่ละ Region Proposal แต่
+วิธีการ Fast R-CNN จะเรียกใช้ Convolution Operation 1 ครั้งต่อ 1 ภาพ 
+อ้างอิง https://towardsdatascience.com/r-cnn-fast-r-cnn-faster-r-cnn-yolo-object-detection-algorithms-36d53571365e
+--- page 27 ---
+Fast Region-based Convolutional Network (Fast R-CNN)
+อ้างอิง https://towardsdatascience.com/understanding-fast-r-cnn-and-faster-r-cnn-for-object-detection-adbb55653d97
+--- page 28 ---
+Fast Region-based Convolutional Network (Fast R-CNN)
+อ้างอิง https://towardsdatascience.com/r-cnn-fast-r-cnn-faster-r-cnn-yolo-object-detection-algorithms-36d53571365e
+--- page 29 ---
+หัวข้อ
+•Multi-Stage Detectors
+• Region-based Convolutional Network (R-CNN)
+• Fast Region-based Convolutional Network (Fast R-CNN)
+• Faster Region-based Convolutional Network (Faster R-CNN)
+•Single-Stage Detectors
+• You Only Look Once (YOLO)
+•การสร้าง YOLOv8 ด้วยชุดคําสั่ง Ultralytics
+--- page 30 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+ในปีค.ศ. 2015 ทีมนักวิจัยShaoqing Ren และคณะได้พัฒนาFaster R-CNN ขึ้นเพื่อแก้ไขปัญหาการทํางานที่
+เชื่องช้าและใช้ทรัพยากรค่อนข้างมากของSelective Search 
+อ้างอิง https://jonathan-hui.medium.com/image-segmentation-with-mask-r-cnn-ebe6d793272
+--- page 31 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+ขั้นตอนที่ 1 นําเข้าทั้งภาพ (Whole Image) เข้าสู่ CNN ส่วน Feature Extraction เท่านั้น เพื่อสกัด Feature Map จากทั้งภาพ 
+แทนที่จะส่งเข้าทีละ Region Proposal สิ่งนี้ ทําให้วิธีการ Fast R-CNN จะเรียกใช้ Convolution Operation 1 ครั้งต่อ 1 ภาพ 
+เท่านั้น ผลลัพธ์ที่ได้ คือ Feature Map 
+ขั้นตอนที่ 2 ตรวจจับวัตถุในภาพด้วย Region Proposal Network (RPN) จากทั้งภาพ ผลลัพธ์ คือ Region Proposal
+ขั้นตอนที่ 3 นําตําแหน่งของแต่ละ Region Proposal ได้แก่ (x, y) width และ height ไปทาบลง Feature Map และ Cropping 
+บริเวณดังกล่าว เพื่อให้ได้รับ Feature Map ของแต่ละ Region Proposal ที่มีขนาดไม่เท่ากัน
+ขั้นตอนที่ 4 ปรับขนาดและรูปร่างของ Feature Map ให้อยู่ในขนาดเดียวกันแบบจัตุรัสด้วยหลักการ RoI Pooling 
+ขั้นตอนที่ 5 ปรับรูปแบบ Feature Map ของแต่ละ Region Proposal ให้อยู่ในรูปแบบ Feature Vector ก่อนส่งต่อเข้าสู่ Fully 
+Connected Layer
+ขั้นตอนที่ 6 ส่ง Feature Vector เข้าสู่ Fully Connected Layer
+ขั้นตอนที่ 7 จําแนกคลาสของ Feature Vector ในแต่ละ Region Proposal ด้วย Softmax Function
+ขั้นตอนที่ 8 ปรับเปลี่ยนตําแหน่งของ Region Proposal ให้สอดคล้องกับวัตถุขึ้นด้วย Linear Regression จาก x, y, w และ h
+--- page 32 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+Region Proposal Network ประกอบไปด้วย6 ขั้นตอน
+Anchor Box 
+Generation
+Intermediate
+Layer
+Classification Layer 
+(Score)
+Regression Layer 
+(Coordinate)
+Non-maximum 
+Suppression (NMS)
+Candidate Region 
+Proposal Selection Using  
+Objectness Score
+Region Proposal Network
+--- page 33 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+Region Proposal Network ประกอบไปด้วย6 ขั้นตอน
+ขั้นตอนที่2.1 นําFeature Map ของ Shared Convolution Layer สุดท้ายของCNN มาสกัดFeature Map โดยอาศัย
+Padding และ3x3 Convolution Window จํานวน512 Filter (จํานวนinput และoutput channel เท่ากัน)
+อ้างอิง https://www.youtube.com/watch?v=0tBhRfEzUWs
+--- page 34 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+ขั้นตอนที่2.2 ในทางทฤษฎีคือเปรียบได้กับการสร้างAnchor Boxes จากนําFeature Map ของ Intermediate Layer 
+สุดท้ายของCNN มาSliding Window แบบสี่เหลี่ยมขนาดN x M โดยกําหนดพารามิเตอร์2 ตัวได้แก่(1) ขนาดScale และ
+(2) อัตราส่วนAspect Ratio 
+--- page 35 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+แต่ในทางพัฒนาโปรแกรมนั้นจะอาศัยตัวดําเนินการ2D Convolution
+2D Convolution 
+(1 x 1 Filter, จํานวน a ตัวกรอง )
+ขนาดเท่ากับ w x h x c 
+แทน Feature ของAnchor แต่ละแบบ
+ขนาดเท่ากับ w x h x a 
+ค่า y,  x,  h,  w 
+ของ Anchor แบบ 1
+ขนาดเท่ากับ w x h x (4*a)  
+ของ Anchor แบบ 1
+หมายเหตุ a คือ จํานวนของรูปแบบ Anchors ทั้งหมด
+2D Convolution 
+(1 x 1 Filter, จํานวน 4*a ตัวกรอง )
+เพื่อทํานายว่าเป็น Object ใช่หรือไม่ และนําค่า
+ความมั่นใจมาเป็น Objectness Score
+เพื่อหาค่าปรับตําแหน่งของพิกัด (x,y) ความกว้าง w และ
+ความสูง h ของ Object
+ขนาดเท่ากับ w x h x c 
+2D Convolution 
+(3 x 3 Filter, จํานวน c ตัวกรอง )
+Feature Map ของ 
+Convolution Layer 
+สุดท้ายของ CNN
+Feature Map 
+ของ Intermediate Layer 
+ของ RPN
+--- page 36 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+โดยปกติ จะกําหนดให้Anchor Boxes มี3 ขนาดและ3 อัตราส่วนทําให้1 บริเวณมี9 Anchor Boxes 
+อ้างอิง https://contohlengkap.github.io/ilustrasi/post/region-proposal-network/
+--- page 37 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+อ้างอิง https://towardsdatascience.com/understanding-fast-r-cnn-and-faster-r-cnn-for-object-detection-adbb55653d97
+--- page 38 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+ขั้นตอนที่2.3 การจําแนกว่าAnchor Boxes นั้นเป็นForeground หรือBackground และมีค่าObjectiveness Score 
+เท่าไหร่โดยรับอินพุธเป็นFeature Vector และประมวลผลด้วย Fully Connected Layer
+--- page 39 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+ขั้นตอนที่2.4 การประมาณและปรับปรุงตําแหน่งของAnchor Boxes โดยรับอินพุธเป็น[x, y, w, h] และประมวลผลด้วย 
+Fully Connected Layer
+อ้างอิง https://www.wovenware.com/blog/2020/06/anchor-boxes-in-object-detection-when-where-and-how-to-propose-them-for-deep-learning-apps/#.YVyIwBNKg8M
+--- page 40 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+ขั้นตอนที่2.5 นําCandidate Region Proposal เฉพาะที่ได้รับการทํานายว่าเป็นForeground มาเรียงตามค่าObjectness 
+Score จากมากไปน้อยจากนั้นเลือกมาn ตัวแรกเท่านั้นเพื่อให้เป็นRegion Proposal
+--- page 41 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+ขั้นตอนที่2.6 นําRegion Proposal มาลดจํานวนลงด้วยการพิจารณาความซํ้าเชิงพื้นที่จากค่าObjectness Score ด้วย
+วิธีการ Non-maximum Suppression (NMS) เพื่อให้ได้รับRegion Proposal ที่มีความเป็นไปได้สูงสุดมาใช้งานต่อ
+อ้างอิง https://lengyi.medium.com/non-maximum-suppression-using-python-40be1df9c2a6
+--- page 42 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+หลักการทํางานของNMS
+0.77 0.89
+0.70
+0.91
+0.88
+0.63
+--- page 43 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+หลักการทํางานของNMS
+ขั้นที่2.6.1 จัดเรียงRegion Proposal ตามค่าObjectness Score จากมากไปน้อยและเก็บไว้ในList
+0.77
+0.89
+0.70
+0.91
+0.88
+0.63
+--- page 44 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+หลักการทํางานของNMS
+ขั้นที่2.6.2 หยิบRegion Proposal ออกมาทีละตัวและพิจารณาจากการซ้อนทับกันตามค่าIntersection of Union (IoU) ว่า
+เกินกว่าค่าที่กําหนดไว้หรือไม่อาทิเช่น
+0.89
+0.91
+IoU = 𝑹𝟏∩𝑹𝟐
+𝑹𝟏∪𝑹𝟐
+จากกรณีข้างต้นจะพบว่า IoU มีค่าเท่ากับ 0
+--- page 45 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+หลักการทํางานของNMS
+ขั้นที่2.6.2 หยิบRegion Proposal ออกมาทีละตัวและพิจารณาจากการซ้อนทับกันตามค่าIntersection of Union (IoU) ว่า
+เกินกว่าค่าที่กําหนดไว้หรือไม่อาทิเช่น
+0.91
+0.88
+IoU = 𝑹𝟏∩𝑹𝟐
+𝑹𝟏∪𝑹𝟐
+จากกรณีข้างต้นจะพบว่า IoU มีค่าค่อนข้างมาก ดังนั้น จึงสรุปได้ว่า 2 Region Proposal ได้ซ้อนทับวัตถุบริเวณเดียวกัน 
+--- page 46 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+หลักการทํางานของNMS
+ขั้นที่2.6.3 เก็บRegion Proposal ที่มีค่ามากเอาไว้และลบRegion Proposal ที่มีค่าน้อยออก
+0.91
+IoU = 𝑹𝟏∩𝑹𝟐
+𝑹𝟏∪𝑹𝟐
+--- page 47 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+หลักการทํางานของNMS
+ขั้นที่2.6.3 เก็บRegion Proposal ที่มีค่ามากเอาไว้และลบRegion Proposal ที่มีค่าน้อยออก
+0.91
+IoU = 𝑹𝟏∩𝑹𝟐
+𝑹𝟏∪𝑹𝟐
+0.63
+--- page 48 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+หลักการทํางานของNMS
+ขั้นที่2.6.3 เก็บRegion Proposal ที่มีค่ามากเอาไว้และลบRegion Proposal ที่มีค่าน้อยออก
+0.91
+IoU = 𝑹𝟏∩𝑹𝟐
+𝑹𝟏∪𝑹𝟐
+--- page 49 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+หลักการทํางานของNMS
+ขั้นที่2.6.4 ทําซํ้าขั้นตอนที่2.6.2 ถึง2.6.3 จนกว่าจะเปรียบเทียบหมด
+0.77 0.89
+0.70
+0.91
+0.88
+0.63
+0.89
+0.91
+--- page 50 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+SVM
+SVM
+SVM
+Classify Region
+with SVMs
+Forward each region
+through ConvNet 
+Warped image regions
+Input image
+Regions of 
+Interest (RoI) 
+from a proposal 
+method (~2,000)
+Softmax classifier
+Linear & 
+softmax
+Linear
+Bounding box regressors
+Fully Connected Layer
+RoI Pooling (Single-level SPP) Layer
+Forward whole image through ConvNet
+Feature map
+Input image
+RoI from 
+proposal method
+Region Proposal Network (RPN)
+Proposals
+Feature map
+RoI pooling
+Softmax 
+classifier
+Linear & 
+softmax
+RoI Pooling (Singl
+Linear
+Bounding box 
+regressors
+(a) R-CNN
+(b) Fast R-CNN
+(c) Faster R-CNN
+--- page 51 ---
+Faster Region-based Convolutional Network (Faster R-CNN)
+อ้างอิง https://towardsdatascience.com/understanding-fast-r-cnn-and-faster-r-cnn-for-object-detection-adbb55653d97
+--- page 52 ---
+หัวข้อ
+•Multi-Stage Detectors
+• Region-based Convolutional Network (R-CNN)
+• Fast Region-based Convolutional Network (Fast R-CNN)
+• Faster Region-based Convolutional Network (Faster R-CNN)
+•Single-Stage Detectors
+• You Only Look Once (YOLO)
+•การสร้าง YOLOv8 ด้วยชุดคําสั่ง Ultralytics
+--- page 53 ---
+You Only Look Once (YOLO)
+หลักการทํางานของYOLO
+สถาปัตยกรรมของYOLO ได้นําเสนอUnified Network เพื่อให้เครือข่ายสามารถทํางานในรูปแบบ End-to-end Training 
+Network
+อ้างอิง https://towardsdatascience.com/yolov1-you-only-look-once-object-detection-e1f3ffec8a89
+--- page 54 ---
+You Only Look Once (YOLO)
+หลักการทํางานของYOLO
+ขั้นที่1 แบ่งภาพออกเป็นGrid 
+ขนาดS x S โดยแต่ละช่องของGrid 
+จะทํานายวัตถุจํานวนn อย่าง
+ตัวอย่างช่องของGrid สีเหลือง
+พยายามทํานายวัตถุ“คน” ที่จุด
+กึ่งกลางอยู่ในช่องของGrid ดังกล่าว 
+อ้างอิง https://jonathan-hui.medium.com/real-time-object-detection-with-yolo-yolov2-28b1b93e2088
+--- page 55 ---
+ความสัมพันธ์ระหว่างวัตถุ--เซลล์–กล่อง-คลาส 
+• วัตถุ-กับ-เซลล์ : วัตถุหนึ่งชิ้นถูกกําหนดให้กับเซลล์ที่มีจุดกึ่งกลางของวัตถุ ตกอยู่
+• วัตถุ-กับ-กล่อง : ในเซลล์นั้น เลือก 1 กล่องจาก 𝐵กล่องที่มี IoU กับ ground truth สูงสุดให้ “เป็น” วัตถุที่ทํานายนั้น ในขณะที่ อีกกล่องจะถูกกําหนดให้เป็นวัตถุอื่น
+หรือเป็นพื้นหลัง ซึ่งส่วนใหญ่ ในYolo V1 มักกําหนดให้ 𝐵มีค่าเท่ากับ 2
+• เซลล์-กับ-คลาส : หนึ่งเซลล์มีได้เพียง “หนึ่งคลาส” หากมีหลายวัตถุคนละชนิดอยู่ในเซลล์เดียวกันจะทําให้ Yolo มีประสิทธิภาพไม่ดี (หรือกล่าวคือ class prob ร่วมกัน
+ต่อเซลล์) นอกจากนี้ วัตถุเล็กจํานวนมากที่กระจุกในบางบริเวณ สถาปัตยกรรม Yolo V1 ยังทํางานได้ไม่ดีมาก เนื่องจากเซลล์มีขนาดใหญ่
+ถ้าพิจารณาจาก cell (1,1) ในกรอบเส้นประของรูป จะพบว่าโมเดลจะให้ผลลัพธ์ดังต่อไปนี้
+• กล่องที่ 1: 𝑥𝑦𝑤ℎและ confidence
+• กล่องที่ 2: 𝑥𝑦𝑤ℎและconfidence
+• ตารางคะแนนคลาส (เช่น car 0.05, person 0.10, truck 0.02, …) ซึ่งเป็น 𝑃class ∣object เวลานําไปใช้งานจะคูณคลาสกับ confidence ของแต่ละกล่อง ทําให้
+ได้คะแนนต่อคลาสต่อกล่อง ก่อนนําไปคัดกรองด้วยวิธีการ NMS จากนั้น จึงนําผลลัพธ์ที่ได้เป็น detection สุดท้าย
+อ้างอิง https://jonathan-hui.medium.com/real-time-object-detection-with-yolo-yolov2-28b1b93e2088
+--- page 56 ---
+You Only Look Once (YOLO)
+อ้างอิง อ้างอิง https://jonathan-hui.medium.com/real-time-object-detection-with-yolo-yolov2-28b1b93e2088
+YOLO จัดการกับ Bounding Box ที่ซํ้าซ้อนกันโดยอาศัยเทคนิค non-maximal suppression เพื่อ
+ขจัด Bounding Box ที่ซํ้าซ้อนกันออก โดยพิจารณาจากค่า Confidence Score จากผลการวิจัย
+พบว่าเทคนิค Non-Maximal Suppression สามารถช่วยเพิ่มประสิทธิภาพได้ประมาณ 2- 3% ใน
+ตัวชี้วัด mAP
+--- page 57 ---
+You Only Look Once (YOLO)
+จากภาพจะพบว่า
+Boundary Box หนึ่งจะ
+ประกอบด้วย2 ส่วนได้แก่(x, y, w, h) และ
+ค่าBox Confidence Score (Objectness) 
+ซึ่งค่า
+Objectness สะท้อนถึงความเป็นไปได้ที่ 
+Boundary Box จะมีวัตถุอยู่และความแม่นยําของ
+กล่องนั้น จากนั้น (1) นําค่าของw และ h ของ
+Boundary Box ไปNormalize ด้วยความสูง(H)
+และความกว้างของภาพ
+(W)
+ถัดมา
+(2)
+ค่า
+x และy จะใช้เป็นค่าชดเชยในการปรับตําแหน่ง
+ของBoundary Box ดังนั้นx, y, w และh จะอยู่
+ในช่วง0 ถึง1 สุดท้าย ในแต่ละCell (ไม่ใช้แต่ละ 
+Boundary Box) จะบอกค่าความน่าจะเป็นของแต่
+ละคลาสดังภาพ
+อ้างอิง https://jonathan-hui.medium.com/real-time-object-detection-with-yolo-yolov2-28b1b93e2088
+--- page 58 ---
+You Only Look Once (YOLO)
+หลักการทํางานของYOLO
+ขั้นที่2 แต่ละGrid จะสร้างB (กําหนดให้B = 2) Bounding Box (ซึ่งประกอบด้วยcx, cy, w, h) และค่าความเชื่อมั่น
+(Confident) ของแต่ละกล่อง
+อ้างอิง https://towardsdatascience.com/yolov1-you-only-look-once-object-detection-e1f3ffec8a89
+--- page 59 ---
+You Only Look Once (YOLO)
+อ้างอิง https://towardsdatascience.com/yolov1-you-only-look-once-object-detection-e1f3ffec8a89
+--- page 60 ---
+You Only Look Once (YOLO)
+อ้างอิง https://towardsdatascience.com/yolov1-you-only-look-once-object-detection-e1f3ffec8a89
+ซึ่งวิธีการYOLO อาศัยสถาปัตยกรรมเบื้องต้นดังภาพซึ่งประกอบไปด้วย24 convolutional layers และ2 fully connected 
+layers
+--- page 61 ---
+You Only Look Once (YOLO)
+อ้างอิง https://towardsdatascience.com/yolov1-you-only-look-once-object-detection-e1f3ffec8a89
+ซึ่งวิธีการYOLO อาศัยสถาปัตยกรรมเบื้องต้นดังภาพซึ่งประกอบไปด้วย24 convolutional layers และ2 fully connected 
+layers
+--- page 62 ---
+You Only Look Once (YOLO)
+อ้างอิง https://towardsdatascience.com/yolov1-you-only-look-once-object-detection-e1f3ffec8a89
+Loss Function
+ประกอบไปด้วย 5 ส่วน ได้แก่ 
+ส่วนที่ 1 
+(x, 
+y) ใช้พิจารณาตําแหน่งความคลาดเคลื่อนของ 
+bounding box โดยอาศัย sum of square error (SSE) 
+ส่วนที่ 2 (w, h) ใช้พิจารณาความกว้างและความสูงที่อยู่ในช่วง 0 
+ถึง 1 (The bounding box width and height are normalized 
+by the image width and height) โดยอาศัยหลักการ SSE 
+นอกจากนี้ การที่อาศัยรากที่สองเนื่องจากลดผลกระทบของขนาด
+กล่องใหญ่กับเล็ก 
+ส่วนที่ 3 และ 4 (confidence) พิจารณาจากค่า IoU 
+ระหว่าง 
+predicted box และ ground truth เพื่อลดปัจจัยการทําให้
+แบบจําลองไม่เสถียนและลดค่าความมั่นใจกรณีไม่มี Object 
+นอกจากนี้ ค่าλnoobj จะกําหนดให้เป็น 0.5
+ส่วนที่ 5 (Class Probabilities): ค่า SSE ของค่าความน่าจะเป็น
+แต่ละคลาส 
+หมายเหตุ ค่า λcoord กําหนดเท่ากับ 5 เพื่อเพิ่มค่า loss 
+สําหรับ
+ตําแหน่งของ bounding box ที่ทํานายได้
+--- page 63 ---
+You Only Look Once
+Ver. 8 (YOLOv8)
+อ้างอิง https://blog.roboflow.com/whats-new-in-yolov8/
+--- page 64 ---
+อ้างอิง https://blog.roboflow.com/guide-to-yolo-models/
+--- page 65 ---
+หัวข้อ
+•Multi-Stage Detectors
+• Region-based Convolutional Network (R-CNN)
+• Fast Region-based Convolutional Network (Fast R-CNN)
+• Faster Region-based Convolutional Network (Faster R-CNN)
+•Single-Stage Detectors
+• You Only Look Once (YOLO)
+•การสร้าง YOLOv8 ด้วยชุดคําสั่ง Ultralytics
+--- page 66 ---
+Ultralytics YOLOv8 เป็น Open Source ของบริษัท Ultralytics Inc. ที่ให้บริการผ่านทาง GitHub ที่พัฒนามาจาก YOLO เวอร์ชันก่อนหน้า 
+ซึ่งสามารถนําไปใช้กับงาน Object Detection, Instance Segmentation, Image Classification และงาน Pose Estimation ได้
+ชุดคําสั่ง Ultralytics YOLOv8 คืออะไร
+--- page 67 ---
+• วิธีการติดตั้ง
+ความต้องการของ Environment ต้องใช้ Python>=3.8 และ PyTorch>=1.8
+การใช้งานชุดคําสั่ง Ultralytics YOLOv8
+yolo predict model=yolov8n.pt source='https://ultralytics.com/images/bus.jpg'
+• วิธีใช้งานเบื้องต้น
+Command Line Interface (CLI)
+pip install ultralytics
+--- page 68 ---
+อ้างอิง : https://docs.ultralytics.com/yolov5/tutorials/train_custom_data/#option-2-create-a-manual-dataset
+ข้อ
+คําอธิบาย
+1 
+สร้างไฟล์ dataset.yaml สําหรับกําหนดรายละเอียดของชุดข้อมูล 
+2
+สร้าง Label ตามฟอร์แมตYOLO 
+3
+จัดเรียง Directories ไฟล์ให้ถูกต้อง
+4
+เลือกโมเดที่จะนําไปใช้
+6
+การฝึกสอนโมเดล
+5
+การทดสอบและวัดผลโมเดล
+วิธีการฝึกฝน Ultralytics YOLOv8 ด้วยชุดข้อมูลกําหนดเอง ประกอบไปด้วย 6 ขั้นตอน ดังนี้
+วิธีการฝึกฝน Ultralytics YOLOv8 ด้วยชุดข้อมูลกําหนดเอง
+--- page 69 ---
+1. สร้างไฟล์ dataset.yaml สําหรับกําหนดรายละเอียด
+ของชุดข้อมูล
+ในชุดคําสั่ง Ultralytics YOLOv8 ใช้การกําหนดลักษณะ
+ข้อมูลโดยใช้ไฟล์ yaml สําหรับการเขียนไฟล์ .yaml
+จําเป็นต้องตัวแปรดังต่อไปนี้
+• train เป็นที่ของภาพสําหรับการฝึกฝน
+• val เป็นที่อยู่ของภาพสําหรับการ Validation
+• test เป็นที่อยู่ของภาพสําหรับการทดสอบ
+• nc
+เป็นการกําหนดจํานวนคลาสทั้งหมดในชุดข้อมูล
+• names เป็นชื่อของคลาสทั้งหมดที่อยู่ในรูป List
+# strongly recommend absolute path
+# train images
+train: datasets/train/images
+# validation images
+val: datasets/valid/images   
+# test images (optional)
+test: datasets/test/images
+# Replace with the actual number of classes in your 
+dataset
+nc: 1
+# Replace with the actual class names
+names: ['car']
+วิธีการฝึกฝน Ultralytics YOLOv8 ด้วยชุดข้อมูลกําหนดเอง
+--- page 70 ---
+2. ทําแบบ Label ให้อยู่ในรูปแบบของ YOLO
+ฉลากข้อมูลสําหรับ YOLO จะอยู่ในรูปแบบของไฟล์ .txt 
+(1 ไฟล์เฉลยสําหรับต่อ 1 ภาพ) โดยที่ ข้อมูลภายในไฟล์จะ
+มีลักษณะการจัดเก็บเป็น “หนึ่งแถวต่อวัตถุหนึ่งชิ้น” และใน 
+1 แถว จะประกอบด้วยข้อมูลดังนี้ 
+• ประเภท (Class), 
+• จุด x_center,
+• จุด y_center, 
+• ความกว้างของวัตถุ
+• ความสูงของวัตถุ
+จากนั้น ตําแหน่งจะต้องถูก Normalize ให้อยู่รูปแบบ 0 – 
+1 โดยใช้ขนาดของภาพ ซึ่งมุมบนซ้ายของภาพ แทน จุด (0, 
+0) และมุมล่างขวา แทน จุด (1, 1)
+วิธีการฝึกฝน Ultralytics YOLOv8 ด้วยชุดข้อมูลกําหนดเอง
+ที่มาของภาพ : https://docs.ultralytics.com/yolov5/tutorials/train_custom_data/#22-create-labels
+หมายเหตุ คลาสที่ 0 จะนําเสนอด้วยกรอบสีส้ม ขณะที่ คลาสที่ 27 จะนําเสนอด้วยสีเขียว โดย
+ตําแหน่งของ YOLO จะประกอบด้วย x_center, y_center, width, height 
+class, x_center,  y_center,    width,        height 
+--- page 71 ---
+3. จัดเรียง Directories ไฟล์ให้ถูกต้อง
+เมื่อกําหนดให้ตัวแปร path คือ ./datasets/coco128 และ 
+train คือ images/train2017 ระบบจะระบุตําแหน่งของ 
+label ให้เองอัตโนมัติโดยระบบจะเปลี่ยนจาก /images/ ไป
+เป็น /labels/ ให้อัตโนมัติ ตัวอย่างเช่น
+ตําแหน่งของรูป คือ
+ระบบจะหาตําแหน่งเฉลยโดยใช้ที่อยู่ให้อัตโนมัติ
+วิธีการฝึกฝน Ultralytics YOLOv8 ด้วยชุดข้อมูลกําหนดเอง
+./datasets/train/images/im0.jpg
+./datasets/train/labels/im0.txt
+--- page 72 ---
+4. เลือกโมเดลที่ใช้งาน
+ใน Ultralytics YOLOv8 มีโมเดล 
+YOLO 8 ที่ถูกฝึกฝนด้วย ชุดข้อมูล 
+COCO ให้เลือกใช้จํานวน 5 ขนาด 
+ดังนั้นนักศึกษาสามารถเลือกได้ตาม
+ความเหมาะสม เช่น ความเร็ว ความ
+ถูกต้อง
+วิธีการฝึกฝน Ultralytics YOLOv8 ด้วยชุดข้อมูลกําหนดเอง
+--- page 73 ---
+5. การฝึกสอนโมเดล
+วิธีฝึกสอนโมเดล YOLO สามารถทําได้โดยการสร้างไฟล์ .py จากนั้น ให้กําหนดรายละเอียดพารามิเตอร์ต่าง ๆ และฝึกสอนได้เลย
+วิธีการฝึกฝน Ultralytics YOLOv8 ด้วยชุดข้อมูลกําหนดเอง
+./datasets/coco128/images/train2017/im0.jpg
+from ultralytics import YOLO
+import yaml
+# Initialize the model
+model = YOLO("yolov8n.pt")
+# Train the model with your custom dataset
+results = model.train(data="mock_data_file.yaml", epochs=5, batch=16, imgsz=256)
+print("Training completed")
+• batch คือ การส่งรูปให้โมเดลครั้งละหลายรูป ซึ่งสามารถส่งไปฝึกสอนหรือทดสอบครั้งละหลายรูปได้
+--- page 74 ---
+6. การทดสอบและวัดผลโมเดล
+สําหรับวิธีการทดสอบและวัดผล YOLO สามารถทําได้โดยการสร้างไฟล์ .py จากนั้น ใส่ที่อยู่ของโมเดลที่ฝึกสอนแล้ว และเรียกใช้ฟังก์ชัน val() 
+จากโมเดลได้เลย พร้อมกับกําหนดรายละเอียดพารามิเตอร์ต่าง ๆ 
+วิธีการฝึกฝน Ultralytics YOLOv8 ด้วยชุดข้อมูลกําหนดเอง
+./datasets/coco128/images/train2017/im0.jpg
+from ultralytics import YOLO
+# Load a model
+model = YOLO("runs/detect/train/weights/best.pt")
+# Customize validation settings
+validation_results = model.val(data="mock_data_file.yaml", imgsz=256, batch=16, conf=0.25, 
+iou=0.5)
+• batch คือ การส่งรูปให้โมเดลครั้งละหลายรูป ซึ่งสามารถส่งไปฝึกสอนหรือทดสอบครั้งละหลายรูปได้
+• conf คือ confidence score ที่ใช้ขจัด Object ที่มีความมั่นใจตํ่าออกไป โดยปกติโปรแกรมได้กําหนดค่าเริ่มต้นเป็น 0.001 (ไม่แนะนํา)
+• iou คือ เกณฑ์ในการพิจารณาการซ้อนทับกันของวัตถุในขั้นตอน non-maximize suppression โดยปกติโปรแกรมได้กําหนดค่าเริ่มต้นเป็น 0.6 
+--- page 75 ---
+6. การทดสอบและวัดผลโมเดล
+วิธีการฝึกฝน Ultralytics YOLOv8 ด้วยชุดข้อมูลกําหนดเอง
+./datasets/coco128/images/train2017/im0.jpg
+img = cv2.imread(img_path)
+# Run inference
+results = model(img)
+# Process results list
+for result in results:
+    # Save the result image with predictions
+    output_img_path = os.path.join(output_path, img_name)
+    result.save(output_img_path)
+เนื่องจากชุดคําสั่ง Ultralytics YOLOv8 รองรับการทํางานทั้ง object detection และ segmentation ส่งผลให้เวลาคืนค่าตัวแปร result จะให้ผลลัพธ์ออกมา
+ทั้ง 2 แบบ ดังนั้น ชุดคําสั่ง Ultralytics YOLOv8 จึงเก็บผลลัพธ์ในรูปแบบ List 
+แต่อย่างไรก็ตาม ถ้านักศึกษาต้องการผลลัพธ์เฉพาะ object detection 
+สามารถแก้ไขโค้ดบริเวณสีเหลืองเป็น output_img_path = os.path.join(output_path, img_name) และ result[0].save(output_img_path)
+--- page 76 ---
+หัวข้อ
+•Multi-Stage Detectors
+• Region-based Convolutional Network (R-CNN)
+• Fast Region-based Convolutional Network (Fast R-CNN)
+• Faster Region-based Convolutional Network (Faster R-CNN)
+•Single-Stage Detectors
+• You Only Look Once (YOLO)
+•การสร้าง YOLOv8 ด้วยชุดคําสั่ง Ultralytics

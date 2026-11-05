@@ -1,0 +1,18 @@
+ลิงค์ Download ไฟล์โปรแกรมและ Dataset ต่างๆ
+https://drive.google.com/drive/folders/1JBMezqtTQBTxbkvWhU1gNhZLXT8_CwRi?usp=sharing
+คำอธิบายรายละเอียด
+(1) ตัวอย่างโปรแกรม Multiclass Image Classification
+   ใน 1-Multiclass Image Classification.zip ประกอบด้วย 3 ไฟล์ ได้แก่ 
+
+classification_train.ipynb สำหรับฝึกสอนแบบจำลอง
+classification_inference.ipynb   สำหรับเรียกใช้งานทีละภาพ หลังผ่านกระบวนการฝึกสอน
+classification_evaluation.ipynb สำหรับเรียกใช้งานทีละหลายภาพ หลังผ่านกระบวนการฝึกสอน
+(2) วิธีการติดตั้ง Enviroment สำหรับ Pytorch และ OpenCV
+   ประกอบด้วย 2 ไฟล์ ได้แก่
+
+getting-start.txt
+requirements.txt
+(3) ฐานข้อมูลสำหรับฝึกใช้งาน
+multiclass-image-classification-dataset.zip สำหรับงานทางด้าน multiclass-image-classification
+multi-label-image-classification-dataset.zip สำหรับงานทางด้าน multi-label-image-classification
+image-regression-dataset.zip สำหรับงานทางด้าน image-regression

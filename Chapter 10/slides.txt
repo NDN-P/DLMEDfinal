@@ -1,0 +1,2651 @@
+##### 6aa34ef66b5bafb530c8b45b.pdf (118 pages)
+--- page 1 ---
+1
+• Edit Master text styles
+11/09/69
+1
+บรรยายโดย ผศ.ดร.ธราวิเชษฐ์  ธิติจรูญโรจน์
+คณะเทคโนโลยีสารสนเทศ 
+สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
+Chapter 10: Practical Implementation 
+of Convolutional Neural Networks
+--- page 2 ---
+2
+• Edit Master text styles
+11/09/69
+2
+หัวข้อ
+•หลักการและการสร้างโมเดลสําหรับ Multiclass Image Classification
+•หลักการและการสร้างโมเดลสําหรับ Multilabel Image Classification  
+•หลักการและการสร้างโมเดลสําหรับ Image Regression
+--- page 3 ---
+3
+• Edit Master text styles
+11/09/69
+3
+หัวข้อ
+•หลักการและการสร้างโมเดลสําหรับ Multiclass Image Classification
+•หลักการและการสร้างโมเดลสําหรับ Multilabel Image Classification  
+•หลักการและการสร้างโมเดลสําหรับ Image Regression
+--- page 4 ---
+4
+• Edit Master text styles
+11/09/69
+4
+การพัฒนาโปรแกรม
+การโปรแกรมโครงข่ายประสาทแบบคอนโวลูชัน
+ด้วยภาษาไพธอนจากชุดคําสั่ง PyTorch ตอนที่ 1
+--- page 5 ---
+5
+• Edit Master text styles
+11/09/69
+5
+อ้างอิง https://www.edureka.co/blog/keras-vs-tensorflow-vs-pytorch/
+--- page 6 ---
+6
+• Edit Master text styles
+11/09/69
+6
+อ้างอิง https://www.edureka.co/blog/keras-vs-tensorflow-vs-pytorch/
+--- page 7 ---
+7
+• Edit Master text styles
+11/09/69
+7
+--- page 8 ---
+12
+• Edit Master text styles
+11/09/69
+12
+การติดตั้งชุดคําสั่ง Pytorch 
+ให้นักศึกษาเข้าเว็บไซต์ https://pytorch.org/ เพื่อทําการดาวโหลดคําสั่งการติดตั้ง Pytorch ผ่าน Anaconda Command
+--- page 9 ---
+13
+• Edit Master text styles
+11/09/69
+13
+หลักการโครงข่ายประสาทแบบคอนโวลูชัน
+Forward Propagation คือ กระบวนการที่ป้อน Input Image เข้าสู่แบบจําลองที่ฝึกสอนเรียบร้อยแล้ว และคืนค่าเป็นเป็น Classname
+Backward Propagation คือ กระบวนการที่นําค่า Normalized Probabilities ไปใช้เพื่อปรับปรุง Weight ของแบบจําลองให้เกิดความแม่นยํามากยิ่งขึ้น
+Scoring 
+Function
+0.0006
+0.0596
+0.0083
+0.9315
+Normalized 
+Probabilities
+Loss Function
+Optimization 
+Algorithm
+Class name
+1.16
+-0.81
+-3.44
+3.91
+Normalized 
+Probabilities
+Loss value
+Forward Propagation : เพื่อรู้จํารูปภาพ
+Backward Propagation : เพื่อปรับปรุงแบบจําลองจากข้อมูลฝึกสอน
+--- page 10 ---
+14
+• Edit Master text styles
+11/09/69
+14
+หลักการโครงข่ายประสาทแบบคอนโวลูชัน
+Forward Propagation คือ กระบวนการที่ป้อน Input Image เข้าสู่แบบจําลองที่ฝึกสอนเรียบร้อยแล้ว และคืนค่าเป็นเป็น Classname
+Backward Propagation คือ กระบวนการที่นําค่า Normalized Probabilities ไปใช้เพื่อปรับปรุง Weight ของแบบจําลองให้เกิดความแม่นยํามากยิ่งขึ้น
+Scoring 
+Function
+0.0006
+0.0596
+0.0083
+0.9315
+Normalized 
+Probabilities
+Loss Function
+Optimization 
+Algorithm
+Class name
+1.16
+-0.81
+-3.44
+3.91
+Normalized 
+Probabilities
+Loss value
+Forward Propagation : เพื่อรู้จํารูปภาพ
+Backward Propagation : เพื่อปรับปรุงแบบจําลองจากข้อมูลฝึกสอน
+--- page 11 ---
+15
+• Edit Master text styles
+11/09/69
+15
+หลักการรู้จําภาพ
+การรู้จํารูปภาพด้วยหลักการโครงข่ายประสาทเทียมแบบคอนโวลูชันจะประกอบไปด้วย2 ส่วนได้แก่(1) ส่วนของกระบวนการฝึกสอนและ(2) กระบวนการ
+ทดสอบโดยที่ กระบวนฝึกสอนเป็นการนําข้อมูลภาพ(input image) และผลเฉลย(Label) ไปฝึกสอนโครงข่ายประสาทเทียมแบบคอนโวลูชันที่ได้กําหนดไว้
+ร่วมกับวิธีการเรียนรู้ของเครื่องจักรเพื่อให้ได้รับแบบจําลองที่มีประสิทธิภาพและเกิดความแม่นยําสูงขณะที่กระบวนการทดสอบเป็นการนําภาพทดสอบไปผ่าน
+แบบจําลองที่สร้างขึ้นและจะได้รับคําตอบว่าภาพดังกล่าวคืออะไร
+การสร้างแบบจําลอง
+ฟ
+การจัดแบ่งประเภท
+Classification
+Training Phase
+(กระบวนการฝึกสอน)
+Testing Phase
+(กระบวนการทดสอบ)
+ฟฟฟ
+ข้อมูลภาพ
+(input image)
+เฉลย
+(Label)
+ข้อมูลภาพทดสอบ
+แบบจําลอง
+(Model)
+--- page 12 ---
+16
+• Edit Master text styles
+11/09/69
+16
+หลักการรู้จําภาพ
+ดังนั้น เมื่อนักศึกษาได้โปรแกรมโครงข่ายประสาทเทียมแบบคอนโวลูชันด้วยภาษาไพทอนจะมีไฟล์ที่เกี่ยวข้องจํานวน3 ไฟล์ได้แก่
+(1)
+Net เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+(2)
+TrainingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาฝึกสอนแบบจําลอง
+(3)
+TestingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาทดสอบแบบจําลอง
+การสร้างแบบจําลอง
+ฟ
+การจัดแบ่งประเภท
+Classification
+Training Phase
+(กระบวนการฝึกสอน)
+Testing Phase
+(กระบวนการทดสอบ)
+ฟฟฟ
+Net.py
+TrainingCNN.py
+TestingCNN.py
+model.pt
+--- page 13 ---
+17
+• Edit Master text styles
+11/09/69
+17
+หลักการรู้จําภาพ
+ดังนั้น เมื่อนักศึกษาได้โปรแกรมโครงข่ายประสาทเทียมแบบคอนโวลูชันด้วยภาษาไพทอนจะมีไฟล์ที่เกี่ยวข้องจํานวน3 ไฟล์ได้แก่
+(1)
+Net เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+(2)
+TrainingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาฝึกสอนแบบจําลอง
+(3)
+TestingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาทดสอบแบบจําลอง
+การสร้างแบบจําลอง
+ฟ
+การจัดแบ่งประเภท
+Classification
+Training Phase
+(กระบวนการฝึกสอน)
+Testing Phase
+(กระบวนการทดสอบ)
+ฟฟฟ
+Net.py
+TrainingCNN.py
+TestingCNN.py
+model.pt
+--- page 14 ---
+18
+• Edit Master text styles
+11/09/69
+18
+Class Net
+                      เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+class Net(Module):   
+    def __init__(self): # กําหนดโครงสร้างในConstructor
+        super(Net, self).__init__()
+        self.cnn_layers = Sequential(
+            # Defining a 2D convolution layer
+             Conv2d(1,4,kernel_size=3, stride=1, padding=1),
+            BatchNorm2d(4),
+            ReLU(inplace=True),
+            MaxPool2d(kernel_size=2, stride=2),
+            # Defining another 2D convolution layer
+            Conv2d(4,4,kernel_size=3, stride=1, padding=1),
+            BatchNorm2d(4),
+           ReLU(inplace=True),
+           MaxPool2d(kernel_size=2, stride=2),
+        )
+        self.linear_layers = Sequential(
+            Linear(4 * 7 * 7, 10)
+        )
+    # Defining the forward pass    
+    def forward(self, x):
+        x = self.cnn_layers(x)
+        x = x.view(x.size(0), -1)
+        x = self.linear_layers(x)
+        return x
+กําหนดส่วน
+Feature 
+Extraction
+กําหนดส่วน
+Classification
+ตั,งชื0อเองได้
+ตั,งชื0อเองได้
+--- page 15 ---
+19
+• Edit Master text styles
+11/09/69
+19
+Class Net
+                      เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+class Net(Module):   
+    def __init__(self): # กําหนดโครงสร้างในConstructor
+        super(Net, self).__init__()
+        self.cnn_layers = Sequential(
+            # Defining a 2D convolution layer
+             Conv2d(1,4,kernel_size=3, stride=1, padding=1),
+            BatchNorm2d(4),
+            ReLU(inplace=True),
+            MaxPool2d(kernel_size=2, stride=2),
+            # Defining another 2D convolution layer
+            Conv2d(4,4,kernel_size=3, stride=1, padding=1),
+            BatchNorm2d(4),
+           ReLU(inplace=True),
+           MaxPool2d(kernel_size=2, stride=2),
+        )
+        self.linear_layers = Sequential(
+            Linear(4 * 7 * 7, 10)
+        )
+    # Defining how the data flows through these layers when 
+       performing the forward pass through the network
+    def forward(self, x):
+        x = self.cnn_layers(x)
+      # convert feature map to vector form
+        x = x.view(x.size(0), -1) 
+        x = self.linear_layers(x)
+        return x
+กําหนดส่วน
+Feature 
+Extraction
+กําหนดส่วน
+Classification
+นักศึกษาสามารถนําเสนอแบบจําลองในรูปแบบกราฟฟิกได้ผ่าน https://netron.app/
+--- page 16 ---
+20
+• Edit Master text styles
+11/09/69
+20
+Class Net
+                      เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+class ConvNet(Module):
+    def __init__(self):
+        super(ConvNet, self).__init__()
+        self.layer1 = Sequential(
+            Conv2d(1, 32, kernel_size=5, stride=1, padding=2),
+            ReLU(),
+            MaxPool2d(kernel_size=2, stride=2))
+        self.layer2 = Sequential(
+            Conv2d(32, 64, kernel_size=5, stride=1, padding=2),
+            ReLU(),
+            MaxPool2d(kernel_size=2, stride=2))
+        self.drop_out = Dropout()
+        self.fc1 = Linear(7 * 7 * 64, 1000)
+        self.fc2 = Linear(1000, 10)
+    def forward(self, x):
+        out = self.layer1(x)
+        out = self.layer2(out)
+out = out.reshape(out.size(0), -1)
+        out = self.drop_out(out)
+        out = self.fc1(out)
+        out = self.fc2(out)
+        return out
+model = ConvNet()
+torch.save(model, 'C:/ConvNet.pt')
+นักศึกษาสามารถนําเสนอแบบจําลองในรูปแบบกราฟฟิกได้ผ่าน https://netron.app/
+--- page 17 ---
+21
+• Edit Master text styles
+11/09/69
+21
+Class Net
+                      เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+class ConvNet(Module):
+    def __init__(self):
+        super(ConvNet, self).__init__()
+        self.layer1 = Sequential(
+            Conv2d(1, 32, kernel_size=5, stride=1, padding=2),
+            ReLU(),
+            MaxPool2d(kernel_size=2, stride=2))
+        self.layer2 = Sequential(
+            Conv2d(32, 64, kernel_size=5, stride=1, padding=2),
+            ReLU(),
+            MaxPool2d(kernel_size=2, stride=2))
+        self.drop_out = Dropout()
+        self.fc1 = Linear(7 * 7 * 64, 1000)
+        self.fc2 = Linear(1000, 10)
+    def forward(self, x):
+        out = self.layer1(x)
+        out = self.layer2(out)
+out = out.reshape(out.size(0), -1)
+        out = self.drop_out(out)
+        out = self.fc1(out)
+        out = self.fc2(out)
+        return out
+model = ConvNet()
+torch.save(model, 'C:/ConvNet.pt')
+นักศึกษาสามารถนําเสนอแบบจําลองในรูปแบบกราฟฟิกได้ผ่าน https://netron.app/
+--- page 18 ---
+22
+• Edit Master text styles
+11/09/69
+22
+เปรียบเทียบการเขียนโค้ดในการสร้างแบบจําลอง
+อ้างอิง https://glassboxmedicine.com/2021/02/06/designing-custom-2d-and-3d-cnns-in-pytorch-tutorial-with-code/
+อย่างไรก็ตาม คําสั่ง nn.Sequential ไม่จําเป็นต้องเรียกใช้งาน แต่โดยส่วนใหญ่แล้ว นิยมแนะนําให้เรียกใช้งานคําสั่ง nn.Sequential มากกว่า 
+เนื่องจากช่วยให้โค้ดมีระเบียบมากขึ้นและเป็นการสร้างกลุ่มของ Layer หรือเรียกว่า Block
+--- page 19 ---
+23
+• Edit Master text styles
+11/09/69
+23
+Containers
+หมายถึง คลาสที่เป็นนามธรรม (abstract module class) ที่ได้กําหนดว่าโครงข่ายประสาทเทียมต้องมีเมธอดใดบ้าง เพื่อเป็นการบังคับว่าทุกโครงข่าย
+ประสาทเทียมต้องมีเมธอดเหล่านี้ ซึ่งประกอบไปด้วย 3 เมธอด ได้แก่
+อ้างอิง https://nn.readthedocs.io/en/rtd/containers และ https://pytorch.org/docs/stable/nn.html
+•
+add(module) เพื่อสําหรับเพิ่มโมดูลลงใน container เป็นลําดับ
+•
+get(index) เพื่อคืนค่าโมดูลที่อยู่ใน container ลําดับที่ index
+•
+size()
+เพื่อคืนค่าจํานวนโมดูลใน Container 
+ซึ่งใน PyTorch จะมีคลาสที่เป็นนามธรรมสําหรับโครงข่ายประสาทเทียมแบบซับซ้อน (Complex neural 
+networks) ที่สําคัญดังนี้ Module และ Sequential 
+ชื่อ
+ความหมาย
+Module
+เป็นพื้นของทุกคลาสที่เกี่ยวข้องกับโมดูลโครงข่ายประสาทเทียม
+Sequential
+เป็น Container แบบเชื่อมต่อเลเยอร์ในลักษณะ fully แบบ feed-forward
+Convolution Layer
+Non-Linearity
+Pooling Layer
+Multilayer Perceptron
+Softmax Output
+Containers
+--- page 20 ---
+24
+• Edit Master text styles
+11/09/69
+24
+2D Convolution Layer
+หมายถึง ส่วนที่มีหน้าที่สกัดคุณลักษณะที่สําคัญจากภาพ โดยอาศัยตัวดําเนินการคอนโวลูชั่นรวมกับตัวกรองที่ค่าสัมประสิทธิทุกค่าบนตัวกรองจะมีการปรับ
+เหมาะอัตโนมัติตามค่าความผิดพลาดที่เกิดขึ้นจากแบบจําลอง
+อ้างอิง https://syncedreview.com/2017/05/11/a-guide-to-receptive-field-arithmetic-for-convolutional-neural-networks/
+คําอธิบายตัวแปร
+• in_channels (int) คือ จํานวน channels ของภาพนําเข้า (input image)
+(ภาพสีมี 3 channels ขณะที่ภาพระดับสีเทาและภาพขาวดํามี 1 channel)
+• out_channels (int) คือ จํานวน channels ของผลลัพธ์ที่ผ่านการ conv
+• kernel_size (int or tuple) คือ ขนาดของตัวกรอง conv
+• stride (int or tuple) คือ จํานวนช่องในการขยับตัวกรอง 
+• padding (int or tuple) คือ ระบุจํานวนชั้นที่เติมข้อมูล 
+• padding_mode (string) คือ วิธีการเติมข้อมูล
+torch.nn.Conv2d(
+in_channels, out_channels, kernel_size, 
+stride=1, padding=0, dilation=1, groups=1, 
+bias=True, padding_mode='zeros’
+)
+หมายเหตุ สีเหลือง คือ บังคบต้องระบุ
+--- page 21 ---
+25
+• Edit Master text styles
+11/09/69
+25
+2D Batch Normalization
+หมายถึง ส่วนที่ทําหน้าที่ (1) ปรับช่วงค่าข้อมูลให้อยู่ในมาตรฐานเดียวกัน หรือ (2) อยู่ในขอบเขตที่กําหนด หรือ (3) ปรับค่าอยู่ในช่วงเดียวกัน (Scaling Data) 
+ก่อนออกจาก Layer ไปเป็น input ให้ Layer ถัดไป ซึ่งสามารถ (1) ลดอิทธิพลของ feature ไม่ให้ตัวใดตัวหนึ่งมีอิทธิพลมากเกินไป (2) สามารถช่วยเพิ่ม
+ความเร็วในการฝึกสอนแบบจําลอง และ (3) ทําให้ค่า Loss ลดลงได้มากกว่า
+อ้างอิง https://gradientscience.org/batchnorm/
+คําอธิบายตัวแปร
+• num_features คือ จํานวน channels ของ input ใน Layer นี้
+torch.nn.BatchNorm2d(
+num_features, eps=1e-05, momentum=0.1, affine=True, 
+track_running_stats=True
+ )
+หมายเหตุ สีเหลือง คือ บังคบต้องระบุ
+--- page 22 ---
+26
+• Edit Master text styles
+11/09/69
+26
+Non-linear Activation Layer
+หมายถึง ส่วนที่ทําให้ผลลัพธ์ของ neuron มีความเป็น Non-linearity ซึ่งสามารถกล่าวได้ว่า Activation function เป็นการแปลงข้อมูลแบบเชิงเส้นให้อยู่ใน
+รูปแบบไม่เชิงเส้นแบบหนึ่ง  (Non-linear transformation).
+torch.nn.Tanh()
+torch.nn.Sigmoid()
+torch.nn.ReLU()
+Rectified Linear Unit Function
+Sigmoid
+Tangent Hyperbolic Function
+--- page 23 ---
+27
+• Edit Master text styles
+11/09/69
+27
+2D Pooling Layer
+หมายถึง กระบวนการ Non-linear และ down-sampling รูปแบบหนึ่งที่พยายามจะแปลงข้อมูลจาก Convolution layer ให้มีความชัดเจนมากขึ้น ซึ่งการทํา 
+pooling สามารถลดเวลาในการประมวลและขนาดของ Feature map  ของเลเยอร์ต้น ๆ ได้ดี อีกทั้งยังถือว่าเป็นการสรุปข้อมูลในเบื้องต้นอีกด้วย 
+อ้างอิง https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html#torch.nn.MaxPool2d
+โดยที่
+• kernel_size (int or tuple) คือ ขนาดของตัวกรอง conv
+torch.nn.MaxPool2d(
+kernel_size: (int or Tuple), 
+stride: None, padding: 0, dilation: 1, return_indices: False, ceil_mode: False 
+ )
+หมายเหตุ สีเหลือง คือ บังคบต้องระบุ
+2D Max Pooling Layer
+โดยที่
+• kernel_size (int or tuple) คือ ขนาดของตัวกรอง conv
+torch.nn.AvgPool2d(
+kernel_size: (int or Tuple), 
+stride: None, padding: 0, ceil_mode: False, count_include_pad: True, divisor_override: None
+ )
+หมายเหตุ สีเหลือง คือ บังคบต้องระบุ
+2D Average Pooling Layer
+--- page 24 ---
+28
+• Edit Master text styles
+11/09/69
+28
+Fully Connected Layer 
+คือ การทํางานร่วมกันของ Input Layer, Hidden Layer และ Output Layer ซึ่งมีหน้าที่ในเรียนรู้ให้เครื่องจักรสามารถจําแนกประเภทของวัตถุได้ โดยขนาด
+ของ Output Layer จะมีค่าเท่ากับ (1) จํานวนของคลาสที่ต้องการ หรือ (2) ขนาดของ Input Layer ใน Fully-Connected Layer ถัดไป
+อ้างอิง https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear
+โดยที่
+• in_features  คือ ขนาดของ input (ได้แก่ feature หรือ output ของ Layer ก่อน
+หน้า) ในรูปแบบของเวกเตอร์
+• out_features คือ ขนาดของ output ที่ได้จาก Fully Connected Layer ปัจจุบัน
+torch.nn.Linear(
+in_features: int, out_features: int, 
+bias: bool = True
+ )
+หมายเหตุ สีเหลือง คือ บังคบต้องระบุ
+X1
+X2
+X3
+Y1
+Y2
+in_features 
+out_features 
+𝑤!
+𝑤"
+𝑤#
+𝑥!𝑤! + 𝑥"𝑤" + 𝑥#𝑤# + 𝑏
+--- page 25 ---
+29
+• Edit Master text styles
+11/09/69
+29
+Dropout Layer 
+คือ ส่วนที่มีหน้าที่สุ่มลบ neuron ลงจากแบบจําลองเพื่อทําให้แบบจําลองมีประสิทธิภาพที่ดีขึ้น เนื่องจากโครงข่ายประสาทเทียมแบบ feedforward ขนาด
+ใหญ่ที่ได้รับการฝึกสอนด้วยชุดข้อมูลขนาดเล็กอาจทําให้ประสิทธิภาพของแบบจําลองแย่เพราะเกิดมาเหตุการณ์ "overfitting” (ช่วงที่แนะนํา 0.2 – 0.5)
+อ้างอิง https://arxiv.org/abs/1207.0580v1
+โดยที่
+• p คือ ค่าความน่าจะเป็นสําหรับการลบ neuron ออกจากแบบจําลอง
+การลบในทางปฎิบัติ คือ การกําหนดให้ค่าถ่วงนํ้าหนักเท่ากับ 0 เช่น
+เมื่อกําหนดให้𝑤" เป็น0 จะพบว่า
+หรือสามารถเขียนได้ว่า
+torch.nn.Dropout(
+    p: 0.5, inplace: False
+)
+X1
+X2
+X3
+Y1
+Y2
+in_features 
+out_features 
+𝑤!
+𝑤"
+𝑤#
+𝑥!𝑤! +
+𝑥#𝑤# + 𝑏
+𝑥!𝑤! + 𝑥"𝑤" + 𝑥#𝑤# + 𝑏
+𝑥!𝑤! + 𝑥"(0) + 𝑥#𝑤# + 𝑏
+𝑥!𝑤! +
+𝑥#𝑤# + 𝑏
+--- page 26 ---
+30
+• Edit Master text styles
+11/09/69
+30
+Class Net
+                      เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+class Net(Module):   
+    def __init__(self): # กําหนดโครงสร้างในConstructor
+        super(Net, self).__init__()
+        self.cnn_layers = Sequential(
+            # Defining a 2D convolution layer
+             Conv2d(1,4,kernel_size=3, stride=1, padding=1),
+            BatchNorm2d(4),
+            ReLU(inplace=True),
+            MaxPool2d(kernel_size=2, stride=2),
+            # Defining another 2D convolution layer
+            Conv2d(4,4,kernel_size=3, stride=1, padding=1),
+            BatchNorm2d(4),
+           ReLU(inplace=True),
+           MaxPool2d(kernel_size=2, stride=2),
+        )
+        self.linear_layers = Sequential(
+            Linear(4 * 7 * 7, 10)
+        )
+    # Defining how the data flows through these layers when 
+       performing the forward pass through the network
+    def forward(self, x):
+        x = self.cnn_layers(x)
+      # convert feature map to vector form
+        x = x.view(x.size(0), -1) 
+        x = self.linear_layers(x)
+        return x
+กําหนดส่วน
+Feature 
+Extraction
+กําหนดส่วน
+Classification
+นักศึกษาสามารถนําเสนอแบบจําลองในรูปแบบกราฟฟิกได้ผ่าน https://netron.app/
+--- page 27 ---
+31
+• Edit Master text styles
+11/09/69
+31
+Class Net
+                      เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+class ConvNet(Module):
+    def __init__(self):
+        super(ConvNet, self).__init__()
+        self.layer1 = Sequential(
+            Conv2d(1, 32, kernel_size=5, stride=1, padding=2),
+            ReLU(),
+            MaxPool2d(kernel_size=2, stride=2))
+        self.layer2 = Sequential(
+            Conv2d(32, 64, kernel_size=5, stride=1, padding=2),
+            ReLU(),
+            MaxPool2d(kernel_size=2, stride=2))
+        self.drop_out = Dropout()
+        self.fc1 = Linear(7 * 7 * 64, 1000)
+        self.fc2 = Linear(1000, 10)
+    def forward(self, x):
+        out = self.layer1(x)
+        out = self.layer2(out)
+out = out.reshape(out.size(0), -1)
+        out = self.drop_out(out)
+        out = self.fc1(out)
+        out = self.fc2(out)
+        return out
+model = ConvNet()
+torch.save(model, 'C:/ConvNet.pt')
+นักศึกษาสามารถนําเสนอแบบจําลองในรูปแบบกราฟฟิกได้ผ่าน https://netron.app/
+--- page 28 ---
+32
+• Edit Master text styles
+11/09/69
+32
+อ้างอิง https://github.com/pytorch/vision/blob/main/torchvision/models/alexnet.py
+class AlexNet(nn.Module):
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5) -> None:
+        super().__init__()
+        _log_api_usage_once(self)
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+            nn.Conv2d(64, 192, kernel_size=5, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+            nn.Conv2d(192, 384, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(384, 256, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 256, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+        )
+        self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
+        self.classifier = nn.Sequential(
+            nn.Dropout(p=dropout),
+            nn.Linear(256 * 6 * 6, 4096),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=dropout),
+            nn.Linear(4096, 4096),
+            nn.ReLU(inplace=True),
+            nn.Linear(4096, num_classes),
+        )
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.features(x)
+        x = self.avgpool(x)
+        x = torch.flatten(x, 1)
+        x = self.classifier(x)
+        return x
+อ้างอิง https://www.linkedin.com/pulse/alexnet-architecture-changed-cnns-nedhir-ben-hammouda/
+•
+inplace=True ใน PyTorch ใช้เพื่อกําหนดว่าต้องการให้การดําเนินการ 
+(operation) นั้นเกิดขึ้น ในตัวมันเองโดยไม่ต้องสร้าง Tensor ใหม่ ผลลัพธ์
+ของการดําเนินการจะถูกเก็บทับบนตัวแปร Tensor 
+เดิมแทนที่จะคืนค่า
+ผลลัพธ์เป็น Tensor ใหม่ ซึ่งช่วยลดการใช้หน่วยความจําในการคํานวณ
+•
+คําสั่ง nn.AdaptiveAvgPool2d((6, 6)) จะปรับเพียง Width และ 
+Height เท่านั้น จะไม่ยุ่งกับ Batch Size และ Channel ตัวอย่างเช่น 
+กําหนดให้ Tensor Shape (Batch Size, Channel, Height, Width) 
+•
+ข้อมูลนําเข้า (1, 3, 10, 14)
+•
+ข้อมูลส่งออก (1, 3, 6, 6)
+--- page 29 ---
+33
+• Edit Master text styles
+11/09/69
+33
+รายละเอียดเพิ่มเติม
+สิ่งที่ปรากฏในสไลน์เป็นเพียงแค่ข้อมูลบางส่วนซึ่งมีการพูดถึงหรือการใช้งานอย่างกว้างขวางและพบเจอมาก ซึ่งนักศึกษาสามารถหาข้อมูลหรือทางเลือกอื่น ๆ 
+ในการกําหนดโครงสร้างได้จากเว็บไซต์ต่อไปนี้
+https://pytorch.org/docs/stable/nn.html
+--- page 30 ---
+34
+• Edit Master text styles
+11/09/69
+34
+หลักการรู้จําภาพ
+ดังนั้น เมื่อนักศึกษาได้โปรแกรมโครงข่ายประสาทเทียมแบบคอนโวลูชันด้วยภาษาไพทอนจะมีไฟล์ที่เกี่ยวข้องจํานวน3 ไฟล์ได้แก่
+(1)
+Net เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+(2)
+TrainingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาฝึกสอนแบบจําลอง
+(3)
+TestingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาทดสอบแบบจําลอง
+การสร้างแบบจําลอง
+ฟ
+การจัดแบ่งประเภท
+Classification
+Training Phase
+(กระบวนการฝึกสอน)
+Testing Phase
+(กระบวนการทดสอบ)
+ฟฟฟ
+Net.py
+TrainingCNN.py
+TestingCNN.py
+model.pt
+--- page 31 ---
+35
+• Edit Master text styles
+11/09/69
+35
+ขั้นตอนการฝึกสอนเครื่องจักร
+                       จะเขียนโปรแกรมลงในไฟล์ TrainingCNN.py 
+                       ซึ่งจะประกอบ ด้วย 7 ขั้นตอนหลัก ได้แก่
+•
+Data Loader
+การโหลดข้อมูลรูปภาพและเฉลยเข้าสู่โปรแกรม
+•
+Training and Validating Set Generation
+แบ่งข้อมูลออกเป็น 2 ชุด ได้แก่ ชุดฝึกสอนและชุดทดสอบ
+•
+Model Loader
+การโหลดโครงสร้างของสถาปัตยกรรมที่จะใช้งานเข้าสู่โปรแกรม
+•
+Defining Learning Algorithm 
+การกําหนดวิธีการเรียนรู้และพารามิเตอร์ต่าง ๆ 
+•
+Training Model
+ฝึกสอนแบบจําลอง
+•
+Evaluating Performance
+คํานวณค่าความผิดพลาดและค่าความแม่นยํา
+•
+Is it accepted ?
+ประเมินผลว่าแบบจําลองมีประสิทธิภาพหรือไม่
+--- page 32 ---
+36
+• Edit Master text styles
+11/09/69
+36
+Import ชุดคําสั่งที่จําเป็น
+                       มีความจําเป็นต้องใช้คําสั่งต่าง ๆ มากมายที่มาจาก
+หลากหลายชุดคําสั่ง เพื่อให้สามารถฝึกสอนเครื่องจักรได้ 
+import pandas as pd
+import numpy as np
+from Net import Net
+# for reading and displaying images
+from skimage.io import imread
+import matplotlib.pyplot as plt
+# for creating validation set
+from sklearn.model_selection import train_tes
+t_split
+# for evaluating the model
+from sklearn.metrics import accuracy_score
+from tqdm import tqdm
+# PyTorch libraries and modules
+import torch
+from torch.autograd import Variable
+from torch.nn import Linear, ReLU, CrossEntro
+pyLoss, Sequential, Conv2d, MaxPool2d, Module
+, Softmax, BatchNorm2d, Dropout
+from torch.optim import Adam, SGD
+--- page 33 ---
+37
+• Edit Master text styles
+11/09/69
+37
+Data Loader
+                       การโหลดข้อมูลรูปภาพและเฉลยเข้าสู่โปรแกรม
+train = pd.read_csv(‘C:/train/train.csv')
+train.head()
+Data Loader
+--- page 34 ---
+38
+• Edit Master text styles
+11/09/69
+38
+Data Loader
+                       การโหลดข้อมูลรูปภาพและเฉลยเข้าสู่โปรแกรม
+train = pd.read_csv(‘C:/train/train.csv')
+train.head()
+train_img = []
+for img_name in tqdm(train['id']):
+    # defining the image path
+    impath = 'C:/train/'+str(img_name)+'.png’
+    # reading the image
+    img = imread(impath, as_gray=True)
+    # normalizing the pixel values
+    img /= 255.0
+    # converting the type of pixel to float
+    img = img.astype('float32’)
+    # appending the image into the list
+    train_img.append(img)
+# converting the list to numpy array
+train_x = np.array(train_img)
+# defining the target
+train_y = train['label'].values
+print(train_x.shape)
+# print >>> (60000, 28, 28)
+Data Loader
+--- page 35 ---
+39
+• Edit Master text styles
+11/09/69
+39
+Training & Validating Set Generation
+                      แบ่งข้อมูลออกเป็น 2 ชุด ได้แก่ ชุดฝึกสอนและ
+                      ชุดทดสอบ
+train_x, val_x, train_y, val_y = 
+train_test_split(train_x, train_y, test_size = 0.1)
+# converting training images into torch format
+train_x = train_x.reshape(54000, 1, 28, 28)
+train_x  = torch.from_numpy(train_x).to(torch.float32)
+# converting the target into torch format
+train_y = train_y.astype(int);
+train_y = torch.from_numpy(train_y).to(torch.float32)
+# shape of training data
+print(train_x.shape, train_y.shape)
+# converting validation images into torch format
+val_x = val_x.reshape(6000, 1, 28, 28)
+val_x  = torch.from_numpy(val_x).to(torch.float32)
+# converting the target into torch format
+val_y = val_y.astype(int);
+val_y = torch.from_numpy(val_y).to(torch.float32)
+# shape of validation data
+print(val_x.shape, val_y.shape)
+Training and Validating Set 
+Generation
+(54000, 28, 28) 
+(6000, 28, 28)  
+(54000,) 
+(6000,)
+[54000, 1, 28, 28] 
+[54000]
+[6000, 1, 28, 28] 
+[6000]
+--- page 36 ---
+40
+• Edit Master text styles
+11/09/69
+40
+Model Loader
+                      การโหลดโครงสร้างของสถาปัตยกรรมที่จะใช้งาน
+                      เข้าสู่โปรแกรม
+from Net import Net #ซึ#งอยู่ในโค้ดของImport ชุดคําสั#งที#จําเป็น
+Model Loader
+--- page 37 ---
+41
+• Edit Master text styles
+11/09/69
+41
+Model Loader
+                      การโหลดโครงสร้างของสถาปัตยกรรมที่จะใช้งาน
+                      เข้าสู่โปรแกรม
+from Net import Net #ซึ#งอยู่ในโค้ดของImport ชุดคําสั#งที#จําเป็น
+Model Loader
+นักศึกษาต้องกําหนดโครงสร้างของCNN (Bone Model) ของ
+นักศึกษาก่อนว่าจะใช้รูปแบบใด
+อาทิเช่น
+AlexNet, 
+ResNet, 
+VGG-19,  GoogLeNet, MobiliNet, Inception, หรือDenseNet 
+นอกจากนี้นักศึกษายังสามารถกําหนดโครงสร้างCNN ของนักศึกษา
+ได้เองซึ่งนักศึกษาสามารถสร้างและเก็บไว้ในรูปแบบไพธอนคลาสได้
+--- page 38 ---
+42
+• Edit Master text styles
+11/09/69
+42
+Defining Learning Algorithm 
+                      การกําหนดวิธีการเรียนรู้และพารามิเตอร์ต่าง ๆ 
+# defining the model
+model = Net()
+# defining the optimizer
+# optimizer = Adam(model.parameters(), lr=0.07)
+optimizer = SGD(model.parameters(), lr=0.07, momentum=0.9)
+# defining the loss function
+criterion = CrossEntropyLoss()
+# checking if GPU is available
+if torch.cuda.is_available():
+    model = model.cuda()
+    criterion = criterion.cuda()
+print(model)
+Defining Learning Algo
+--- page 39 ---
+43
+• Edit Master text styles
+11/09/69
+43
+Defining Learning Algorithm 
+                      การกําหนดวิธีการเรียนรู้และพารามิเตอร์ต่าง ๆ 
+# defining the model
+model = Net()
+# defining the optimizer
+# optimizer = Adam(model.parameters(), lr=0.07)
+optimizer = SGD(model.parameters(), lr=0.07, momentum=0.9)
+# defining the loss function
+criterion = CrossEntropyLoss()
+# checking if GPU is available
+if torch.cuda.is_available():
+    model = model.cuda()
+    criterion = criterion.cuda()
+print(model)
+Defining Learning Algo
+--- page 40 ---
+44
+• Edit Master text styles
+11/09/69
+44
+TORCH.OPTIM
+คือ แพ็คเกจที่รวบรวมคําสั่งที่เกี่ยวข้องกับอัลกอริทึมปรับปรุงแบบจําลอง (Optimization Algorithm) อยู่
+อ้างอิง https://medium.com/mmp-li/gradient-descent-คีย์เวิร์ดที่-data-
+science-ต้องรู้จัก-machine-learning-101-b5c78c1787a0
+วิธีการใช้งาน optimizer จากแพ็คเกจ TORCH.OPTIM
+• สร้าง optimizer object สําหรับเก็บข้อมูลสถานะและค่าพารามิเตอร์ต่าง ๆ ของแบบจําลอง
+• กําหนดค่าพารามิเตอร์ต่าง ๆ ที่จําเป็น อาทิเช่น learning rate, optimizer-specific เป็นต้น
+• อัพเดตค่าต่าง ๆ ของแบบจําลองด้วย gradients
+ตัวอย่างเช่น 
+# Stochastic Gradient Descent Algorithm
+ optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+ # Adam algorithm.
+ optimizer = optim.Adam([var1, var2], lr=0.0001)
+--- page 41 ---
+45
+• Edit Master text styles
+11/09/69
+45
+Normalization
+คือ การปรับช่วงของข้อมูลให้อยู่ในช่วงที่กําหนด 
+ข้อควรระวัง
+นักศึกษาควรต้องตรวจสอบช่วงของค่าข้อมูลก่อนว่ามีความแตกต่างกันมากหรือไม่ เนื่องจากอาจส่งผลให้ใช้เวลาในการ
+ประมวลผลที่นานกว่าจะเข้าใกล้ค่าตํ่าสุดสําหรับ Gradient Descent ตัวอย่างเช่น แอททริบิว A อยู่ในช่วง 0 - 1 ขณะที่แอททริ
+บิว B 
+อยู่ในช่วง 0 - 255 ซึ่งจะพบว่าทัง 2 แอททริบิวมีช่วงที่แตกต่างกันอย่างชัดเจน เพื่อที่จะหลีกเลี่ยงปัญหาข้างต้น ดังนั้น 
+การปรับรูปแบบบรรทัดฐาน (Normalization) จึงถูกนํามาใช้งาน โดยอาศัยหลักการทางสถิติดังแสดงในสมการต่อไปนี้
+หลังจากการปรับรูปแบบบรรทัดฐานแล้ว  𝒙! ควรปรับให้ค่าเฉลี่ย (μ) เท่ากับ 0 และส่วนเบี่ยงเบนมาตรฐาน (σ) เท่ากับ 1
+อ้างอิง https://medium.com/mmp-li/gradient-descent-คีย์เวิร์ดที่-data-science-ต้องรู้จัก-machine-learning-101-b5c78c1787a0 และ https://towardsdatascience.com/gradient-descent-algorithm-and-its-variants-10f652806a3
+w
+b
+unnormalized data
+w
+b
+normalized data
+𝒙𝒊
+! = 𝐱𝐢− 𝝁
+𝝈
+mean
+S.D.
+--- page 42 ---
+46
+• Edit Master text styles
+11/09/69
+46
+Defining Learning Algorithm 
+                      การกําหนดวิธีการเรียนรู้และพารามิเตอร์ต่าง ๆ 
+# defining the model
+model = Net()
+# defining the optimizer
+# optimizer = Adam(model.parameters(), lr=0.07)
+optimizer = SGD(model.parameters(), lr=0.07, momentum=0.9)
+# defining the loss function
+criterion = CrossEntropyLoss()
+# checking if GPU is available
+if torch.cuda.is_available():
+    model = model.cuda()
+    criterion = criterion.cuda()
+print(model)
+Defining Learning Algo
+--- page 43 ---
+47
+• Edit Master text styles
+11/09/69
+47
+Loss Functions (Cost Function) for Classification Problem
+คือ สมการผลรวมของค่าความแตกต่าง (Difference) หรือค่าความผิดพลาด (Error) ระหว่างค่าที่ได้จากแบบจําลองกับค่าจากข้อมูลจริง ซึ่งนิยมนํามาใช้เพื่อวัด
+ประสิทธิภาพของแบบจําลองว่ามีความเหมาะสมกับข้อมูลหรือไม่ โดยทั่วไปแล้วค่าของสมการยิ่งน้อยยิ่งดี
+Loss 
+Functions 
+จะสะท้อนถึงประสิทธิภาพของแบบจําลอง หรือกล่าวได้ว่า “พารามิเตอร์แต่ละตัวของ
+แบบจําลองมีความเหมาะสมกับข้อมูลหรือไม่” ซึ่ง Loss 
+Functions จะรับค่า Probability จาก Softmax มา
+คํานวณเพื่อดูว่า (1) ผลทํานายถูกต้องหรือไม่ และ (2) ค่าความมั่นใจของแบบจําลองเป็นอย่างไร อาทิเช่น
+• กรณีที่ 1 : ทํานายถูก
+และมีความมั่นใจมากซึ่งจะสามารถเรียกได้ว่า ดีและจะให้ค่า Loss ที่น้อย
+• กรณีที่ 2 : ทํานายถูก
+และมีความมั่นใจน้อยซึ่งจะสามารถเรียกได้ว่า ไม่ดีและจะให้ค่า Loss ที่มาก
+• กรณีที่ 3 : ทํานายไม่ถูก และมีความมั่นใจมากซึ่งจะสามารถเรียกได้ว่า ไม่ดีและจะให้ค่า Loss ที่มาก
+ซึ่งในงานประเภท Classification 
+Problem จะมี Loss 
+Functions 
+ที่น่าสนใจอยู่ด้วยกัน 2 สมการ 
+ได้แก่ (1) Hinge Loss และ (2) Cross Entropy Loss
+อ้างอิง https://pytorch.org/docs/stable/nn.html และ https://towardsdatascience.com/common-loss-functions-in-machine-learning-46af0ffc4d23
+Loss Function, Cost Function หรือ 
+Error Function 
+คือ สมการทางคณิตศาสตร์ที่คํานวณค่า Event 
+จาก Input หลาย ๆ ตัว ออกมาเป็นตัวเลข
+จํานวนจริง 1 ตัว เพื่อใช้แทน Cost ของ Event 
+นั้น
+Optimization
+คือ การหาวิธีทําให้ค่า Output ของ Loss 
+Function ออกมาน้อยที่สุด (Minimize)
+KENG SURAPONG
+PROJECT MANAGER 
+@BUA LABS
+--- page 44 ---
+48
+• Edit Master text styles
+11/09/69
+48
+Defining Learning Algorithm 
+                      การกําหนดวิธีการเรียนรู้และพารามิเตอร์ต่าง ๆ 
+# defining the model
+model = Net()
+# defining the optimizer
+# optimizer = Adam(model.parameters(), lr=0.07)
+optimizer = SGD(model.parameters(), lr=0.07, momentum=0.9)
+# defining the loss function
+criterion = CrossEntropyLoss()
+# checking if GPU is available
+if torch.cuda.is_available():
+    model = model.cuda()
+    criterion = criterion.cuda()
+print(model)
+Defining Learning Algo
+--- page 45 ---
+49
+• Edit Master text styles
+11/09/69
+49
+Defining Learning Algorithm 
+                      การกําหนดวิธีการเรียนรู้และพารามิเตอร์ต่าง ๆ 
+Defining Learning Algo
+Training and Validating Set 
+Generation
+Model Loader
+--- page 46 ---
+50
+• Edit Master text styles
+11/09/69
+50
+# empty list to store training losses
+train_losses = []
+# empty list to store validation losses
+val_losses = []
+# defining the number of epochs
+n_epochs = 25
+# training the model
+for epoch in tqdm(range(n_epochs)):
+    model.train()
+    tr_loss = 0
+    # getting the training set
+    x_train, y_train = Variable(train_x), Variable(train_y)
+    # getting the validation set
+    x_val, y_val = Variable(val_x), Variable(val_y)
+    # clearing the Gradients of the model parameters
+    optimizer.zero_grad()
+    # prediction for training and validation set
+    output_train = model(x_train)
+    output_val   = model(x_val)
+Training Model
+Training Model
+                      ฝึกสอนแบบจําลอง
+--- page 47 ---
+51
+• Edit Master text styles
+11/09/69
+51
+ฟังก์ชัน model.train() ใน PyTorch 
+model.train() ใน PyTorch เป็นคําสั่งที่ใช้เพื่อกําหนดว่าโมเดลกําลังอยู่ในโหมด "training" (การฝึกฝน) แทนที่จะเป็นโหมด "evaluation" (การ
+ทดสอบ) การสลับโหมดระหว่างการฝึกฝนและการทดสอบเป็นสิ่งสําคัญ เนื่องจากพฤติกรรมของบางเลเยอร์ในโมเดล เช่น Dropout หรือ Batch 
+Normalization จะเปลี่ยนไปตามโหมดที่โมเดลอยู่
+• Dropout
+ในโหมดการฝึก (train()), Dropout จะเปิดใช้งาน โดยจะสุ่มปิดบางหน่วย (neurons) ระหว่างการฝึก เพื่อช่วยป้องกันการ overfitting แต่ใน
+โหมดการทดสอบ (eval()), Dropout จะถูกปิด (หรือถูกข้ามไป) และไม่มีการปิดหน่วยใดๆ
+• Batch Normalization
+ในโหมดการฝึก (train()), Batch Normalization จะคํานวณค่า mean และ variance จาก mini-batch ในแต่ละครั้งที่ทํา forward pass แต่ใน
+โหมดการทดสอบ (eval()), Batch Normalization จะใช้ค่า mean และ variance ที่คํานวณไว้จากการฝึกเพื่อให้โมเดลทํางานคงที่ในการ
+ทดสอบ
+อย่างไรก็ตาม คําสั่ง model.train() 
+ไม่ได้ใช้สําหรับการฝึกโมเดลโดยตรง แต่มันเป็นการบอก PyTorch 
+ว่าโมเดลอยู่ในโหมดการฝึก และเมื่อ
+ต้องการทดสอบโมเดลหลังจากการฝึก เราควรสลับเป็นโหมด eval() โดยใช้ model.eval() เพื่อให้แน่ใจว่าเลเยอร์ต่าง ๆ เช่น Dropout และ 
+Batch Normalization ทํางานในโหมดการทดสอบอย่างถูกต้อง นอกจากนี้ หากไม่กําหนดค่า model.train() ใน PyTorch ค่าเริ่มต้น (default) 
+ของโมเดลจะอยู่ใน โหมดการฝึก (training mode) โดยอัตโนมัติ ซึ่งหมายความว่า
+--- page 48 ---
+52
+• Edit Master text styles
+11/09/69
+52
+ฟังก์ชัน Variable(...)ใน PyTorch 
+Variable(...) เป็นคําสั่งที่ใช้ใน PyTorch เวอร์ชันเก่า (ก่อนเวอร์ชัน0.4) เพื่อห่อหุ้ม Tensor ให้กลายเป็น Variable ซึ่งเป็นคลาสที่ใช้ในการเก็บ
+ข้อมูล (Tensor) และคํานวณค่าการไล่ระดับ (gradients) ระหว่างการทําbackpropagation
+• ใน PyTorch เวอร์ชันเก่า (ก่อนเวอร์ชัน0.4) 
+Variable ใน PyTorch ใช้เพื่อเก็บข้อมูล (Tensor) และทําให้สามารถคํานวณค่าการไล่ระดับของค่าใน Tensor นั้นได้ ตัวแปร Tensor ที่นํามาใส่
+ใน Variable เพื่อให้มันสามารถเก็บค่าและทํางานร่วมกับกราฟการคํานวณเชิงสัญลักษณ์ (computational graph) ของ PyTorch ฟังก์ชันนี้จะ
+ถูกใช้เมื่อเราต้องการให้ PyTorch คํานวณ gradient โดยอัตโนมัติเมื่อทําการฝึกฝนโมเดล
+• ใน PyTorch เวอร์ชันใหม่ (หลังเวอร์ชัน0.4) 
+ไม่จําเป็นต้องใช้ Variable อีกต่อไป เนื่องจาก PyTorch ได้รวมฟังก์ชันของ Variable เข้ากับ Tensor โดยตรง ดังนั้น เราสามารถทํางานกับ 
+Tensor ได้เหมือนเดิมโดยไม่ต้องใช้ Variable
+--- page 49 ---
+53
+• Edit Master text styles
+11/09/69
+53
+ค่าการไล่ระดับ (Gradients) 
+Gradient ในบริบทของการเรียนรู้เชิงลึก (Deep Learning) หมายถึง เวกเตอร์
+ของอนุพันธ์ย่อย (Partial Derivatives) ของฟังก์ชันเป้าหมาย (เช่น ฟังก์ชัน
+ความสูญเสีย) ซึ่งแสดงทิศทางและอัตราการเปลี่ยนแปลงของฟังก์ชันนั้นเมื่อ
+เทียบกับพารามิเตอร์ต่าง ๆ ของโมเดล
+ในทางคณิตศาสตร์ Gradient ของฟังก์ชันเป็นการวัด อัตราการเปลี่ยนแปลง 
+ของฟังก์ชันเมื่อเปลี่ยนแปลงพารามิเตอร์ ซึ่ง Gradient จะชี้ไปในทิศทางของ
+การเพิ่มขึ้นที่เร็วที่สุดของฟังก์ชัน ดังนั้น ถ้าต้องการลดค่าของฟังก์ชัน จึง
+จําเป็นต้องปรับพารามิเตอร์ไปในทิศทางตรงกันข้ามของ Gradient ใน
+อัลกอริทึม Gradient Descent ซึ่งเป็นหนึ่งในวิธีที่ใช้ปรับพารามิเตอร์ของ
+โมเดล จะคํานวณ Gradient ของฟังก์ชันความสูญเสีย (Loss Function) เพื่อ
+บอกว่าควรปรับค่าพารามิเตอร์ไปในทิศทางใดเพื่อลดค่าฟังก์ชันความสูญเสีย
+อ้างอิง https://www.kaggle.com/code/aryaupadhyay95/gradient-descent
+𝑤$%& = 𝑤'() − 𝛼𝜕(𝑙𝑜𝑠𝑠)
+𝜕(𝑤'()) 
+𝑤'()
+𝑤$%&
+𝐺𝑟𝑎𝑑𝑖𝑒𝑛𝑡= 𝜕(𝑙𝑜𝑠𝑠)
+𝜕(𝑤$%&)
+--- page 50 ---
+54
+• Edit Master text styles
+11/09/69
+54
+ฟังก์ชัน optimizer.zero_grad() ใน PyTorch 
+optimizer.zero_grad() ใน PyTorch เป็นคําสั่งที่ใช้ รีเซ็ต (reset) ค่า gradients ของพารามิเตอร์ทั้งหมดที่ถูกจัดการโดย optimizer ให้เป็น
+ศูนย์ก่อนที่จะทําการคํานวณ gradients ใหม่ในการฝึกแต่ละรอบ (forward และ backward pass)
+สาเหตุที่ต้องใช้ optimizer.zero_grad()
+ใน PyTorch ค่า gradients ที่คํานวณได้จากการทําbackpropagation (ผ่าน loss.backward()) จะถูกสะสม (accumulated) ในพารามิเตอร์
+ต่างๆ ของโมเดล หากไม่ได้รีเซ็ตค่า gradients เป็นศูนย์ในแต่ละรอบ ค่า gradients จากรอบก่อนหน้าจะถูกบวกเข้าไปกับค่า gradients ของรอบ
+ปัจจุบัน ทําให้ค่าที่ได้ไม่ถูกต้อง ดังนั้น การใช้ optimizer.zero_grad() 
+ก่อนการคํานวณ backpropagation 
+ในแต่ละรอบการฝึกฝนจึงเป็น
+สิ่งจําเป็นเพื่อให้แน่ใจว่าค่า gradients ใหม่จะถูกคํานวณจากข้อมูลใหม่เท่านั้น
+--- page 51 ---
+55
+• Edit Master text styles
+11/09/69
+55
+# computing the training and validation loss
+    # we convert the results because they aren't in 
+    the good format
+    y_train = y_train.long() 
+    y_train = y_train.squeeze_()
+    y_val = y_val.long() 
+    y_val = y_val.squeeze_()
+    loss_train = criterion(output_train, y_train)
+    loss_val = criterion(output_val, y_val)
+    train_losses.append(loss_train)
+    val_losses.append(loss_val)
+    # computing the updated weights of all the model parameters
+    loss_train.backward()
+    optimizer.step()
+    tr_loss = loss_train.item()
+Training Model
+Training Model
+                      ฝึกสอนแบบจําลอง
+--- page 52 ---
+56
+• Edit Master text styles
+11/09/69
+56
+# computing the training and validation loss
+    # we convert the results because they aren’t 
+    # in the good format
+    y_train = y_train.long()
+    y_train = y_train.squeeze()
+    y_val = y_val.long() 
+    y_val = y_val.squeeze()
+    loss_train = criterion(output_train, y_train)
+    loss_val   = criterion(output_val, y_val)
+    train_losses.append(loss_train)
+    val_losses.append(loss_val)
+    # computing the updated weights
+    loss_train.backward()
+    optimizer.step()
+    tr_loss = loss_train.item()
+    print('Epoch : ',epoch+1, '\t', 'loss :', loss_val)
+Evaluating Performance
+Training Model
+Training Model
+                      ฝึกสอนแบบจําลอง
+# computing the training and validation loss
+    # we convert the results because they aren't in 
+    the good format
+    y_train = y_train.long() 
+    y_train = y_train.squeeze_()
+    y_val = y_val.long() 
+    y_val = y_val.squeeze_()
+    loss_train = criterion(output_train, y_train)
+    loss_val = criterion(output_val, y_val)
+    train_losses.append(loss_train)
+    val_losses.append(loss_val)
+    # computing the updated weights of all the model parameters
+    loss_train.backward()
+    optimizer.step()
+    tr_loss = loss_train.item()
+--- page 53 ---
+57
+• Edit Master text styles
+11/09/69
+57
+ฟังก์ชัน squeeze() ใน PyTorch 
+ฟังก์ชัน squeeze() ใน PyTorch ใช้เพื่อลดขนาด
+ของ Tensor โดยลบมิติที่มีขนาดเท่ากับ 1 ออก 
+เช่น หาก Tensor มีขนาดเป็น (10, 1, 28, 28) 
+และใช้ squeeze() จะได้ Tensor ที่มีขนาดเป็น 
+(10, 28, 28) โดยมิติที่ขนาดเท่ากับ 1 จะถูกลบ
+ออก 
+นอกจากนี้ เครื่องหมายขีดล่าง _ ใน squeeze_() 
+บ่งบอกว่าเป็น in-place 
+operation 
+นั่น
+หมายความว่าการเปลี่ยนแปลงจะเกิดขึ้นกับตัว
+แปรนั้นๆ โดยตรง ไม่ได้สร้างตัวแปรใหม่
+--- page 54 ---
+58
+• Edit Master text styles
+11/09/69
+58
+ฟังก์ชัน self.long() และ self.to(torch.int64)
+ใน PyTorch, self.long() และ self.to(torch.int64) ทํางานคล้ายกันคือการเปลี่ยน
+ประเภทของข้อมูล (data 
+type) 
+ของ Tensor 
+ให้เป็น 64-bit 
+integer 
+(torch.int64) หรือที่เรียกว่า long tensor ใน PyTorch แต่ทั้งสองวิธีมีความ
+แตกต่างกันเล็กน้อยในด้านการใช้งานและความยืดหยุ่น
+• self.long()
+ฟังก์ชัน long() เป็นวิธีที่ง่ายและตรงไปตรงมาในการแปลง Tensor ให้เป็นประเภท 
+long หรือ torch.int64 ใช้เมื่อเรารู้อยู่แล้วว่าเราต้องการแปลง Tensor เป็น 
+torch.int64
+• self.to(torch.int64)
+ฟังก์ชัน to() เป็นวิธีที่ยืดหยุ่นกว่า เพราะสามารถแปลง Tensor เป็นชนิดข้อมูลอื่นๆ 
+ได้ อาทิเช่น torch.float32, torch.int32, torch.cuda, ฯลฯ ไม่ใช่แค่ torch.int64 
+เพียงอย่างเดียว เหมาะสมเมื่อคุณต้องการความยืดหยุ่นในการระบุชนิดของข้อมูล 
+(dtype) ที่ชัดเจน
+--- page 55 ---
+59
+• Edit Master text styles
+11/09/69
+59
+ฟังก์ชัน criterion(...), backward(...) และ step(...) 
+•
+คําสั่ง loss_train = criterion(output_train, y_train) ทําหน้าที่คํานวณ ค่าความสูญเสีย (loss) ระหว่างค่าผลลัพธ์ที่โมเดลทํานาย (output_train) กับค่าจริง (y_train) โดยใช้ฟังก์ชัน
+ความสูญเสียที่กําหนดโดย criterion ซึ่งเป็นขั้นตอนสําคัญในการฝึกโมเดล Machine Learning เพราะค่าความสูญเสียนี้จะถูกใช้ในการคํานวณ gradient เพื่อนําไปปรับปรุงพารามิเตอร์ของ
+โมเดล
+•
+คําสั่งloss_train.backward() ใช้เพื่อคํานวณ gradient ของค่าความสูญเสีย (loss) ย้อนกลับไปยังพารามิเตอร์ของโมเดล ผ่านการทํางานของ backpropagation กระบวนการนี้สําคัญ
+สําหรับการฝึกโมเดลเชิงลึก (deep learning) เพราะ gradients เหล่านี้จะถูกใช้ในการอัปเดตพารามิเตอร์ของโมเดล (เช่น weights และ biases) ด้วยการปรับค่าเพื่อให้โมเดลเรียนรู้จาก
+ข้อมูล
+•
+คําสั่ง optimizer.step() ใช้สําหรับ อัปเดตพารามิเตอร์ของโมเดล โดยใช้ค่า gradients ที่ถูกคํานวณไว้ด้วย loss.backward()
+กระบวนการทํางานระห่าง criterion(...), backward(...) และstep(...) 
+•
+ขั้นตอน Forward Pass
+1.
+โมเดลคํานวณค่าผลลัพธ์ (output_train) จากข้อมูลอินพุต (x_train) โดยผ่านเลเยอร์ต่างๆ ของโมเดล
+2.
+ค่าความสูญเสีย (loss_train) ถูกคํานวณโดยใช้ฟังก์ชันความสูญเสีย (loss function) เช่น MSELoss หรือ CrossEntropyLoss เพื่อวัดว่าผลลัพธ์ของโมเดลแตกต่างจากค่าจริง 
+(target) มากแค่ไหน
+•
+ขั้นตอน Backward Pass
+1.
+เมื่อเรียก loss_train.backward() PyTorch จะคํานวณ gradients ของค่าความสูญเสียย้อนกลับไปยังพารามิเตอร์ของโมเดลทุกตัวที่กําหนดให้มี requires_grad=True
+2.
+ค่ากราดิเอนต์เหล่านี้จะบอกว่าแต่ละพารามิเตอร์ (เช่น weights, biases) ควรปรับอย่างไรเพื่อให้ค่าความสูญเสียลดลง
+•
+ขั้นตอน การอัปเดตพารามิเตอร์
+1.
+เมื่อทํา backward pass ผ่านการใช้ loss.backward() แล้ว ค่า gradients ของพารามิเตอร์แต่ละตัวในโมเดลจะถูกคํานวณและเก็บไว้ในตัวแปรที่เกี่ยวข้องกับพารามิเตอร์นั้นๆ
+2.
+คําสั่ง optimizer.step() จะใช้ค่า gradients เหล่านั้นในการปรับค่าพารามิเตอร์ (เช่น weights, biases) เพื่อให้โมเดลเรียนรู้จากข้อมูลและลดค่าความสูญเสียในรอบถัดไป
+--- page 56 ---
+60
+• Edit Master text styles
+11/09/69
+60
+Training Model
+                      ฝึกสอนแบบจําลอง
+# Saving Entire Model 
+# A common PyTorch convention is to save models 
+using either a .pt or .pth file extension.
+torch.save(model, 'C:/model04.pt')
+Training Model
+Is it 
+accepted ?
+End
+--- page 57 ---
+61
+• Edit Master text styles
+11/09/69
+61
+หลักการรู้จําภาพ
+ดังนั้น เมื่อนักศึกษาได้โปรแกรมโครงข่ายประสาทเทียมแบบคอนโวลูชันด้วยภาษาไพทอนจะมีไฟล์ที่เกี่ยวข้องจํานวน3 ไฟล์ได้แก่
+(1)
+Net เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+(2)
+TrainingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาฝึกสอนแบบจําลอง
+(3)
+TestingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาทดสอบแบบจําลอง
+การสร้างแบบจําลอง
+ฟ
+การจัดแบ่งประเภท
+Classification
+Training Phase
+(กระบวนการฝึกสอน)
+Testing Phase
+(กระบวนการทดสอบ)
+ฟฟฟ
+Net.py
+TrainingCNN.py
+TestingCNN.py
+model.pt
+--- page 58 ---
+62
+• Edit Master text styles
+11/09/69
+62
+ทดลองใช้แบบจําลอง (option)
+                       นําข้อมูลจากชุด Validate มาทดสอบกับแบบ
+จําลองที่ฝึกสอนไว้แล้ว
+# prediction for validation set
+# don’t need gradients in test step since the 
+parameter updates has been done in training 
+step. Using ‘torch.no_grad()’ in the test and 
+validation phase yields the faster 
+inference(speed up computation) and reduced 
+memory usage(which allows us to use larger 
+size of batch).
+with torch.no_grad():
+    #output = model(val_x.cuda())
+    output = model(val_x)
+softmax = torch.exp(output).cpu()
+prob = list(softmax.numpy())
+predictions = np.argmax(prob, axis=1)
+# accuracy on validation set
+accuracy_score(val_y, predictions)
+--- page 59 ---
+63
+• Edit Master text styles
+11/09/69
+63
+ฟังก์ชัน optimizer.zero_grad() ใน PyTorch 
+การใช้ torch.no_grad() ร่วมกับ output_train = model(x_train) เป็นวิธีการปิดการคํานวณ gradients ในระหว่างการทําforward pass ใน 
+PyTorch 
+ซึ่งมีประโยชน์ในหลายสถานการณ์ เช่น การทดสอบโมเดล (inference) 
+ที่เราไม่ต้องการคํานวณ gradients 
+เพื่อลดการใช้
+หน่วยความจําและเพิ่มความเร็วในการประมวลผล
+โดยที่ การทํางานของ torch.no_grad(): ถือว่าเป็นการปิดการคํานวณค่า gradients สําหรับ tensors ทั้งหมดที่อยู่ภายในบล็อกของคําสั่ง with 
+torch.no_grad() ซึ่งมีประโยชน์ในช่วงการทดสอบ (inference) เมื่อเราต้องการคํานวณ output โดยไม่จําเป็นต้องอัปเดตพารามิเตอร์ (weights)
+ทําให้ลดการใช้หน่วยความจํา และเพิ่มความเร็ว เนื่องจากไม่ต้องคํานวณค่า gradients การทําforward pass จะเร็วขึ้น
+--- page 60 ---
+64
+• Edit Master text styles
+11/09/69
+64
+หลักการรู้จําภาพ
+ดังนั้น เมื่อนักศึกษาได้โปรแกรมโครงข่ายประสาทเทียมแบบคอนโวลูชันด้วยภาษาไพทอนจะมีไฟล์ที่เกี่ยวข้องจํานวน3 ไฟล์ได้แก่
+(1)
+Net เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+(2)
+TrainingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาฝึกสอนแบบจําลอง
+(3)
+TestingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาทดสอบแบบจําลอง
+การสร้างแบบจําลอง
+ฟ
+การจัดแบ่งประเภท
+Classification
+Training Phase
+(กระบวนการฝึกสอน)
+Testing Phase
+(กระบวนการทดสอบ)
+ฟฟฟ
+Net.py
+TrainingCNN.py
+TestingCNN.py
+model.pt
+--- page 61 ---
+65
+• Edit Master text styles
+11/09/69
+65
+Import ชุดคําสั่งที่จําเป็น
+                   มีความจําเป็นต้องใช้คําสั่งต่าง ๆ มากมายที่มาจาก
+                หลากหลายชุดคําสั่ง เพื่อให้สามารถฝึกสอนเครื่องจักรได้ 
+import pandas as pd
+import numpy as np
+from Net import Net
+# for reading and displaying images
+from skimage.io import imread
+import matplotlib.pyplot as plt
+# for creating validation set
+from sklearn.model_selection import train_test_split
+# for evaluating the model
+from sklearn.metrics import accuracy_score
+from tqdm import tqdm
+# PyTorch libraries and modules
+import torch
+from torch.autograd import Variable
+from torch.nn import Linear, ReLU, CrossEntropyLoss
+, Sequential, Conv2d, MaxPool2d, Module, Softmax, B
+atchNorm2d, Dropout
+from torch.optim import Adam, SGD
+--- page 62 ---
+66
+• Edit Master text styles
+11/09/69
+66
+Model Loader
+                   การโหลดโครงสร้างของสถาปัตยกรรมที่จะใช้งาน
+เข้าสู่โปรแกรม
+# Load the Trained Model from model04.pt
+model = torch.load('C:/model04.pt’)
+Model Loader
+--- page 63 ---
+67
+• Edit Master text styles
+11/09/69
+67
+Data Loader
+                   การโหลดข้อมูลรูปภาพเข้าสู่โปรแกรม (ไม่มีเฉลย)
+# Load Data File
+test = pd.read_csv(‘C:/test/test.csv’)
+outXls = pd.read_csv(‘C:/out.csv’)
+Data Loader
+--- page 64 ---
+68
+• Edit Master text styles
+11/09/69
+68
+Data Loader
+                   การโหลดข้อมูลรูปภาพเข้าสู่โปรแกรม (ไม่มีเฉลย)
+# Load Data File
+test = pd.read_csv(‘C:/test/test.csv’)
+outXls = pd.read_csv(‘C:/out.csv’)
+# loading test images
+test_img = []
+for img_name in tqdm(test['id']):
+    # defining the image path
+    image_path = '/test/' + str(img_name) + '.png’
+    # reading the image
+    img = imread(image_path, as_gray=True)
+    # normalizing the pixel values
+    img /= 255.0
+    # converting the type of pixel to float 32
+    img = img.astype('float32’)
+    # appending the image into the list
+    test_img.append(img)
+# converting the list to numpy array
+test_x = np.array(test_img)
+# converting training images into torch format
+test_x = test_x.reshape(10000, 1, 28, 28)
+test_x = torch.from_numpy(test_x).to(torch.float32)
+Data Loader
+--- page 65 ---
+69
+• Edit Master text styles
+11/09/69
+69
+Executing Model with Testing Image
+                   การนํารูปภาพมาทดสอบกับแบบจําลองที่ฝึกสอนแล้ว
+# generating predictions for test set
+with torch.no_grad():
+    #output = model(test_x.cuda())
+    output = model(test_x)
+softmax = torch.exp(output).cpu()
+prob = list(softmax.numpy())
+predictions = np.argmax(prob, axis=1)
+# replacing the label with prediction
+outXls['label'] = predictions
+outXls.head()
+# saving the file
+outXls.to_csv(‘C:/out.csv', index=False)
+Executing Model with 
+Testing Image
+End
+--- page 66 ---
+70
+• Edit Master text styles
+11/09/69
+70
+หลักการรู้จําภาพ
+ดังนั้น เมื่อนักศึกษาได้โปรแกรมโครงข่ายประสาทเทียมแบบคอนโวลูชันด้วยภาษาไพทอนจะมีไฟล์ที่เกี่ยวข้องจํานวน3 ไฟล์ได้แก่
+(1)
+Net เป็นไฟล์ที่ใช้กําหนดโครงสร้างของแบบจําลอง
+(2)
+TrainingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาฝึกสอนแบบจําลอง
+(3)
+TestingCNN เป็นไฟล์ที่เรียกใช้งานไฟล์Net และนํามาทดสอบแบบจําลอง
+การสร้างแบบจําลอง
+ฟ
+การจัดแบ่งประเภท
+Classification
+Training Phase
+(กระบวนการฝึกสอน)
+Testing Phase
+(กระบวนการทดสอบ)
+ฟฟฟ
+Net.py
+TrainingCNN.py
+TestingCNN.py
+model.pt
+--- page 67 ---
+71
+• Edit Master text styles
+11/09/69
+71
+--- page 68 ---
+73
+• Edit Master text styles
+11/09/69
+73
+ข้อควรระวัง
+ข้อควรระวัง : input image ขนาด 227 × 227 × 3 แสดงว่า ข้อมูลต้องมี 3 แพลน อาทิเช่น ภาพสี แต่ถ้าข้อมูลเป็นภาพขาวดําหรือระดับสีเทาต้องทํา
+อย่างไร
+--- page 69 ---
+74
+• Edit Master text styles
+11/09/69
+74
+เสริมท้ายบท
+• Regularization คือวิธีการที่ใช้แก้หรือบรรเทาปัญหาoverfitting หรือunderfitting ของแบบจําลองซึ่งมี3 วิธีการที่
+กําลังได้รับความนิยมอยู่ในปัจจุบันได้แก่ (1) Data Augmentation, (2) Batch Normalization และ(3) Dropout
+• Epoch คือ รอบของการฝึกสอนแบบจําลองด้วยข้อมูลทั้งหมดในdataset ทุกตัวดังนั้น 1 Epoch คือ การฝึกสอน
+แบบจําลองโดยป้อนข้อมูลทั้งหมดในdataset ทุกตัวเข้าแบบจําลอง
+--- page 70 ---
+75
+• Edit Master text styles
+11/09/69
+75
+หลักการโครงข่ายประสาทแบบคอนโวลูชัน
+Forward Propagation คือ กระบวนการที่ป้อน Input Image เข้าสู่แบบจําลองที่ฝึกสอนเรียบร้อยแล้ว และคืนค่าเป็นเป็น Classname
+Backward Propagation คือ กระบวนการที่นําค่า Normalized Probabilities ไปใช้เพื่อปรับปรุง Weight ของแบบจําลองให้เกิดความแม่นยํามากยิ่งขึ้น
+Scoring 
+Function
+0.0006
+0.0596
+0.0083
+0.9315
+Normalized 
+Probabilities
+Loss Function
+Optimization 
+Algorithm
+Class name
+1.16
+-0.81
+-3.44
+3.91
+Normalized 
+Probabilities
+Loss value
+Forward Propagation : เพื่อรู้จํารูปภาพ
+Backward Propagation : เพื่อปรับปรุงแบบจําลองจากข้อมูลฝึกสอน
+--- page 71 ---
+76
+• Edit Master text styles
+11/09/69
+76
+การพัฒนาโปรแกรม
+การโปรแกรมโครงข่ายประสาทแบบคอนโวลูชัน
+ด้วยภาษาไพธอนจากชุดคําสั่ง PyTorch ตอนที่ 2
+--- page 72 ---
+77
+• Edit Master text styles
+11/09/69
+77
+หัวข้อ
+•การสร้างโมเดล Image Classification แบบพื้นฐาน
+•การสร้างโมเดลแบบกําหนดเอง (Custom CNN Model)
+•การสร้าง Data Loader สําหรับชุดข้อมูลแบบกําหนดเอง
+•การทําData Transformation และ Augmentation
+--- page 73 ---
+78
+• Edit Master text styles
+11/09/69
+78
+หัวข้อ
+•การสร้างโมเดล Image Classification แบบพื้นฐาน
+•การสร้างโมเดลแบบกําหนดเอง (Custom CNN Model)
+•การสร้าง Data Loader สําหรับชุดข้อมูลแบบกําหนดเอง
+•การทําData Transformation และ Augmentation
+--- page 74 ---
+79
+• Edit Master text styles
+11/09/69
+79
+การสร้างโมเดล Classification แบบพื้นฐาน
+อ้างอิง : https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
+ข้อ
+คําอธิบาย
+1 
+กําหนด Dataset ที่จะนํามาใช้ในการฝึกสอนโมเดล
+2
+กําหนด Convolutional Neural Network สําหรับการฝึกสอนโมเดล
+3
+เลือก Loss Function และ Optimizer ที่เหมาะสมกับงานของเรา
+4
+การฝึกสอนโมเดล
+5
+การทดสอบและวัดผลโมเดล
+การสร้างโมเดล Classification แบบพื้นฐาน ประกอบไปด้วย 5 ขั้นตอนด้วยกัน ได้แก่
+ขั้นตอนดังกล่าว เป็นขั้นตอนในการสร้างโมเดล Classification แบบพื้นฐานของชุดคําสั่ง Pytorch ที่สามารถนําไปประยุกต์ใช้ หรือต่อยอดใน
+งานประเภทอื่น ๆ ได้ เช่น Regression เป็นต้น
+--- page 75 ---
+80
+• Edit Master text styles
+11/09/69
+80
+การสร้างโมเดล Classification แบบพื้นฐาน
+ขั้นตอนที่ 1 : กระบวนการ Pre-processing เป็นการรวบรวม pre-process ที่
+ต้องการทํากับข้อมูล อาทิเช่น data augmentation, data normalization, 
+data standardization หรือ data transformation เป็นต้น โดยอาศัยคําสั่ง 
+transforms.Compose จากตัวอย่างโค้ด (1) มีการแปลงชนิดข้อมูลให้อยู่ใน 
+datatype ของ Pytorch ได้แก่ tensor และจากนั้น (2) ทําการ normalize 
+ภาพให้อยู่ในช่วง -1 ถึง 1 เพื่อลดปัญหา bias 
+ที่อาจจะเกิดขึ้นระหว่างการ
+ฝึกสอนแบบจําลอง (หรือโมเดล)
+import torch
+import torchvision
+import torchvision.transforms as transforms
+transform = transforms.Compose([
+     transforms.ToImage(),  # Convert to image format
+     transforms.ConvertImageDtype(torch.float32),  # Convert image dtype
+     transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+])
+--- page 76 ---
+81
+• Edit Master text styles
+11/09/69
+81
+การสร้างโมเดล Classification แบบพื้นฐาน
+import torch
+import torchvision
+import torchvision.transforms as transforms
+transform = transforms.Compose([
+     transforms.ToImage(),  # Convert to image format
+     transforms.ConvertImageDtype(torch.float32),  # Convert image dtype
+     transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+])
+ขั้นตอนที่ 2 : 
+การปรับค่าของข้อมูลภาพให้อยู่ในช่วงที่เหมาะสมสําหรับการฝึก
+โมเดล โดยทําการลบค่าเฉลี่ยและหารด้วยค่าความเบี่ยงเบนมาตรฐานของข้อมูลแต่
+ละช่องสัญญาณ (channel) เช่น RGB โดยอาศัยคําสั่ง transforms.Normalize ใน 
+Convolutional Neural Networks (CNN) ตัวอย่างการใช้
+ในตัวอย่างนี้ ค่าของช่องสัญญาณแต่ละช่อง (R, G, B) จะถูก normalize โดยลบ
+ค่าเฉลี่ยและหารด้วยค่าความเบี่ยงเบนมาตรฐานตามลําดับที่กําหนดไว้ การทําเช่นนี้
+ช่วยให้การเรียนรู้ของโมเดลมีประสิทธิภาพมากขึ้นและสามารถหาค่าพารามิเตอร์ที่
+เหมาะสมได้เร็วขึ้น
+อ้างอิง https://www.geeksforgeeks.org/how-to-normalize-images-in-pytorch/
+--- page 77 ---
+82
+• Edit Master text styles
+11/09/69
+82
+การสร้างโมเดล Classification แบบพื้นฐาน
+ขั้นตอนที่ 3 : การกําหนด Dataset ที่จะนํามาใช้ในการฝึกสอนโมเดล
+สําหรับชุดคําสั่งPytorch มีDataset สําเร็จรูปให้เลือกใช้มากมายไม่ว่าจะเป็น
+CIFAR10, FashionMNIST, ImageNet นอกจากนี้ยังมีDataset สําหรับงานอื่น
+ๆ
+อีกด้วยโดยสามารถเข้าไปดูเพิ่มเติมได้ที่
+https://pytorch.org/vision/
+stable/datasets.html สําหรับโค้ดตัวอย่างเป็นการนําDataset ที่มีอยู่แล้วมา
+ประยุกต์ใช้งานโดยใช้คําสั่งtorchvision.datasets.XXX โดยมีพารามิเตอร์ที่
+ต้องกําหนดดังนี้
+import torch
+import torchvision
+import torchvision.transforms as transforms
+transform = transforms.Compose([
+     transforms.ToImage(),  # Convert to image format
+     transforms.ConvertImageDtype(torch.float32),  # Convert image dtype
+     transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+])
+batch_size = 4
+# Define training dataset and eval dataset
+trainset = torchvision.datasets.CIFAR10(root='./data', train=True, 
+download=True, transform=transform)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, 
+shuffle=True, num_workers=2)
+testset = torchvision.datasets.CIFAR10(root='./data', train=False, 
+download=True, transform=transform)
+testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, 
+shuffle=False, num_workers=2)
+classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 
+'ship', 'truck')
+พารามิเตอร์
+คําอธิบาย
+root
+ตําแหน่งในการดาวน์โหลดเมื่อ download=true
+train
+ชุดในการนําข้อมูลไปใช้
+download
+ดาวน์โหลดชุดข้อมูลไปเก็บไว้ที่ root
+transform
+นําชุดข้อมูลไปผ่านกระบวนการบางอย่างก่อนไปทดสอบ
+หรือฝึกโมเดล
+--- page 78 ---
+83
+• Edit Master text styles
+11/09/69
+83
+การสร้างโมเดล Classification แบบพื้นฐาน
+Dataset : https://pytorch.org/vision/stable/datasets.html
+--- page 79 ---
+84
+• Edit Master text styles
+11/09/69
+84
+การสร้างโมเดล Classification แบบพื้นฐาน
+ขั้นตอนที่ 4 : การสร้างแบบจําลองแบบกําหนดเอง สามารถทําได้
+โดยสร้างคลาสใหม่ขึ้นมา จากนั้น สืบทอด torch.nn. Module 
+มายังคลาสที่สร้างเพื่อดึงสืบทอดคุณลักษณะ (Attribute) 
+และ 
+ฟังก์ชันที่จําเป็นมาใช้งาน ในการกําหนด Network 
+จําเป็นต้อง
+กําหนดฟังก์ชันดังนี้
+• __init__() ใช้สําหรับสร้างหรือกําหนด (define) องค์ประกอบ
+ของโมเดลที่ต้องการสร้าง
+• forward() ใช้สําหรับในการกําหนดลําดับการทํางานของโมเดล
+จากบนลงล่าง
+import torch.nn as nn
+import torch.nn.functional as F 
+# Recommend for Not Customer
+class ClassificationNetwork(nn.Module):
+    def __init__(self):
+        super().__init__()
+        # nn.Conv2d(in_channels, out_channels, kernel_size)
+        self.conv1 = nn.Conv2d(3, 6, 5) 
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        # flatten all dimensions except batch
+        x = torch.flatten(x, 1) 
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+model = ClassificationNetwork()
+# flatten() convert N-D to 1D but view() convert N-D to (N-x)D
+ข้อมูลเพิ่มเติม torch.nn  : https://pytorch.org/docs/stable/nn.html#convolution-layers
+--- page 80 ---
+85
+• Edit Master text styles
+11/09/69
+85
+การสร้างโมเดล Classification แบบพื้นฐาน
+ขั้นตอนที่ 5 : การกําหนด Loss Function และ Optimizer ที่
+เหมาะสมกับงานของเรา
+• การเรียนรู้ของเครื่องจักรมีความหลากหลายของปัญหาหรือประเภท
+งานค่อนข้างมาก โดยแต่ละงานก็จะมี Loss Function ที่เหมาะสม
+แตกต่างกันดังนั้น เพื่อให้ได้รับแบบจําลองที่ดีและเหมะสม จึง
+จําเป็นต้องกําหนด Loss 
+Function 
+แตกต่างกันในงานแต่ละ
+ประเภท
+• Optimizer เป็นการคํานวณหาจุด Optimal 
+ที่ทําให้แบบจําลอง
+ทํานายได้มีความแม่นยํามากที่สุดตามหลักคณิตศาสตร์ โดยที่ 
+Optimizer แต่ละตัวมีขั้นตอนและหลักการคํานวณที่ต่างกัน ทําให้
+พารามิเตอร์มีความแตกต่างกัน
+import torch.optim as optim
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+ข้อมูลเพิ่มเติม
+Loss Functions : https://pytorch.org/docs/stable/nn.html#loss-functions
+Optimizer : https://pytorch.org/docs/stable/optim.html#algorithms
+--- page 81 ---
+86
+• Edit Master text styles
+11/09/69
+86
+การสร้างโมเดล Classification แบบพื้นฐาน
+ขั้นตอนที่ 6 : การฝึกสอนแบบจําลองโมเดล
+num_epochs = 10
+for epoch in range(num_epochs ): # loop over the dataset multiple times
+    running_loss = 0.0
+    for i, data in enumerate(trainloader, 0):
+        # I is round number start from 0 to N.
+        # get the inputs; data is a list of [inputs, labels]
+        inputs, labels = data
+        # zero the parameter gradients
+        optimizer.zero_grad()
+        # forward + backward + optimize
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        # print statistics
+        running_loss += loss.item()
+        if i % 2000 == 1999:    # print every 2000 mini-batches
+            print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 
+2000:.3f}')
+            running_loss = 0.0
+print('Finished Training')
+--- page 82 ---
+87
+• Edit Master text styles
+11/09/69
+87
+การสร้างโมเดล Classification แบบพื้นฐาน
+ขั้นตอนที่ 7 : ในการทดสอบและการวัดผลโมเดล ผู้พัฒนาควร
+ระวัง ไม่ให้แบบจําลองมีการเรียนรู้จากชุดข้อมูลทดสอบเพิ่มเติม 
+เพื่อไม่ให้แบบจําลองปรับปรุง Weight และ Bias ของแบบจําลอง
+ที่ได้รับการฝึกสอนเรียบร้อย โดยอาศัยคําสั่ง torch.no_grad()
+เพื่อกําหนดให้แบบจําลองไม่คํานวณหรือปรับปรุง Weight และ 
+Bias ของแบบจําลอง และควรใส่อาศัยคําสั่ง [โมเดล 
+Pytorch].eval() เช่น model.eval() 
+เพื่อป้องกันไม่ให้เกิดการ
+เรียนรู้ระหว่างทําการทดสอบกับชุดข้อมูลใหม่
+correct = 0
+total = 0
+# since we're not training, we don't need to calculate the gradients 
+for our outputs
+model.eval() 
+  # set disable all functions for training model
+with torch.no_grad(): # return resource (or memory) for training
+    for data in testloader:
+        images, labels = data
+        # calculate outputs by running images through the network
+        outputs = model(images)
+        # the class with the highest value is our prediction
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+print(f'Accuracy of the network on the test images: {100 * correct // 
+total} %')
+--- page 83 ---
+88
+• Edit Master text styles
+11/09/69
+88
+หัวข้อ
+•การสร้างโมเดล Image Classification แบบพื้นฐาน
+•การสร้างโมเดลแบบกําหนดเอง (Custom CNN Model)
+•การสร้าง Data Loader สําหรับชุดข้อมูลแบบกําหนดเอง
+•การทําData Transformation และ Augmentation
+--- page 84 ---
+89
+• Edit Master text styles
+11/09/69
+89
+การสร้างโมเดลแบบกําหนดเอง
+ในการสร้างโมเดลแบบกําหนดเองจากชุดคําสั่ง Pytorch จะเกี่ยวข้องกับคลาส torch.nn.Module และ torch.nn.Parameter ที่ทํางานร่วมกัน
+อัตโนมัติเพียงแค่เราสร้างคลาสใหม่ขึ้นมา และสืบทอด (Inheritance) คลาส torch.nn.Module เท่านั้น ซึ่ง torch.nn.Module จะหน้าหน้าที่
+ในการจัดการเกี่ยวลักษณะของโมเดลรวมถึงพฤติกรรม (Behaviors) ในขณะที่ torch.nn.Parameter จะทําหน้าที่จัดการกับ weight และ bias 
+ของแต่ละองค์ประกอบ (Component) ของโมเดล
+Image by Aphex34 (https://en.wikipedia.org/).
+--- page 85 ---
+90
+• Edit Master text styles
+11/09/69
+90
+การสร้างโมเดลแบบกําหนดเอง
+import torch.nn as nn
+import torch.nn.functional as F
+class ClassificationNetwork(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 6, 5) 
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+x = torch.flatten(x, 1)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+ในการสร้างโมเดลมีฟังก์ชันที่จําเป็น 2 ฟังก์ชัน ได้แก่
+• __init__() ใช้สําหรับสร้างหรือกําหนด (define) องค์ประกอบของโมเดลที่
+ต้องการสร้าง เช่น Convolution Filter, Pooling หรือ Dense Layer ซึ่งหลัก
+จากที่เรากําหนดเรียบร้อยแล้วพารามิเตอร์จากคลาส torch.nn.Parameter จะ
+ถูกนําไปลงทะเบียน (Register) ลงในตัวแปร self. parameters ของคลาส 
+torch.nn.Module ให้อัตโนมัติ
+• forward() ใช้สําหรับในการกําหนดลําดับการทํางานของโมเดลจากบนลงล่าง
+--- page 86 ---
+91
+• Edit Master text styles
+11/09/69
+91
+การสร้างโมเดลแบบกําหนดเอง
+จากตัวอย่างโค้ดทางด้านซ้ายมือเป็นการแสดงให้เห็น Weight และ Bias ของ
+องค์ประกอบในชุดคําสั่ง Pytorch เริ่มจากสร้าง Linear 
+Layer ที่รับอินพุธขนาด 
+1×3 และให้ผลลัพธ์ขนาด 1×2 โดยใช้คําสั่ง 
+torch.nn.Linear(3, 2) จากนั้น เมื่อ
+นําไปผ่านคําสั่ง print() เพื่อดูรายละเอียดพารามิเตอร์จะพบว่ามีการแสดงข้อมูล
+ออกมา 2 ชุดด้วยกัน (Parameter containing: ….) ซึ่งมาจากค่า Weight ที่มีขนาด 
+2×3 และ Bias ขนาด 1×2
+W1
+W2
+W3
+W4
+W5
+W6
+B1
+B2
+[Code]
+linear = torch.nn.Linear(3, 2)
+x = torch.rand(1, 3)
+print('Input:')
+print(x)
+print('\n\nWeight and Bias parameters:')
+for param in linear.parameters():
+    print(param)
+------------------------------------------------
+[Results]
+Input:
+tensor([[0.8790, 0.9774, 0.2547]])
+Weight and Bias parameters:
+Parameter containing:
+tensor([[ 0.1656,  0.4969, -0.4972],
+        [-0.2035, -0.2579, -0.3780]],
+requires_grad=True)
+Parameter containing:
+tensor([0.3768, 0.3781], requires_grad=True)
+--- page 87 ---
+92
+• Edit Master text styles
+11/09/69
+92
+การสร้างโมเดลแบบกําหนดเอง
+ตัวอย่างขององค์ประกอบของโมเดลในงานประเภทต่างๆ
+Linear Layer
+• torch.nn.Linear(in_features*, out_features*, bias=True, device=None, dtype=None)
+Convolutional Layers
+• torch.nn.Conv1d(in_channels*, out_channels*, kernel_size, stride=1, padding=0, 
+dilation=1, groups=1, bias=True, padding_mode='zeros', device=None, dtype=None)
+• torch.nn.Conv2d(in_channels*, out_channels*, kernel_size, stride=1, padding=0, 
+dilation=1, groups=1, bias=True, padding_mode='zeros', device=None, dtype=None)
+• torch.nn.ConvTranspose2d(in_channels*, out_channels*, kernel_size, stride=1, 
+padding=0, output_padding=0, groups=1, bias=True, dilation=1, 
+padding_mode='zeros', device=None, dtype=None)
+ข้อมูลเพิ่มเติม torch.nn  : https://pytorch.org/docs/stable/nn.html
+--- page 88 ---
+93
+• Edit Master text styles
+11/09/69
+93
+การสร้างโมเดลแบบกําหนดเอง
+ตัวอย่างขององค์ประกอบของโมเดลในงานประเภทต่างๆ
+Recurrent Layers
+• torch.nn.RNN(input_size*, hidden_size*, num_layers=1, nonlinearity='tanh', 
+bias=True, batch_first=False, dropout=0.0, bidirectional=False, device=None, 
+dtype=None)
+• torch.nn.GRU(input_size*, hidden_size*, num_layers=1, bias=True, 
+batch_first=False, dropout=0.0, bidirectional=False, device=None, dtype=None)
+• torch.nn.LSTM(input_size*, hidden_size*, num_layers=1, bias=True, 
+batch_first=False, dropout=0.0, bidirectional=False, proj_size=0, device=None, 
+dtype=None)
+• torch.nn.RNNCell(input_size*, hidden_size*, bias=True, nonlinearity='tanh', 
+device=None, dtype=None)
+ข้อมูลเพิ่มเติม torch.nn  : https://pytorch.org/docs/stable/nn.html
+--- page 89 ---
+94
+• Edit Master text styles
+11/09/69
+94
+การสร้างโมเดลแบบกําหนดเอง
+ตัวอย่างขององค์ประกอบของโมเดลในงานประเภทต่างๆ
+องค์ประกอบอื่นๆ
+• torch.nn.MaxPool2d(kernel_size*, stride=None, padding=0, dilation=1, 
+return_indices=False, ceil_mode=False)
+• torch.nn.AvgPool2d(kernel_size*, stride=None, padding=0, ceil_mode=False, 
+count_include_pad=True, divisor_override=None)
+• torch.nn.AdaptiveAvgPool2d(output_size*) # AdaptiveAvgPool2d like GlobalAveragePooling2D
+• torch.nn.ZeroPad2d(padding*)
+• torch.nn.ReLU(inplace=False)
+• torch.nn.Sigmoid(*args, **kwargs)
+• torch.nn.Tanh(*args, **kwargs)
+อ้างอิง : https://pytorch.org/docs/stable/nn.htm และ https://underflow101.tistory.com/41l
+--- page 90 ---
+95
+• Edit Master text styles
+11/09/69
+95
+การสร้างโมเดลแบบกําหนดเอง
+ตัวอย่างขององค์ประกอบของโมเดลในงานประเภทต่างๆ
+องค์ประกอบอื่นๆ
+• torch.nn.Softmax(dim=None)
+• torch.nn.BatchNorm1d(num_features*, eps=1e-05, momentum=0.1, 
+affine=True, track_running_stats=True, device=None, dtype=None)
+• torch.nn.BatchNorm2d(num_features*, eps=1e-05, momentum=0.1, 
+affine=True, track_running_stats=True, device=None, dtype=None)
+• torch.nn.Dropout(p=0.5, inplace=False)
+• torch.nn.Flatten(start_dim=1, end_dim=-1)
+ข้อมูลเพิ่มเติม torch.nn  : https://pytorch.org/docs/stable/nn.html
+--- page 91 ---
+96
+• Edit Master text styles
+11/09/69
+96
+นอกจากนี้หากต้องการเลือกใช้โมเดล (Backbone) สําเร็จรูป ที่ถูกฝึกฝนเรียบร้อย (Pretrain) ด้วยชุดข้อมูล IMAGENET ไม่ว่าจะเป็น VGG, 
+ResNet, SqueezeNet หรือ EfficientNet ก็สามารถเลือกใช้ได้จาก torchvision.models โดยตรง
+--- page 92 ---
+97
+• Edit Master text styles
+11/09/69
+97
+นอกจากนี้ หากต้องการเลือกใช้โมเดล (Backbone) สําเร็จรูป ที่ถูกฝึกฝนเรียบร้อย (Pretrain) ด้วยชุดข้อมูล IMAGENET ไม่ว่าจะเป็น VGG, 
+ResNet, SqueezeNet หรือ EfficientNet ก็สามารถเลือกใช้ได้จาก torchvision.models โดยตรง
+https://pytorch.org/vision/stable/models.html
+--- page 93 ---
+98
+• Edit Master text styles
+11/09/69
+98
+การสร้างโมเดลแบบกําหนดเอง
+ตัวอย่างการใช้งาน
+from torchvision.models import resnet50, googlenet, squeezenet1_0, densenet121, ResNet50_Weights, 
+GoogLeNet_Weights, SqueezeNet1_0_Weights, DenseNet121_Weights
+# Using pretrained weights:
+Model1 = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
+Model2 = googlenet(weights=GoogLeNet_Weights.IMAGENET1K_V2)
+Model3 = squeezenet1_0(weights=SqueezeNet1_0_Weights.IMAGENET1K_V2)
+Model4 = densenet121 (weights=DenseNet121_Weights.IMAGENET1K_V2)
+# Using no weights:
+Model = resnet50()
+สําหรับโมเดลสําเร็จรูปที่ชุดคําสั่ง torchvision.models พร้อมให้ใช้งานสามารถดูได้ที่ลิ้ง
+• https://pytorch.org/vision/stable/models.html
+--- page 94 ---
+99
+• Edit Master text styles
+11/09/69
+99
+หัวข้อ
+•การสร้างโมเดล Image Classification แบบพื้นฐาน
+•การสร้างโมเดลแบบกําหนดเอง (Custom CNN Model)
+•การสร้าง Data Loader สําหรับชุดข้อมูลแบบกําหนดเอง
+•การทําData Transformation และ Augmentation
+--- page 95 ---
+100
+• Edit Master text styles
+11/09/69
+100
+การสร้าง Data Loader สําหรับชุดข้อมูลแบบกําหนดเอง
+การประมวลผล (Process) ข้อมูลสามารถก่อให้เกิดความสับสนและดูแลรักษา (Maintain) ค่อนข้างลําบาก  ดังนั้น ในชุดคําสั่ง PyTorch จึงทํา
+การแยกการจัดการข้อมูลออกมาเป็นโมดูล เพื่อให้เกิดความสะดวกต่อการอ่านง่ายและทําให้โค้ดดูเรียบร้อยมากยิ่งขึ้น โดยชุดคําสั่ง PyTorch ได้
+ทําการแยกรูปแบบชุดข้อมูลพื้นฐาน (Primitive Data) ออกมาเป็น 2 ประเภท
+• torch.utils.data.Dataset ทําหน้าที่ในการจัดการกับชุดข้อมูล รวมถึงจัดเก็บตัวอย่าง (Sample) และป้ายเฉลย (Label) ที่ต้องการนํามา
+ฝึกฝนกับโมเดล นอกจากนี้ ยังสามารถเรียกใช้ชุดข้อมูล (Dataset) ต่าง ๆ ที่มีอยู่แล้วมาใช้ได้อีกด้วย
+• torch.utils.data.DataLoader ทําหน้าที่ในการลําเลียงข้อมูลในขั้นตอนของการฝึกฝนและการทดสอบ โดยจะนําเอาข้อมูลจาก 
+torch.utils.data.Dataset มาจัดให้เหมาะสม ตามขนาด Batch Size และลําเลียงไปฝึกฝนหรือทดสอบ
+--- page 96 ---
+101
+• Edit Master text styles
+11/09/69
+101
+การสร้าง Data Loader สําหรับชุดข้อมูลแบบกําหนดเอง
+กรณีที่ 1 สําหรับการเข้าถึงชุดข้อมูลสําเร็จรูป สามารถเข้าไปดู
+รายชื่อชุดข้อมูลที่ Pytorch 
+มีให้ได้จากลิ้งในข้อมูลเพิ่มเติม ใน
+การใช้งานเพียงนําเข้าชุดคําสั่ง torch.utils.data ตามด้วยชื่อ
+ชุดข้อมูลสําเร็จรูปที่ต้องการใช้งาน 
+โดยมีพารามิเตอร์ที่ต้อง
+กําหนดดังนี้
+import torch
+from torch.utils.data import Dataset
+from torchvision import datasets
+from torchvision.transforms import ToTensor
+import matplotlib.pyplot as plt
+training_data = datasets.FashionMNIST(
+    root="data",
+    train=True,
+    download=True,
+    transform=ToTensor()
+)
+test_data = datasets.FashionMNIST(
+    root="data",
+    train=False,
+    download=True,
+    transform=ToTensor()
+)
+ข้อมูลเพิ่มเติม Dataset : https://pytorch.org/vision/stable/datasets.html
+พารามิเตอร์
+คําอธิบาย
+root
+ตําแหน่งในการดาวน์โหลดเมื่อ download=true
+train
+ชุดในการนําข้อมูลไปใช้
+download
+ดาวน์โหลดชุดข้อมูลไปเก็บไว้ที่ root
+transform
+นําชุดข้อมูลไปผ่านกระบวนการบางอย่างก่อนไปทดสอบหรือฝึก
+โมเดล
+--- page 97 ---
+102
+• Edit Master text styles
+11/09/69
+102
+การสร้าง Data Loader สําหรับชุดข้อมูลแบบกําหนดเอง
+กรณีที่ 2 สําหรับข้อมูลแบบกําหนดเอง 
+ขั้นตอนที่ 1 การสร้างคลาสใหม่ขึ้นมา จากนั้น สืบทอดคลาส 
+torch.utils. data.Dataset จากชุดคําสั่งของ Pytorch โดย
+จําเป็นต้องสร้าง (Implement) 3 ฟังก์ชันเพิ่มเติม ดังนี้
+import os
+import pandas as pd
+from torch.utils.data import Dataset
+from torchvision.io import read_image
+class CustomImageDataset(Dataset):
+    def __init__(self, annotations_file, img_dir, transform=None, 
+                 target_transform=None):
+self.img_labels = pd.read_csv(annotations_file)
+        self.img_dir = img_dir
+        self.transform = transform
+        self.target_transform = target_transform
+    def __len__(self):
+return len(self.img_labels)
+    def __getitem__(self, idx):
+        img_path = os.path.join(self.img_dir,
+                                self.img_labels.iloc[idx, 0])
+        image = read_image(img_path)
+        label = self.img_labels.iloc[idx, 1]
+        if self.transform:
+            image = self.transform(image)
+        if self.target_transform:
+            label = self.target_transform(label)
+        return image, label
+ฟังก์ชัน
+คําอธิบาย
+__init__
+เป็นฟังก์ชันสําหรับ
+(1) กําหนดที่อยู่ หรือ ตําแหน่งเริ่มต้น (Root) ของชุดข้อมูล 
+(2) กําหนดวิธีการแปลงข้อมูล 
+(2) กําหนดตําแหน่งของเฉลย 
+ซึ่งจะถูกเรียกใช้งานหนึ่งครั้งเมื่อ Object ของ Dataset ถูกสร้าง
+__len__
+เป็นฟังก์ชันสําหรับคืนค่า (Return) จํานวนข้อมูลในชุดข้อมูล
+__getitem__ เป็นฟังก์ชันสําหรับจัดการและคืนค่าชุดข้อมูล และเฉลย โดยจะเรียกใช้
+ในขั้นตอนฝึกฝนและทดสอบ
+--- page 98 ---
+103
+• Edit Master text styles
+11/09/69
+103
+การสร้าง Data Loader สําหรับชุดข้อมูลแบบกําหนดเอง
+ขั้นตอนที่ 2 ให้สร้าง Object ของ Dataset ของชุดข้อมูลที่ต้องการ
+โดยการกําหนดพารามิเตอร์ต่อไปนี้
+from torch.utils.data import DataLoader
+# Initialize Dataset
+training_data = CustomImageDataset(annotations_file, img_dir)
+test_data = CustomImageDataset(annotations_file, img_dir)
+ข้อมูลเพิ่มเติม DataLoader : https://pytorch.org/docs/stable/data.html
+--- page 99 ---
+104
+• Edit Master text styles
+11/09/69
+104
+การสร้าง Data Loader สําหรับชุดข้อมูลแบบกําหนดเอง
+ขั้นตอนที่ 3 ให้แปลง Object ของ Dataset ของชุดข้อมูลไปเป็น 
+Object ของ DataLoader โดยใช้ชุดคําสั่ง torch.utils.data. 
+DataLoader ซึ่งจะเป็นคําสั่งที่ใช้สําหรับลําเลียงข้อมูลไปฝึกฝนหรือ
+ทดสอบ ตามพารามิเตอร์ที่เรากําหนดไว้ พร้อมกับแปลงไปเป็นข้อมูล 
+iterator ให้อัตโนมัติ ตัวอย่างของพารามิเตอร์ที่สามารถกําหนดได้
+from torch.utils.data import DataLoader
+# Initialize Dataset
+training_data = CustomImageDataset(annotations_file, img_dir)
+test_data = CustomImageDataset(annotations_file, img_dir)
+# Converts to Data Loader
+train_dataloader = DataLoader (training_data, batch_size=64, 
+shuffle=True)
+test_dataloader = DataLoader (test_data, batch_size=64, 
+shuffle=True)
+ข้อมูลเพิ่มเติม DataLoader : https://pytorch.org/docs/stable/data.html
+พารามิเตอร์
+คําอธิบาย
+batch_size เป็นการกําหนดขนาดข้อมูลที่จะใช้ฝึกฝนหรือทดสอบ ในหนึ่งครั้ง
+shuffle
+เป็นการกําหนดว่าจะสุ่มข้อมูลหรือไม่ ซึ่งจะสุ่มใหม่ทุก ๆ eporch 
+num_workers หากกําหนดเป็นจํานวนเต็มบวก Pytorch จะเปิดการโหลดข้อมูล
+แบบ multi-process ในการโหลดข้อมูลเข้ามายัง Ram ของระบบ
+คอมพิวเตอร์ โดยที่ ค่าเริ่มต้นเป็น 0
+--- page 100 ---
+105
+• Edit Master text styles
+11/09/69
+105
+หัวข้อ
+•การสร้างโมเดล Image Classification แบบพื้นฐาน
+•การสร้างโมเดลแบบกําหนดเอง (Custom CNN Model)
+•การสร้าง Data Loader สําหรับชุดข้อมูลแบบกําหนดเอง
+•การทําData Transformation และ Augmentation
+--- page 101 ---
+106
+• Edit Master text styles
+11/09/69
+106
+การทําData Transformation และ Augmentation
+ชุดคําสั่ง Pytorch มีฟังก์ชันสําเร็จรูปสําหรับการ Data Transformation และ Augmentation ได้โดยตรงเพียงนําเข้าชุดคําสั่ง
+torchvision.transforms.v2 ซึ่งภายในชุดคําสั่งประกอบไปด้วยฟังก์ชันมากมาย ไม่ว่าจะเป็นฟังก์ชันสําหรับแปลงรูปแบบข้อมูล ฟังก์ชันสําหรับ
+การทําPre-process ข้อมูล รวมถึงเครื่องมือสําหรับการทํา Data Augmentation ด้วย
+ElasticTransform
+RandomPerspective
+CenterCrop
+ภาพประกอบ : https://pytorch.org/vision/stable/auto_examples/transforms/plot_transforms_illustrations.html#sphx-glr-auto-examples-transforms-plot-transforms-illustrations-py
+--- page 102 ---
+107
+• Edit Master text styles
+11/09/69
+107
+สําหรับการทําData Transformation และ Augmentation จะ
+กําหนดลําดับการทํางานเป็นขั้นตอน โดยอาศัยใช้ฟังก์ชัน 
+torchvision. transforms.v2.Compose()
+จากโค้ดตัวอย่าง จะพบว่าในฟังก์ชัน Compose() จะเริ่มจากแปลง
+ภาพจาก Object ของ Image มาอยู่ในรูปแบบ Object ของ 
+Tensor ใน Pytorch จนจบฟังก์ชัน Compose() จากนั้น ให้นํา
+ผลลัพธ์ที่ได้ไปผ่านกระกวนการ Data Augmentation  จากฟังก์ชัน
+ที่
+เรากําหนด ได้แก่ RandomResizedCrop, 
+RandomResizedCrop และ Random HorizontalFlip ก่อนนํา
+ผลลัพธ์ที่ได้ไป ดําเนินการแปลงชนิดข้อมูลให้อยู่ในรูปแบบเลข
+ทศนิยมในช่วง 0 ถึง 1 และผ่านกระบวนการ Normalize ข้อมูล
+เพื่อให้แบบจําลองมีประสิทธิภาพในการฝึกสอนแบบจําลองมากยิ่งขึ้น 
+import torch
+from torchvision.transforms import v2
+preproc = v2.Compose([
+    v2.PILToTensor(),
+    v2.RandomResizedCrop(size=(224, 224), antialias=True),
+    v2.RandomHorizontalFlip(p=0.5),
+# to float32 in [0, 1]
+    v2.ToDtype(torch.float32, scale=True),
+# typically, from ImageNet
+v2.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 
+0.225)),])
+trainset = torchvision.datasets.ImageNet(root='./data', 
+train=True, download=True, transform=preproc)
+ข้อมูลเพิ่มเติม DataLoader : https://pytorch.org/docs/stable/data.html
+การทําData Transformation และ Augmentation
+--- page 103 ---
+108
+• Edit Master text styles
+11/09/69
+108
+ตัวอย่างของฟังก์ชันในชุดคําสั่งtorchvision.transforms.v2
+Geometry
+• torchvision.transforms.v2.Resize(size*: Union[int, Sequence[int]], interpolation: 
+Union[InterpolationMode, int] = InterpolationMode.BILINEAR, max_size: Optional[int] = 
+None, antialias: Optional[bool] = True)
+• torchvision.transforms.v2.RandomResize(min_size*: int, max_size*: int, interpolation: 
+Union[InterpolationMode, int] = InterpolationMode.BILINEAR, antialias: Optional[bool] = 
+True)
+• torchvision.transforms.v2.RandomCrop(size*: Union[int, Sequence[int]], padding: 
+Optional[Union[int, Sequence[int]]] = None, pad_if_needed: bool = False, fill: Union[int, 
+float, Sequence[int], Sequence[float], None, Dict[Union[Type, str], Optional[Union[int, 
+float, Sequence[int], Sequence[float]]]]] = 0, padding_mode: Literal['constant', 'edge', 
+'reflect', 'symmetric'] = 'constant’)
+• torchvision.transforms.v2.RandomHorizontalFlip(p: float = 0.5)
+ข้อมูลเพิ่มเติม torchvision.transforms.v2: https://pytorch.org/vision/stable/transforms.html
+การทําData Transformation และ Augmentation
+--- page 104 ---
+109
+• Edit Master text styles
+11/09/69
+109
+ตัวอย่างของฟังก์ชันในชุดคําสั่งtorchvision.transforms.v2
+Geometry
+• torchvision.transforms.v2.RandomZoomOut(fill: Union[int, float, Sequence[int], 
+Sequence[float], None, Dict[Union[Type, str], Optional[Union[int, float, Sequence[int], 
+Sequence[float]]]]] = 0, side_range: Sequence[float] = (1.0, 4.0), p: float = 0.5)
+• torchvision.transforms.v2.RandomRotation(degrees*: Union[Number, Sequence], interpolation: 
+Union[InterpolationMode, int] = InterpolationMode.NEAREST, expand: bool = False, center: 
+Optional[List[float]] = None, fill: Union[int, float, Sequence[int], Sequence[float], 
+None, Dict[Union[Type, str], Optional[Union[int, float, Sequence[int], Sequence[float]]]]] 
+= 0)
+• torchvision.transforms.v2.Pad(padding*: Union[int, Sequence[int]], fill: Union[int, float, 
+Sequence[int], Sequence[float], None, Dict[Union[Type, str], Optional[Union[int, float, 
+Sequence[int], Sequence[float]]]]] = 0, padding_mode: Literal['constant', 'edge', 
+'reflect', 'symmetric'] = 'constant')
+ข้อมูลเพิ่มเติม torchvision.transforms.v2: https://pytorch.org/vision/stable/transforms.html
+การทําData Transformation และ Augmentation
+--- page 105 ---
+110
+• Edit Master text styles
+11/09/69
+110
+ตัวอย่างของฟังก์ชันในชุดคําสั่งtorchvision.transforms.v2
+Color
+• torchvision.transforms.v2.Grayscale(num_output_channels: int = 1)
+• torchvision.transforms.v2.RGB()
+• torchvision.transforms.v2.GaussianBlur(kernel_size*: Union[int, Sequence[int]], 
+sigma: Union[int, float, Sequence[float]] = (0.1, 2.0))
+• torchvision.transforms.v2.RandomAdjustSharpness(sharpness_factor*: float, p: 
+float = 0.5)
+ข้อมูลเพิ่มเติม torchvision.transforms.v2: https://pytorch.org/vision/stable/transforms.html
+Composition
+• torchvision.transforms.v2.RandomApply(transforms*: Union[Sequence[Callable], 
+ModuleList], p: float = 0.5)
+การทําData Transformation และ Augmentation
+--- page 106 ---
+111
+• Edit Master text styles
+11/09/69
+111
+ตัวอย่างของฟังก์ชันในชุดคําสั่งtorchvision.transforms.v2
+Miscellaneous
+• torchvision.transforms.v2.Normalize(mean*: Sequence[float], std*: 
+Sequence[float], inplace: bool = False)
+Conversion
+• torchvision.transforms.v2.PILToTensor()
+• torchvision.transforms.v2.ToDtype(dtype*: Union[dtype, Dict[Union[Type, str], 
+Optional[dtype]]], scale: bool = False)
+• torchvision.transforms.v2.ToPILImage(mode: Optional[str] = None)
+• (Deprecated) torchvision.transforms.v2.ToTensor() -> v2.Compose([v2.ToImage(), 
+v2.ToDtype(torch.float32, scale=True)])
+การทําData Transformation และ Augmentation
+ข้อมูลเพิ่มเติม torchvision.transforms.v2: https://pytorch.org/vision/stable/transforms.html
+--- page 107 ---
+112
+• Edit Master text styles
+11/09/69
+112
+ตัวอย่างของฟังก์ชันในชุดคําสั่งtorchvision.transforms.v2
+Auto-Augmentation
+• torchvision.transforms.v2.AugMix(severity: int = 3, mixture_width: int = 3, chain_depth: int = - 1, alpha: float = 1.0, all_ops: 
+bool = True, interpolation: Union[InterpolationMode, int] = InterpolationMode.BILINEAR, fill: Union[int, float, Sequence[int], 
+Sequence[float], None, Dict[Union[Type, str], Optional[Union[int, float, Sequence[int], Sequence[float]]]]] = None)
+ข้อมูลเพิ่มเติม https://pytorch.org/vision/stable/auto_examples/transforms/plot_cutmix_mixup.html#sphx-glr-auto-examples-transforms-plot-cutmix-mixup-py และ https://pytorch.org/vision/stable/transforms.html
+CutMix
+• torchvision.transforms.v2.CutMix(*, alpha: float = 1.0, num_classes: int, labels_getter='default’)
+การทําData Transformation และ Augmentation
+--- page 108 ---
+113
+• Edit Master text styles
+11/09/69
+113
+หัวข้อ
+•หลักการและการสร้างโมเดลสําหรับ Multiclass Image Classification
+•หลักการและการสร้างโมเดลสําหรับ Multilabel Image Classification  
+•หลักการและการสร้างโมเดลสําหรับ Image Regression
+•หลักการ Multi-task Learning 
+--- page 109 ---
+114
+• Edit Master text styles
+11/09/69
+114
+หัวข้อ
+•หลักการและการสร้างโมเดลสําหรับ Multiclass Image Classification
+•หลักการและการสร้างโมเดลสําหรับ Multilabel Image Classification  
+•หลักการและการสร้างโมเดลสําหรับ Image Regression
+•หลักการ Multi-task Learning 
+--- page 110 ---
+115
+• Edit Master text styles
+11/09/69
+115
+การสร้างโมเดลสําหรับ Multilabel Image Classification 
+การพิจารณาผลลัพธ์ของแบบจําลองและการคํานวณข้อผิดพลาด
+Multilabel Image Classification 
+Multiclass Image Classification
+--- page 111 ---
+116
+• Edit Master text styles
+11/09/69
+116
+กําหนดโครงสร้าง Convolutional Neural Network สําหรับ Multilabel Image Classification 
+from torchvision.models import resnet50, ResNet50_Weights
+import torch.nn as nn
+# Load Backborn
+model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
+# Edit Model
+model.fc = nn.Linear(2048, 24)
+print(model)
+การสร้างโมเดล Multilabel Image Classification 
+กําหนด Loss function และ Optimizer
+import torch.optim as optim
+# This loss combines a Sigmoid layer and the Binary Cross Entropy (BCELoss) in one single class. 
+criterion = nn.BCEWithLogitsLoss()
+# optimizer function
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+--- page 112 ---
+117
+• Edit Master text styles
+11/09/69
+117
+from PIL import Image
+from torch.nn.functional import sigmoid
+img_path = 'Multi_Label_dataset/tt0084867.jpg'
+image = Image.open(img_path).convert('RGB')
+image = transform(image)
+# Check if GPU (cuda) is available
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# Move our model to device (GPU or CPU)
+model.to(device)
+model.eval()
+image = image.to(device)
+image = image.unsqueeze(0)
+output = model(image)
+# Normalize range
+output = sigmoid(output)
+# get predict class based on threshold
+output = output.squeeze(0)
+output = torch.nonzero(output > 0.3, as_tuple=True)[0].cpu()
+print("The genre of this oster is ", classes[output].to_list())
+การสร้างโมเดล Multilabel Image Classification 
+ตัวอย่างโปรแกรมเรียกใช้งานแบบจําลอง
+--- page 113 ---
+118
+• Edit Master text styles
+11/09/69
+118
+หัวข้อ
+•หลักการและการสร้างโมเดลสําหรับ Multiclass Image Classification
+•หลักการและการสร้างโมเดลสําหรับ Multilabel Image Classification  
+•หลักการและการสร้างโมเดลสําหรับ Image Regression
+•หลักการ Multi-task Learning 
+--- page 114 ---
+119
+• Edit Master text styles
+11/09/69
+119
+การสร้างโมเดลสําหรับ Image Regression 
+การพิจารณาผลลัพธ์ของแบบจําลองและการคํานวณข้อผิดพลาด
+Image Regression 
+Multiclass Image Classification
+--- page 115 ---
+120
+• Edit Master text styles
+11/09/69
+120
+กําหนดโครงสร้าง Convolutional Neural Network สําหรับ Image Regression
+from torchvision.models import resnet50, ResNet50_Weights
+import torch.nn as nn
+# Load Backborn
+model = resnet50()
+# Edit Model
+model.fc = nn.Linear(2048, 1)
+การสร้างโมเดล Image Regression
+กําหนด Loss function และ optimizer
+import torch.optim as optim
+# loss function
+criterion = nn.L1Loss() 
+# optimizer function
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+--- page 116 ---
+121
+• Edit Master text styles
+11/09/69
+121
+from PIL import Image
+from torch.nn.functional import sigmoid
+img_path = 'Multi_Label_dataset/tt0084867.jpg'
+image = Image.open(img_path).convert('RGB')
+image = transform(image)
+# Check if GPU (cuda) is available
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# Move our model to device (GPU or CPU)
+model.to(device)
+model.eval()
+image = image.to(device)
+image = image.unsqueeze(0)
+output = model(image)
+# Normalize range
+output = sigmoid(output)
+# get predict class based on threshold
+output = output.squeeze(0)
+output = torch.nonzero(output > 0.3, as_tuple=True)[0].cpu()
+print("The genre of this oster is ", classes[output].to_list())
+การสร้างโมเดล Image Regression
+ตัวอย่างโปรแกรมเรียกใช้งานแบบจําลอง
+--- page 117 ---
+122
+• Edit Master text styles
+11/09/69
+122
+from PIL import Image
+img_path = 'AgeDetection/30_1_2_20170116192249012.jpg'
+image = Image.open(img_path).convert('RGB')
+image = transform(image)
+# Check if GPU (cuda) is available
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# Move our model to device (GPU or CPU)
+model.to(device)
+model.eval()
+image = image.to(device)
+image = image.unsqueeze(dim=0)
+outputs = model(image)
+predicted = outputs.squeeze(dim=0)
+print(f'Predicted: {predicted.item():,.2f} years old', )
+การสร้างโมเดล Image Regression
+ตัวอย่างโปรแกรมเรียกใช้งานแบบจําลอง
+--- page 118 ---
+123
+• Edit Master text styles
+11/09/69
+123
+import torch.nn as nn
+import torch.nn.functional as F
+class RegressionNetwork(nn.Module):
+    def __init__(self):
+        super().__init__()
+        # nn.Conv2d(in_channels, out_channels, kernel_size)
+        self.conv1 = nn.Conv2d(3, 6, 5) 
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 128)
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, 1)
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        # flatten all dimensions except batch
+        x = torch.flatten(x, 1)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+model = RegressionNetwork()
+การสร้างโมเดล Image Regression
+ตัวอย่างโปรแกรมการสร้างแบบจําลองสําหรับ Image Regression
+##### 6aa37b466b5bafb530c8b8ba.pdf (4 pages)
+--- page 1 ---
+1. Creating a Custom Dataset for your files
+A custom Dataset class must implement three functions: init, len, and getitem. Take a look at this implementation; the
+SatelliteImageClassification images are stored in a directory img_dir, and their labels are stored separately in a CSV file
+annotations_file.
+__init__
+The _init_ function is run once when instantiating the Dataset object. We initialize the annotations file, and both transforms
+__len__
+The _len_ function returns the number of samples in our dataset.
+__getitem__
+The _getitem_ function loads and returns a sample from the dataset at the given index idx. Based on the index, it identifies the
+image’s location on disk, converts that to a tensor using read_image, retrieves the corresponding label from the csv data in
+self.img_labels, calls the transform functions on them (if applicable), and returns the tensor image and corresponding label in a
+tuple.
+import os
+import pandas as pd
+from torch.utils.data import Dataset
+from PIL import Image
+classes = ('apple', 'avocado', 'banana', 'cherry', 'kiwi', 'mango', 'orange', 'pinenapple', 'strawberries', 'watermelon')
+idx_to_class = {i:j for i, j in enumerate(classes)}
+class_to_idx = {value:key for key,value in idx_to_class.items()}
+class CustomImageDataset(Dataset):
+   def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
+       self.img_labels = pd.read_csv(annotations_file)
+       self.img_dir = img_dir
+       self.transform = transform
+       self.target_transform = target_transform
+   def __len__(self):
+       return len(self.img_labels)
+   def __getitem__(self, idx):
+       img_path = os.path.join(self.img_dir, self.img_labels.iloc[idx, 1], self.img_labels.iloc[idx, 0])
+       label = self.img_labels.iloc[idx, 1]
+       # Load image
+       image = Image.open(img_path).convert('RGB')
+       # transform to number
+       label = class_to_idx[label]
+       if self.transform:
+           image = self.transform(image)
+       if self.target_transform:
+           label = self.target_transform(label)
+       return image, label
+--- page 2 ---
+- Preparing your data for training with DataLoaders
+import torchvision.transforms.v2 as transforms
+import torch
+from torch.utils.data import DataLoader
+from torchvision.datasets import ImageFolder
+transform = transforms.Compose([
+    transforms.Resize((256, 256)),
+    transforms.ToImage(),  # Convert to image format
+    transforms.ConvertImageDtype(torch.float32),  # Convert image dtype
+    transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))])
+train_dataset = CustomImageDataset(annotations_file="./FruitClassification/train/annotation.csv", img_dir="./FruitClassification/train", transform=transform)
+train_dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True)
+- Show sample image from the DataLoader
+import matplotlib.pyplot as plt
+import numpy as np
+import torchvision
+def imshow(img):
+   img = img / 2 + 0.5     # unnormalize
+   npimg = img.numpy()
+   plt.imshow(np.transpose(npimg, (1, 2, 0)))
+   plt.show()
+# get some random training images
+dataiter = iter(train_dataloader)
+images, labels = next(dataiter)
+# show images
+imshow(torchvision.utils.make_grid(images))
+# print labels
+print(' '.join(f'{classes[labels[j]]:5s}' for j in range(4)))
+Show hidden output
+2. Define a Convolutional Neural Network
+from torchvision.models import resnet50, ResNet50_Weights
+import torch.nn as nn
+# New weights with accuracy 80.858%
+model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
+model.fc = nn.Linear(2048, len(classes))
+print(model)
+Show hidden output
+--- page 3 ---
+3. Define a Loss function and optimizer
+import torch.optim as optim
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+4. Train the network
+torch.manual_seed(0)
+# Check if GPU (cuda) is available
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# Move our model to device (GPU or CPU)
+model.to(device)
+model.train()
+num_epochs = 4
+for epoch in range(num_epochs):  # loop over the dataset multiple times
+   running_loss = 0.0
+   for batch_idx, (inputs, labels) in enumerate(train_dataloader):
+       # get the inputs; data is a list of [inputs, labels]
+       inputs, labels = inputs.to(device), labels.to(device)
+       # zero the parameter gradients
+       optimizer.zero_grad()
+       # forward + backward + optimize
+       outputs = model(inputs)
+       loss = criterion(outputs, labels)
+       loss.backward()
+       optimizer.step()
+       # print statistics
+       running_loss += loss.item()
+       if batch_idx % 500 == 499:    # print every 200 mini-batches
+           print(f'Epoch [{epoch + 1}/{num_epochs}], Batch [{batch_idx + 1}/{len(train_dataloader)}], Loss: {running_loss / 500:.4f}')
+           running_loss = 0.0
+print('Finished Training')
+Show hidden output
+    - Save the model that we have trained
+# Save model
+torch.save(model.state_dict(), 'model.pt')
+##### 6aa37b466b5bafb530c8b8bb.pdf (2 pages)
+--- page 1 ---
+1. Load a Convolutional Neural Network
+from torchvision.models import resnet50
+import torch.nn as nn
+import torch
+# New weights with accuracy 80.858%
+model = resnet50()
+model.fc = nn.Linear(2048, len(classes))
+model.load_state_dict(torch.load('./model.pt'))
+<All keys matched successfully>
+2. Test the network with an image
+import torchvision.transforms.v2 as transforms
+import torch
+transform = transforms.Compose([
+   transforms.Resize((256, 256)),
+   transforms.ToImage(),  # Convert to image format
+   transforms.ConvertImageDtype(torch.float32),  # Convert image dtype
+   transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))])
+from PIL import Image
+img_path = 'FruitClassification/test/kiwi/img_141.jpeg'
+image = Image.open(img_path).convert('RGB')
+image = transform(image)
+# Check if GPU (cuda) is available
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# Move our model to device (GPU or CPU)
+model.to(device)
+model.eval()
+image = image.to(device)
+image = image.unsqueeze(0)
+outputs = model(image)
+outputs = outputs.squeeze(0)
+score = torch.softmax(outputs, 0)
+_, predicted = torch.max(score, 0)
+print(f'Predicted: {classes[predicted]} {score[predicted] * 100:.02f}%')
+Predicted: kiwi 99.89%

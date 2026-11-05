@@ -1,0 +1,2977 @@
+##### 6ac83a3e6b5bafb530ccbf3c.pdf (104 pages)
+--- page 1 ---
+บรรยายโดย ผศ.ดร.ธราวิเชษฐ์  ธิติจรูญโรจน์
+คณะเทคโนโลยีสารสนเทศ 
+สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
+Chapter 13
+Deep Learning for Video Processing
+--- page 2 ---
+หัวข้อ
+•ข้อมูลแบบอนุกรมเวลา (Time Series) 
+•โครงข่ายประสาทแบบวนกลับ (Recurrent Neural Network: RNN)
+•หน่วยความจําระยะสั้นแบบยาว (Long Short-Term Memory: LSTM)
+•หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+ (Convolution Long Short-Term Memory: ConvLSTM)
+•วิธีการสร้าง Convolution LSTM  ด้วย Pytorch
+•โครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติ
+--- page 3 ---
+หัวข้อ
+•ข้อมูลแบบอนุกรมเวลา (Time Series) 
+•โครงข่ายประสาทแบบวนกลับ (Recurrent Neural Network: RNN)
+•หน่วยความจําระยะสั้นแบบยาว (Long Short-Term Memory: LSTM)
+•หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+ (Convolution Long Short-Term Memory: ConvLSTM)
+•วิธีการสร้าง Convolution LSTM  ด้วย Pytorch
+•โครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติ
+--- page 4 ---
+ข้อมูลแบบอนุกรมเวลา (Time Series) 
+คือ ชุดข้อมูลที่บันทึกในช่วงเวลาต่อเนื่องกัน โดยข้อมูลแต่ละตัวจะถูกจัดเก็บตามลําดับ
+เวลา ข้อมูลเหล่านี้มักจะใช้ในการวิเคราะห์แนวโน้ม (Trend Analysis) และรูปแบบที่
+เกิดขึ้นตามเวลา (Seasonal Analysis) รวมถึงการทํานายค่าในอนาคต (Forecasting)
+ตัวอย่างทั่วไปของข้อมูลแบบอนุกรมเวลา ได้แก่ ข้อมูลราคาหุ้น, ข้อมูลอุณหภูมิ, ข้อมูล
+การผลิตสินค้าในโรงงาน, และข้อมูลผู้เข้าชมเว็บไซต์ในแต่ละวัน
+• ราคาหุ้น (Stock 
+Prices): ข้อมูลราคาหุ้นจะถูกบันทึกในทุกๆ วันหรือทุกๆ นาที 
+ขึ้นอยู่กับความถี่ในการซื้อขาย
+• อุณหภูมิรายวัน (Daily 
+Temperature): ข้อมูลอุณหภูมิที่วัดได้ในแต่ละวัน 
+ตัวอย่างเช่น อุณหภูมิสูงสุดในกรุงเทพฯ ในแต่ละวัน
+• ปริมาณการขายสินค้า (Sales 
+Volume): ข้อมูลจํานวนสินค้าที่ขายได้ในแต่ละ
+เดือน ตัวอย่างเช่น จํานวนเครื่องใช้ไฟฟ้าที่ขายได้ในแต่ละเดือน
+https://www.nerdwallet.com/assets/blog/wp-content/uploads/2023/07/Image-7-14-
+23-at-4.17-PM-770x462.jpeg
+https://www.researchgate.net/publication/332383223/figure/fig1/AS:746928123936768@1555092950420/The-
+average-day-night-and-daily-temperature-in-Ruse-for-each-month-of-the-year.png
+--- page 5 ---
+ข้อมูล Time Series สําหรับวิดีโอ
+คือ การใช้ข้อมูลแบบอนุกรมเวลา (Time 
+Series) 
+สําหรับวิดีโอเป็นการวิเคราะห์ข้อมูลที่
+เกี่ยวข้องกับลําดับของเฟรมที่เกิดขึ้นตามเวลา ซึ่งเป็นข้อมูลที่มีความซับซ้อนมากกว่าข้อมูลแบบ
+อนุกรมเวลาทั่วไป เนื่องจากประกอบด้วยทั้งข้อมูลเชิงพื้นที่ (spatial data) และข้อมูลเชิงเวลา 
+(temporal data)
+ตัวอย่างการใช้งาน 
+• การตรวจจับการกระทํา (Action Recognition): วิดีโอที่บันทึกการเล่นกีฬาจะมีลําดับของ
+เฟรมที่แสดงการเคลื่อนไหวต่างๆ การวิเคราะห์ข้อมูลนี้สามารถใช้ในการตรวจจับการกระทํา 
+เช่น การเตะบอล การกระโดด หรือการหมุนตัว
+• การตรวจจับเหตุการณ์ (Event Detection): ใช้ในการตรวจจับเหตุการณ์เฉพาะในวิดีโอ 
+เช่น การตรวจจับการชนในวิดีโอจากกล้องวงจรปิด หรือการตรวจจับการล้มของผู้สูงอายุ ซึ่ง
+สามารถใช้งานโมเดล Convolutional Neural Networks (CNN) ร่วมกับ Recurrent 
+Neural Networks (RNN) หรือ Long Short-Term Memory (LSTM)
+• การวิเคราะห์พฤติกรรม (Behavior Analysis): ใช้ในการวิเคราะห์พฤติกรรมของบุคคลหรือ
+วัตถุในวิดีโอ เช่น การวิเคราะห์พฤติกรรมการเดินของผู้คนในสถานีรถไฟ ซึ่งสามารถใช้งาน
+โมเดล  3D Convolutional Neural Networks (3D CNN) 
+https://media.springernature.com/lw685/springer-static/image/art%3A10.1007%2Fs11042-
+020-08806-9/MediaObjects/11042_2020_8806_Fig7_HTML.png
+https://www.mdpi.com/applsci/applsci-09-04364/article_deploy/html/images/applsci-09-04364-g001-550.jpg
+--- page 6 ---
+ความแตกต่างของภาพและวิดีโออยู่ที่มิติเวลา
+--- page 8 ---
+ในการประมวลผลข้อมูลประเภทวิดีโอ เราจําเป็นต้องพิจารณาลักษณะเชิงพื้นที่ (Spatial Feature) และลักษณะเชิง
+เวลา (Temporal Feature) พร้อมกัน เนื่องจากวิดีโอเป็นการรวมกันของภาพที่ต่อเนื่องกันซึ่งมีข้อมูลทั้งสองมิติอยู่
+• Spatial Feature เป็นลักษณะเชิงพื้นที่คือข้อมูลที่เกี่ยวข้องกับรายละเอียดภายในแต่ละเฟรมของวิดีโอ ซึ่งเป็น
+ข้อมูลที่บอกถึงโครงสร้างและลักษณะเฉพาะของวัตถุภายในภาพ เช่น ขอบเขต สี รูปร่าง และพื้นผิว ซึ่งสามารถ
+สกัดด้วยเทคนิค Convolutional Neural Networks (CNNs) ซึ่งใช้ฟิลเตอร์คอนโวลูชันเพื่อดึงลักษณะต่างๆ จาก
+ภาพ 
+• Temporal 
+Feature เป็นลักษณะเชิงเวลาคือข้อมูลที่เกี่ยวข้องกับการเปลี่ยนแปลงของภาพในแต่ละเฟรมเมื่อ
+เทียบกับเฟรมก่อนหน้า เป็นการบ่งบอกถึงความสัมพันธ์และการเคลื่อนไหวของวัตถุภายในวิดีโอ ซึ่งสามารถสกัด
+ลักษณะเชิงเวลามักจะใช้เทคนิค Recurrent Neural Networks (RNNs) หรือ Long Short-Term Memory 
+(LSTM) ซึ่งเหมาะสมกับการจัดการข้อมูลที่มีลําดับเวลา
+การรวมสกัดคุณลักษณะทางด้าน Spatial และ Temporal ร่วมกันจากวิดีโอที่ซับซ้อนมักจะใช้การผสมผสานระหว่าง 
+CNNs และ LSTMs เพื่อสกัดลักษณะเชิงพื้นที่จากแต่ละเฟรม และใช้ LSTMs เพื่อจับความสัมพันธ์เชิงเวลาในเฟรม
+ต่อเนื่อง นอกจากนี้ ยังมีเทคนิค 3D Convolutional Networks (3D CNNs) ที่ใช้ฟิลเตอร์สามมิติในการจับลักษณะ
+เชิงพื้นที่และเชิงเวลาในครั้งเดียว
+ข้อมูล Time Series สําหรับวิดีโอ
+--- page 9 ---
+ความสําคัญของมิติเวลา
+--- page 10 ---
+ความเชื่อมโยงงานภาพในมุมมองงานวิดีโอ
+--- page 15 ---
+ซึ่งโครงสร้างข้อมูลในลักษณะข้างต้นมักนิยมเรียกว่าTensor ที่มีดีกรี(Rank) อยู่ที่4 ซึ่งบางคนจะเรียกว่าข้อมูล4 มิติก็ได้
+V = {               ,             ,             ,             ,     . . .    ,               }
+Frame ที่ 1
+Frame ที่ 2
+Frame ที่ 3
+Frame ที่ 4
+Frame สุดท้าย
+1
+1
+8
+3
+0
+5
+5
+2
+0
+6
+7
+1
+1
+3
+3
+4
+1
+9
+9
+0
+1
+0
+8
+8
+7
+3
+0
+0
+7
+6
+4
+6
+4
+4
+7
+0
+1
+1
+3
+3
+8
+1
+9
+9
+0
+2
+0
+8
+8
+7
+6
+0
+0
+7
+6
+8
+0
+2
+4
+5
+9
+1
+1
+3
+3
+8
+1
+9
+9
+0
+0
+0
+8
+8
+7
+0
+0
+0
+7
+6
+1
+5
+2
+0
+6
+7
+1
+1
+3
+3
+4
+1
+9
+9
+0
+1
+0
+8
+8
+7
+3
+0
+0
+7
+6
+4
+Tensor Rank 0
+(Scalar)
+Tensor Rank 1
+(Vector)
+Tensor Rank 2
+(Matrix)
+Tensor Rank 3 or higher (Tensor)
+ข้อมูล Time Series สําหรับวิดีโอ
+--- page 16 ---
+การใช้งาน Deep Learning สําหรับวีดิโอ 
+Spatial / Temporal 
+Feature Extraction
+Long Short-Term 
+Memory
+Signal
+Video
+Convolution Neural 
+Network
+Long Short-Term 
+Memory
+Feature Vector
+t
+t
+Predicted
+Result
+1
+Video
+t
+t
+or
+Feature Map
+Feature Vector
+or
+Convolution Neural 
+Network
+Predicted
+Result
+Predicted
+Result
+2
+--- page 17 ---
+หัวข้อ
+•ข้อมูลแบบอนุกรมเวลา (Time Series) 
+•โครงข่ายประสาทแบบวนกลับ (Recurrent Neural Network: RNN)
+•หน่วยความจําระยะสั้นแบบยาว (Long Short-Term Memory: LSTM)
+•หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+ (Convolution Long Short-Term Memory: ConvLSTM)
+•วิธีการสร้าง Convolution LSTM  ด้วย Pytorch
+•โครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติ
+--- page 18 ---
+โครงข่ายประสาทแบบวนกลับ 
+สถาปัตยกรรม Neural Network (NN) และ Convolution Neural 
+Network (CNN) ได้รับการออกแบบให้มีความเหมาะสมกับ 
+• อินพุตที่ใส่ค่าเข้ามาพร้อมกันทั้งหมด อาทิเช่น รับค่าพิกเซลเข้ามาทั้งภาพ หรือ 
+รับค่าของคุณลักษณะเข้ามาทั้งเวกเตอร์ เป็นต้น
+• อินพุตต้องไม่มีความสัมพันธิเชิงลําดับ (Sequence) ที่ส่งผลต่อการทํานาย
+ผลลัพธ์
+• อินพุตต้องมีขนาดที่เท่ากันและแน่นอน 
+ดังนั้น สถาปัตยกรรม NN และ CNN จึงไม่เหมาะสมกับข้อมูลที่มี
+ความสัมพันธ์ในลําดับก่อนหลัง และไม่รองรับข้อมูลที่มีขนาดไม่เท่ากัน
+(ก) สถาปัตยกรรม NN
+(ข) สถาปัตยกรรม RNN
+--- page 19 ---
+โครงข่ายประสาทแบบวนกลับ 
+เพื่อจะสามารถสร้างแบบจําลองที่รองรับข้อมูลที่มีขนาดไม่เท่ากันและเหมาะสมกับ
+ข้อมูลที่มีความสัมพันธ์เชิงลําดับ(หรือเรียกว่า ข้อมูลอนุกรมเวลา) ดังนั้น จึงได้มีการ
+นําเสนอสถาปัตยกรรมแบบโครงข่ายประสาทแบบวนกลับ (Recurrent 
+Neural 
+Network: RNN)
+ข้อมูลที่มีความสัมพันธ์เชิงลําดับ (หรือ สถานะ/state/ความรู้ก่อนหน้า) มี
+ความสําคัญต่อแบบจําลองเป็นอย่างมาก แต่จะพบว่าสถาปัตยกรรม NN ไม่มีการ
+เก็บสารสนเทศก่อนหน้า (หรือ สถานะก่อนหน้า) เอาไว้ ขณะที่ สถาปัตยกรรมRNN 
+มีการเก็บสารสนเทศของสารสนเทศก่อนหน้าไว้ (เส้นสีม่วง) และนํามาประมวลผล
+ร่วมกับข้อมูลปัจจุบัน สิ่งเหล่านี้ทําให้ RNN เป็นสถาปัตยกรรมที่ได้ทํานายผลลัพธ์
+มาจากข้อมูล 2 แหล่ง ได้แก่ ข้อมูลปัจจุบันและสารสนเทศของสถานะก่อนหน้า
+(ก) สถาปัตยกรรม NN
+(ข) สถาปัตยกรรม RNN
+--- page 20 ---
+โครงข่ายประสาทแบบวนกลับ 
+โครงข่ายประสาทแบบวนกลับเป็นสถาปัตยกรรมที่ได้รับการออกแบบมาเพื่อให้ใช้
+งานกับข้อมูลที่เป็นลําดับ (Sequence) ได้แก่ วีดิโอ (Video or Sequence of 
+Images) หรือ ข้อความ (Text or Sequence of Words) เป็นต้น RNN มีลักษณะ
+การทํางานคล้ายกับพฤติกรรมการอ่านหนังสือของมนุษย์ โดยที่ มนุษย์จะอ่าน
+หนังสือทีละคํา เพื่อทําความเข้าใจเรื่องราวที่อ่าน ซึ่งมนุษย์สามารถเข้าใจเรื่องราวที่
+อ่านได้เนื่องจากมีข้อมูลของคําที่อ่านก่อนหน้ามาแล้วและผนวกกับคําที่เรากําลังอ่าน
+อยู่ ณ ตําแหน่งปัจจุบัน สิ่งเหล่านี้ทําให้มนุษย์เข้าใจความหมายของสิ่งที่อ่านเข้าไป 
+ดังนั้น RNN จึงได้รับการออกแบบให้มีสถาปัตยกรรมที่มีการพิจารณา (1) 
+สารสนเทศก่อนหน้า (Previous Information) และ (2) ข้อมูล ณ ตําแหน่งปัจจุบัน 
+เพื่อให้สามารถทําความเข้าใจข้อมูลและสิ่งที่ต้องการทํานายได้
+--- page 21 ---
+โครงข่ายประสาทแบบวนกลับ 
+Unfold
+(ขยายออกมา)
+จากตัวอย่างข้างต้น นักศึกษาจะพบว่า Hidden Layer (หรือ เรียกได้ว่า RNN Cell) มีเพียงตัวเดียว แต่สามารถ Unfold ออกมา
+เพื่อให้เห็นการทํางานในแต่ละรอบได้ ซึ่งจากตัวอย่างได้แสดงให้เห็นการทํางาน 3 รอบ “A recurrent neural network can 
+be seen as the repeated use of a single RNN Cell. ”
+--- page 22 ---
+โครงข่ายประสาทแบบวนกลับ 
+เมื่อพิจารณาภายใน RNN Cell (หรือ Hidden Layer: H) จะพบว่า
+คุณลักษณะหรือสารสนเทศที่สําคัญจะคํานวณมาจาก 2 ส่วน ได้แก่
+• ส่วนข้อมูล ณ เวลา ปัจจุบัน (Xt )
+• ส่วนข้อมูลที่ได้รับการประมวลผลก่อนหน้า (Ht-1 )
+โดยที่ Xt จะถูกควบคุมการไหล่เข้าสู่ RNN Cell ด้วย Wxt ขณะที่ 
+Ht-1 จะถูกควบคุมการไหล่เข้าสู่ RNN Cell ด้วย Wht ซึ่งคุณลักษณะ
+หรือสารสนเทศที่ได้รับจาก RNN Cell จะคํานวณได้จากสมการ
+ต่อไปนี้
+Ht = Tanh(   Xt ⋅ Wxt       +  Ht-1 ⋅ Wht     + Bt )
+ข้อมูลปัจจุบัน
+สารสนเทศก่อนหน้า
+--- page 23 ---
+โครงข่ายประสาทแบบวนกลับ 
+และสามารถคํานวณผลลัพธ์ของ RNN Cell ได้จากสมการต่อไปนี้ 
+Yt = Softmax(   Ht ⋅ Wyt       +  Byt     )
+โดยที่ Wyt มีหน้าที่ควบคุมการไหล่ของสารสนเทศออกจาก RNN 
+Cell ก่อนนําไปสร้างเป็นผลลัพธ์ของ RNN Cell
+--- page 24 ---
+โครงข่ายประสาทแบบวนกลับ 
+สรุปแนวความคิดที่สําคัญ ดังนี้
+• ส่วนของสมการ Ht ของ RNN Cell ใช้สําหรับสกัดสารสนเทศหรือ
+คุณลักษณะที่สําคัญออกมาจากข้อมูลและสารสนเทศก่อนหน้า
+Ht = Tanh(   Xt ⋅ Wxt       +  Ht-1 ⋅ Wht     + Bt )
+• ส่วนของสมการ Yt ของ RNN Cell ใช้สําหรับนําสารสนเทศหรือ
+คุณลักษณะที่ได้มาตีความหรือนําไปคํานวณหาค่าผลลัพธ์ที่คาดหวัง
+Yt = Softmax(   Ht ⋅ Wyt       +  Byt     )
+--- page 25 ---
+โครงข่ายประสาทแบบวนกลับ 
+อย่างไรก็ตาม บางครั้ง เราสามารถแบ่งภายใน Hidden Layer 
+ของ RNN ได้เป็น 2 ส่วน ได้แก่ (1) RNN Cell และ (2) RNN 
+Cell Forward ซึ่งนักศึกษาสามารถปรับเปลี่ยนส่วนของ RNN 
+Cell Forward ได้ เนื่องจากส่วนดังกล่าวมีหน้าที่นําสารสนเทศ
+หรือคุณลักษณะที่ได้มาตีความหรือนําไปคํานวณหาค่าผลลัพธ์ที่
+คาดหวังดังนั้น 
+• อาจจะปรับเปลี่ยนให้เกิดความเหมาะสมกับรูปแบบของ
+ผลลัพธ์ได้ตามความเหมาะสม 
+• บางครั้ง RNN Cell Forward อาจจะถูกมองว่าไม่ใช้ส่วนหนึ่ง
+ของ RNN Cell แต่เป็นเพียงส่วนต่อขยายเพื่อใช้สร้างผลลัพธ์ 
+หมายความว่าถ้าไม่ต้องการสร้างผลลัพธ์ ก็ไม่จําเป็นต้องมีก็ได้ 
+อ้างอิง https://durgaprasad-nagarkatte.github.io/implementing-forward-pass-for-rnn.html
+RNN Cell 
+RNN Cell Forward 
+--- page 26 ---
+โครงข่ายประสาทแบบวนกลับ 
+อย่างไรก็ตาม สถาปัตยกรรมแบบ RNN ยิ่งเวลาผ่านไปและข้อมูลผ่านไปในแต่ละ RNN Cell 
+หลายรอบเข้า สารสนเทศที่อยู่ใน RNN Cell ณ รอบแรก ๆ จะมีบทบาทลดลงไป ดังนั้น ถ้า
+ข้อมูลอินพุตมีขนาดที่ยาวมากอาจส่งผลให้ RNN Cell ไม่สามารถรักษาสารสนเทศในรอบ
+ต้น ๆ ได้ ทําให้เกิดปัญหาตามมา
+--- page 27 ---
+โครงข่ายประสาทแบบวนกลับ 
+สัญญาณข้อมูล
+แบ่งข้อมูลออกแป็นส่วน
+เข้ารหัสข้อมูล 
+เวกเตอร์คุณลักษณะ
+#1    #2    #3    #4
+#1    #2    #3    #4
+ขั้นตอนที่ 1 การเตรียมและเข้ารหัสข้อมูล (Data Preparation and One-hot Encoder)
+ตัวอย่างคํานวณ
+--- page 28 ---
+โครงข่ายประสาทแบบวนกลับ 
+ขั้นตอนที่ 2 นําข้อมูลที่เข้ารหัสแล้ว
+ส่งต่อให้ RNN ประมวลผล
+ตัวอย่างคํานวณ
+--- page 29 ---
+โครงข่ายประสาทแบบวนกลับ 
+ข้อดีและข้อเสียของ RNN
+ข้อดี
+ข้อเสีย
+• ความสามารถในการประมวลผลอินพุตที่มีความยาวหรือขนาด
+แตกต่างกันได้
+• ขนาดของโมเดลไม่เพิ่มขึ้นตามขนาดของอินพุต
+• การคํานวณจะพิจารณาข้อมูลก่อนหน้าที่ผ่านมา
+• การแชร์นํ้าหนักข้ามช่วงเวลา
+• การคํานวณช้า
+• ยากในการเข้าถึงข้อมูลจากเวลานานมาแล้ว
+• ไม่สามารถพิจารณาอินพุตในอนาคตสําหรับสถานะปัจจุบัน
+--- page 30 ---
+หัวข้อ
+•ข้อมูลแบบอนุกรมเวลา (Time Series) 
+•โครงข่ายประสาทแบบวนกลับ (Recurrent Neural Network: RNN)
+•หน่วยความจําระยะสั้นแบบยาว (Long Short-Term Memory: LSTM)
+•หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+ (Convolution Long Short-Term Memory: ConvLSTM)
+•วิธีการสร้าง Convolution LSTM  ด้วย Pytorch
+•โครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติ
+--- page 31 ---
+หน่วยความจําระยะสั้นแบบยาว 
+หน่วยความจําระยะสั้นแบบยาว (Long Short-Term Memory: LSTM) คือ โครงข่ายประสาทแบบวนกลับ
+ชนิดหนึ่งที่มีความสามารถเรียนรู้แบบการพึ่งพาแบบระยะยาว (long-term 
+dependencies) ระหว่าง
+ข้อมูลในแต่ละลําดับเวลาได้ ซึ่งพัฒนาขึ้นโดย Hochreiter และคณะในปี 1997
+--- page 32 ---
+หน่วยความจําระยะสั้นแบบยาว 
+LSTM ได้รับการออกแบบเพื่อหลีกเลี่ยงปัญหา “การพึ่งพาแบบระยะยาว (long-term dependency 
+problem)” กล่าวคือ ในทางปฏิบัติติแล้วการจดจําสารสนเทศเป็นระยะเวลานานไม่สามารถการันตีได้ว่า
+จะสามารถจดจําได้หมดหรือไม่ หรือจดจําได้ก็ไม่การันตีว่าจะสามารถส่งต่อไปครบถ้วนหรือไม่
+--- page 33 ---
+LSTM ประกอบไปด้วย 
+• 2 State ได้แก่ Cell State และ Hidden State 
+• 3 Gate ได้แก่ Input Gate, Forget or Remember Gate, และ Output Gate
+• 2 Modulate ได้แก่ Input Modulate Gate และ Output Modulate Gate (ส่วนนี้ผมตั้งเอง**) 
+--- page 34 ---
+LSTM ประกอบไปด้วย 
+• 2 State ได้แก่ Cell State และ Hidden State 
+• 3 Gate ได้แก่ Input Gate, Forget or Remember Gate, และ Output Gate
+• 2 Modulate ได้แก่ Input Modulate Gate และ Output Modulate Gate (ส่วนนี้ผมตั้งเอง**) 
+--- page 35 ---
+หน่วยความจําระยะสั้นแบบยาว 
+Cell State (Long Memory) คือ มีหน้าที่เข้ารหัสสารสนเทศ (ข้อมูลที่ได้รับการประมวลผลแล้ว ณ ตั้งแต่เริ่ม
+จนถึงปัจจุบัน) ที่รวบรวมมาจากแต่ละเวลาก่อนหน้าทั้งหมด หรือสามารถกล่าวได้ว่า Cell State จะให้ความสนใจ
+กับข้อมูลทั้งหมดมากกว่า 
+Hidden State (Short Memory)  คือ มีหน้าที่เข้ารหัส “ลักษณะเฉพาะของข้อมูล” จากแต่ละเวลาก่อนหน้า
+ทั้งหมด โดยที่ “ลักษณะเฉพาะของข้อมูล” เป็นนามธรรมที่ใช้เพื่อบ่งบอกถึงสิ่งที่ Hidden State เก็บไว้เพื่อใช้
+สําหรับทํานายต่อไป ซึ่งส่วนใหญ่สิ่งที่เก็บจะเกี่ยวข้องกับ state ณ เวลาล่าสุด แต่อย่างไรก็ตาม ผลลัพธ์ที่ได้รับ 
+Hidden State ไม่ใช้ output หรือผลของการทํานายโดยตรง ซึ่งก็เหมือน RNN Cell Forward หรือสามารถกล่าว
+ได้ว่า ผลลัพธ์ที่ได้รับ Hidden 
+State 
+รองรับการนําไปประมวลผลต่อเพื่อรับข้อมูลที่มีความหมายมากขึ้นหรือ
+ทํานายผลลัพธ์ก็ได้
+--- page 36 ---
+LSTM ประกอบไปด้วย 
+• 2 State ได้แก่ Cell State และ Hidden State 
+• 3 Gate ได้แก่ Input Gate, Forget or Remember Gate, และ Output Gate
+• 2 Modulate ได้แก่ Input Modulate Gate และ Output Modulate Gate (ส่วนนี้ผมตั้งเอง**) 
+--- page 37 ---
+Forget or Remember Gate (Delete) คือ มีหน้าควบคุมการไหลของข้อมูลใน Cell State ก่อนหน้ามา Cell 
+State ปัจจุบันซึ่งเปรียบเทียบได้กับการกําหนดว่า Cell State สามารถจําหรือลืมข้อมูลอะไรไปบ้าง โดยค่าของ 
+Forget Gate จะอยู่ในช่วง 0 ถึง 1 โดยที่ 0 หมายความว่า ข้อมูลใน Cell State จะถูกลบหมด แต่ขณะที่ 1 
+หมายความว่าข้อมูลจะอยู่ครบทั้งหมด ค่าของ Forget Gate จากสมการต่อไปนี้
+𝑓! = 𝑓"#$%&#' 𝑊(!𝑥! + 𝑊)!ℎ!*+ + 𝑏,
+𝑊!!
+𝑊"!
+𝑏#
+โดยที่ ค่าของ Forget Gate จะคํานวณมาจาก (1) ค่าของ Hidden Node ณ State ก่อนหน้า (2) ค่า Input ณ 
+State ปัจจุบัน และ (3) ค่า Bias ของ Forget Gate ซึ่งจะพบว่า ค่า (1) และ ค่า (2) จะมีค่าถ่วงนํ้าหนักเฉพาะ ณ 
+Forget Gate กํากับอยู่ด้วย 
+ซึ่ง Sigmoid Function จะรับหน้าที่เป็นตัวนําข้อมูลข้างต้นมาตัดสินใจในรูปแบบ Analog ที่ให้ผลลัพธ์อยู่ในช่วง 0 ถึง 1
+ข้อมูล ณ ปัจจุบัน
+ข้อมูลก่อนหน้า
+ข้อมูล ณ ปัจจุบัน
+ข้อมูลก่อนหน้า
+--- page 38 ---
+Input Gate (Write) คือ มีหน้าควบคุมปริมาณการไหลของข้อมูลใหม่เข้าสู่ Cell State ปัจจุบัน ซึ่งเปรียบเทียบ
+ได้กับการกําหนดว่า Cell State จะอัพเดตข้อมูลปัจจุบันหรือไม่นั้นเอง โดยค่าของ Input Gate จะอยู่ในช่วง 0 ถึง 
+1 โดยที่ 0 หมายความว่า ข้อมูลใหม่จะไม่ไหลเข้าสู่ Cell State เลย แต่ขณะที่ 1 หมายความว่าข้อมูลใหม่จะไหล
+เข้าสู่ Cell State ทั้งหมด
+𝑖! = 𝑓"#$%&#' 𝑊("𝑥! + 𝑊)"ℎ!*+ + 𝑏#
+โดยที่ ค่าของ Input Gate จะคํานวณมาจาก (1) ค่าของ Hidden Node ณ State ก่อนหน้า (2) ค่า Input ณ 
+State ปัจจุบัน และ (3) ค่า Bias ของ Input Gate ซึ่งจะพบว่า ค่า (1) และ ค่า (2) จะมีค่าถ่วงนํ้าหนักเฉพาะ ณ 
+Input Gate กํากับอยู่ด้วย 
+ซึ่ง Sigmoid Function จะรับหน้าที่เป็นตัวนําข้อมูลข้างต้นมาตัดสินใจในรูปแบบ Analog ที่ให้ผลลัพธ์อยู่ในช่วง 0 ถึง 1
+ข้อมูล ณ ปัจจุบัน
+ข้อมูลก่อนหน้า
+ข้อมูล ณ ปัจจุบัน
+ข้อมูลก่อนหน้า
+𝑊!"
+𝑊""
+𝑏$
+--- page 39 ---
+Output Gate (Read) คือ มีหน้าที่กําหนดการไหลของข้อมูลใน Cell State ปัจจุบัน ออกให้คนนอกนําไปใช้งาน
+ได้ ที่เรียกว่า Read เพราะว่า ข้อมูลทั้งหมดใน Cell State จะเปิดเผยให้ผู้อื่นมาอ่านไปใช้งานได้มากน้อยเพียงใดก็
+ขึ้นอยู่กับ Output Gate เป็นตัวตัดสินใจ โดยค่าของ Output Gate จะอยู่ในช่วง 0 ถึง 1 โดยที่ 0 หมายความว่า 
+จะไม่เปิดเผยข้อมูลใน Cell State ต่อภายนอกเลย แต่ขณะที่ 1 หมายความว่าเปิดเผยข้อมูลใน Cell State ทั้งหมด
+𝑜! = 𝑓"#$%&#' 𝑊(#𝑥! + 𝑊)#ℎ!*+ + 𝑏&
+โดยที่ ค่าของ Output Gate จะคํานวณมาจาก (1) ค่าของ Hidden Node ณ State ก่อนหน้า (2) ค่า Input ณ 
+State ปัจจุบัน และ (3) ค่า Bias ของ Output Gate ซึ่งจะพบว่า ค่า (1) และ ค่า (2) จะมีค่าถ่วงนํ้าหนักเฉพาะ ณ 
+Output Gate กํากับอยู่ด้วย 
+ซึ่ง Sigmoid Function จะรับหน้าที่เป็นตัวนําข้อมูลข้างต้นมาตัดสินใจในรูปแบบ Analog ที่ให้ผลลัพธ์อยู่ในช่วง 0 ถึง 1
+ข้อมูล ณ ปัจจุบัน
+ข้อมูลก่อนหน้า
+ข้อมูล ณ ปัจจุบัน
+ข้อมูลก่อนหน้า
+𝑊!#
+𝑊"#
+𝑏%
+--- page 40 ---
+หน่วยความจําระยะสั้นแบบยาว 
+Forget or Remember Gate (Delete) คือ มีหน้าควบคุมการไหลของข้อมูลใน Cell State ก่อนหน้ามา Cell 
+State ปัจจุบันว่า ซึ่งเปรียบเทียบได้กับการกําหนดว่า Cell State สามารถจําหรือลืมข้อมูลอะไรไปบ้าง โดยค่าของ 
+Forget Gate จะอยู่ในช่วง 0 ถึง 1 โดยที่ 0 หมายความว่า ข้อมูลใน Cell State จะถูกลบหมด แต่ขณะที่ 1 
+หมายความว่าข้อมูลจะอยู่ครบทั้งหมด 
+Input Gate (Write) คือ มีหน้าที่เข้ารหัส “ลักษณะเฉพาะของข้อมูล” จากแต่ละเวลาก่อนหน้าทั้งหมด โดยที่ 
+“ลักษณะเฉพาะของข้อมูล” เป็นนามธรรมที่ใช้เพื่อบ่งบอกถึงสิ่งที่ Hidden State เก็บไว้เพื่อใช้ในการทํานายต่อไป 
+ซึ่งส่วนใหญ่สิ่งที่เก็บจะเกี่ยวข้องกับ state ณ เวลาล่าสุด
+--- page 41 ---
+LSTM ประกอบไปด้วย 
+• 2 State ได้แก่ Cell State และ Hidden State 
+• 3 Gate ได้แก่ Input Gate, Forget or Remember Gate, และ Output Gate
+• 2 Modulate ได้แก่ Input Modulate Gate และ Output Modulate Gate (ส่วนนี้ผมตั้งเอง**) 
+--- page 42 ---
+Input Modulate Gate คือ มีหน้าใช้ในการปรับปรุงและควบคุมข้อมูลใหม่ที่ต้องการเพิ่มเข้าไปใน cell state 
+(สถานะของเซลล์) หรือหน่วยความจําของ LSTM ในแต่ละ timestep (จังหวะเวลา) โดยอาศัย input (ข้อมูลที่
+ป้อนเข้ามา) และ hidden state (สถานะที่ซ่อนอยู่) จาก timestep ก่อนหน้า มาผ่าน Tanh function เพื่อ
+คํานวณค่าที่จะใช้ปรับปรุง cell state
+𝑧! = 𝑓!-.) 𝑊($𝑥! + 𝑊)$ℎ!*+ + 𝑏/
+โดยอาศัย input (ข้อมูลที่ป้อนเข้ามา) และ hidden state (สถานะที่ซ่อนอยู่) จาก timestep ก่อนหน้า มาผ่าน 
+tanh activation function และ (3) ค่า Bias ของ Input Modulate Gate เพื่อคํานวณค่าที่จะใช้ปรับปรุง cell 
+state ซึ่งจะพบว่า ค่า (1) - (3) จะมีค่าถ่วงนํ้าหนักเฉพาะ ณ Input Modulate Gate กํากับอยู่ด้วย 
+ซึ่ง Tanh function จะรับหน้าที่เป็นตัวนําข้อมูลข้างต้นมาตัดสินใจในรูปแบบ Analog ที่ให้ผลลัพธ์อยู่ในช่วง -1 ถึง 1
+ข้อมูล ณ ปัจจุบัน
+ข้อมูลก่อนหน้า
+ข้อมูล ณ ปัจจุบัน
+ข้อมูลก่อนหน้า
+𝑊!$
+𝑊"$
+𝑏&
+Tanh
+(Input Modulate Gate)
+Xt
+Ht-1
+--- page 43 ---
+จากนั้น ดําเนินการปรับปรุงและควบคุมข้อมูล
+ใหม่ที่ต้องการเพิ่มเข้าไปใน cell state (สถานะ
+ของเซลล์) ณ ปัจจุบัน โดยผ่านกระบวนการ 
+Combination with Input Gate กล่าวคือนําค่า 
+𝑧! มาคูณกับค่า𝑖! มาคํานวณ เพื่อควบคุม
+ปริมาณข้อมูลที่เพิ่มเข้าไปใน cell state
+𝐶! = 𝑓!𝐶!*+ + 𝑖! ∗𝑧!
+ข้อมูลที่เพิ่ม
+ข้อมูลก่อนหน้า
+--- page 44 ---
+Output Modulate Gate คือ มีหน้าปรับปรุง 
+Hidden State โดยที่ค่า ℎ! คํานวณจากค่า 𝑜!
+คูณกับค่า 𝐶! ที่มาผ่าน Tanh function
+ℎ! = 𝑜! ∗𝑓!-.) 𝐶!
+Output Modulate Gate ใน LSTM มีบทบาทใน
+การควบคุมข้อมูลที่ถูกส่งออกจาก cell state เพื่อใช้
+ในการคํานวณ hidden state ซึ่งจะถูกส่งต่อไปยัง 
+timestep ถัดไป การทํางานของ Output Gate ทํา
+ให้ LSTM 
+สามารถเลือกได้ว่าข้อมูลใดจาก cell 
+state จะถูกนําไปใช้ในการคํานวณและส่งต่อไปยัง 
+hidden state ถัดไป ทําให้สามารถปรับปรุงการ
+จัดการข้อมูลในลําดับเวลาได้ดีขึ้น
+Input Data
+Hidden State 
+Input
+Cell State
+Sigmoid
+(Input Gate)
+Tanh
+(Input Modulate Gate)
+Cell State 
+Candidate 
+Cell State (t-1) 
+ที่คงเหลือ
+Sigmoid
+(Output Gate)
+Tanh
+(Output Modulate Gate)
+Cell State
+Hidden State 
+Output
+Output
+Sigmoid
+(Forget Gate)
+Cell State (t) : Ct
+--- page 45 ---
+LSTM ประกอบไปด้วย 
+• 2 State ได้แก่ Cell State และ Hidden State 
+• 3 Gate ได้แก่ Input Gate, Forget or Remember Gate, และ Output Gate
+• 2 Modulate ได้แก่ Input Modulate Gate และ Output Modulate Gate (ส่วนนี้ผมตั้งเอง**) 
+--- page 46 ---
+การใช้งาน Deep Learning สําหรับวีดิโอ 
+Spatial / Temporal 
+Feature Extraction
+Long Short-Term 
+Memory
+Signal
+Video
+Convolution Neural 
+Network
+Long Short-Term 
+Memory
+Feature Vector
+t
+t
+Predicted
+Result
+1
+Video
+t
+t
+or
+Feature Map
+Feature Vector
+or
+Convolution Neural 
+Network
+Predicted
+Result
+Predicted
+Result
+2
+--- page 47 ---
+แนวทางการประยุกต์ใช้งาน
+--- page 48 ---
+แนวทางการประยุกต์ใช้งาน
+อ้างอิง https://stackoverflow.com/questions/56758148/how-to-train-a-neural-network-lstm-with-mfcc-coefficients-in-matlab
+--- page 49 ---
+แนวทางการประยุกต์ใช้งาน
+อ้างอิง DOI: 10.3390/technologies11040091
+--- page 50 ---
+การใช้งาน Deep Learning สําหรับวีดิโอ 
+ConvLSTM
+Video
+Convolution Neural 
+Network
+Long Short-Term 
+Memory
+Feature Vector
+t
+t
+Predicted
+Result
+1
+Video
+t
+Predicted
+Result
+3D CNN
+Video
+t
+Predicted
+Result
+3
+4
+Neural Network
+(Optional)
+Neural Network
+(Optional)
+--- page 51 ---
+การใช้งาน Deep Learning สําหรับวีดิโอ 
+ConvLSTM
+Video
+Convolution Neural 
+Network
+Long Short-Term 
+Memory
+Feature Vector
+t
+t
+Predicted
+Result
+1
+Video
+t
+Predicted
+Result
+3D CNN
+Video
+t
+Predicted
+Result
+3
+4
+Neural Network
+(Optional)
+Neural Network
+(Optional)
+--- page 52 ---
+หัวข้อ
+•ข้อมูลแบบอนุกรมเวลา (Time Series) 
+•โครงข่ายประสาทแบบวนกลับ (Recurrent Neural Network: RNN)
+•หน่วยความจําระยะสั้นแบบยาว (Long Short-Term Memory: LSTM)
+•หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+ (Convolution Long Short-Term Memory: ConvLSTM)
+•วิธีการสร้าง Convolution LSTM  ด้วย Pytorch
+•โครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติ
+--- page 53 ---
+หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+ในปัจจุบันนี้ การค้นหาข้อมูลในรูปแบบของลําดับภาพ (a 
+sequence of images) กําลังได้รับความนิยมเป็นอย่างมาก อาทิ
+เช่น Movies and trailers, Satellites pictures, และ Security 
+cameras โดย Convolutional LSTM Network ได้รับการคิดค้น
+ขึ้นในปี ค.ศ. 2015 โดย Xingjian 
+Shi และคณะ เป็น recurrent 
+neural network ชนิดหนึ่งสําหรับใช้ทํานายข้อมูลในมุมมองเชิง
+ภูมิศาสตร์และด้านเวลาควบคู่กัน ซึ่งจะประกอบด้วย 2 ส่วนหลัก 
+ได้แก่  Convolution Layer และ LSTM 
+อ้างอิง https://medium.com/neuronio/an-introduction-to-convlstm-55c9025563a7
+--- page 54 ---
+หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+--- page 55 ---
+หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+คือ การผสมผสานระหว่าง Convolutional Neural Networks (CNNs) และ Long Short-Term Memory (LSTM) ซึ่งถูกออกแบบมาเพื่อประมวลผลข้อมูลที่
+มีโครงสร้างเชิงพื้นที่และเชิงเวลา เช่น วิดีโอหรือข้อมูลทางภูมิศาสตร์ ConvLSTM ถูกสร้างขึ้นเพื่อจัดการกับปัญหาที่ LSTM แบบดั้งเดิมไม่สามารถจัดการได้ดี 
+ซึ่งรวมถึงการจัดการกับข้อมูลที่มีมิติสูงและมีการเชื่อมโยงเชิงพื้นที่  ซึ่งลักษณะสําคัญของ ConvLSTM คือ การใช้การคอนโวลูชันในส่วนของการคํานวณสถานะ
+ซ่อน (hidden state) และอินพุต (Input) ทําให้สามารถจับลักษณะเชิงพื้นที่ได้ดีขึ้น การเปลี่ยนแปลงหลักจาก LSTM ดั้งเดิม ประกอบด้วย 2 ส่วน ได้แก่
+• เปลี่ยนแปลง element-wise multiplication ด้วยการคอนโวลูชัน (convolution operation) ในการคํานวณสถานะซ่อนและอินพุต
+• การใช้ตัวกรองคอนโวลูชันเพื่อคํานวณการอัพเดตสถานะซ่อน แทนการคูณเมทริกซ์แบบเดิม
+--- page 56 ---
+หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+อ้างอิง https://medium.com/neuronio/an-introduction-to-convlstm-55c9025563a7
+หลักการคํานวณของแต่ละ Gate ใน ConvLSTM จะเขียนได้ดังสมการต่อไปนี้
+--- page 57 ---
+หัวข้อ
+•ข้อมูลแบบอนุกรมเวลา (Time Series) 
+•โครงข่ายประสาทแบบวนกลับ (Recurrent Neural Network: RNN)
+•หน่วยความจําระยะสั้นแบบยาว (Long Short-Term Memory: LSTM)
+•หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+ (Convolution Long Short-Term Memory: ConvLSTM)
+•วิธีการสร้าง Convolution LSTM  ด้วย Pytorch
+•โครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติ
+--- page 58 ---
+วิธีการสร้าง Convolution LSTM ด้วย Pytorch
+อ้างอิง : https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
+ข้อ
+คําอธิบาย
+1 
+กําหนดโครงสร้าง Dataset ที่จะนํามาใช้ในการฝึกสอนโมเดล
+2
+กําหนด Convolution LSTM สําหรับการฝึกสอนโมเดล
+3
+เลือก Loss Function และ Optimizer ที่เหมาะสมกับงานของเรา
+4
+การฝึกสอนโมเดล
+5
+การทดสอบและวัดผลโมเดล
+การสร้างโมเดล Convolution LSTM ยังคงสามารถใช้ลําดับขั้นตอนของการสร้างโมเดลแบบพื้นฐานคือ
+ซึ่งส่วนที่แตกต่างไปคือรายละเอียดในแต่ละขั้นตอนเท่านั้น โดยจะถูกเปลี่ยนไปให้เหมาะสมกับลักษณะงานที่จะไปประยุกต์ใช้หรือวิธีการที่นํามา
+ประยุกต์ใช้งาน
+--- page 59 ---
+1. กําหนดโครงสร้าง Dataset 
+ที่จะนํามาใช้ในการ
+ฝึกสอนโมเดล
+ในการทําVideo Classification จะมีความลักษณะพิเศษ
+คือรับข้อมูลนําเข้าเป็นข้อมูล 5 
+มิติ (Batch, 
+Frame, 
+Width, Height, Channel) ซึ่งไม่มีชุดข้อมูลสําเร็จรูป 
+สําหรับข้อมูลประเภทนี้ เราจึงจําเป็นต้องกําหนดโครงสร้าง 
+Dataset โดยใช้ชุดคําสั่งแบบกําหนดเองที่ชุดคําสั่ง Pytorch 
+กําหนดไว้ให้ โดยในส่วนของฟังก์ชัน __init__ จะจัดเก็บ
+ข้อมูลที่จําเป็นสําหรับการเรียกใช้ (Load Video) ขณะ
+ฝึกสอนแบบจําลอง เช่น ชื่อวิดีโอ ป้ายเฉลย ขนาดวิดีโอ 
+class VideoDataset(Dataset):
+   def __init__(self, root_dir, labels, transform=None, max_frames=0, 
+resize=(224, 224)):
+        self.root_dir = root_dir
+        self.labels = labels
+        self.transform = transform
+        self.max_frames = max_frames
+        self.resize = resize
+        self.video_paths = []
+        self.video_labels = []
+        for label in labels:
+            label_dir = os.path.join(root_dir, label)
+            for filename in os.listdir(label_dir):
+                if filename.endswith(('.mp4', '.avi', '.mov')):
+                    self.video_paths.append(os.path.join(label_dir, filename))
+                    self.video_labels.append(label)
+    def __len__(self):
+        return len(self.video_paths)
+วิธีการสร้าง Convolution LSTM ด้วย Pytorch
+--- page 60 ---
+class VideoDataset(Dataset):
+   def __getitem__(self, idx):
+        video_path = self.video_paths[idx]
+        label = self.video_labels[idx]
+        video_frames = self.load_video(video_path) #numpy format
+        if self.transform:
+            video_frames = [self.transform(frame) for frame in video_frames]
+        # Stack frames to create a tensor
+        video_tensor = torch.stack(video_frames)
+        # Assuming labels are provided as strings
+        label_idx = self.labels.index(label)
+        return video_tensor, label_idx
+วิธีการสร้าง Convolution LSTM ด้วย Pytorch
+ถัดมา ขั้นตอนการเรียกใช้ข้อมูลจะทํา
+การเรียกขึ้นเป็นลักษณะของภาพเรียง
+ต่อกัน (รายละเอียดจะอยู่ในสไลด์ถัดไป)
+ในรูปแบบของ numpy.array() จากนั้น 
+นํามาผ่าน transform 
+ที่ละภาพหรือ
+เฟรม (frame) ก่อนจะนํามาต่อกันให้
+อยู่ในรูปแบบของ tensor ก่อนส่งออก
+ไปประมวลผลต่อไป
+--- page 61 ---
+class VideoDataset(Dataset):
+   def load_video(self, path):
+        cap = cv2.VideoCapture(path)
+        frames = []
+        try:
+            while True:
+                ret, frame = cap.read()
+# Stop condition when failing to read
+                if not ret: 
+                    break
+# Preprocess Option
+                if self.resize:
+                    frame = cv2.resize(frame, self.resize)
+                frames.append(frame)
+# Stop condition when the number of maximum frames equals 
+# the number of frames read from the video
+                if self.max_frames and (len(frames) >= self.max_frames):
+                    break
+        finally:
+            cap.release()
+        return np.array(frames)
+# Zero is False and Positive and Negative Number is True.
+วิธีการสร้าง Convolution LSTM ด้วย Pytorch
+ในส่วนของการอ่านวิดีโอ ภาษาไพทอน
+มีชุดข้อมูลที่นิยมนํามาใช้คือ OpenCV 
+โดยจะทําการอ่านที่ละเฟรมไปจนสิ้นสุด
+ความยาวของวิดีโอ ซึ่งสามารถกําหนด
+รายละเอียด หรือทํา Data Processing 
+จากส่วนนี้ได้เลย ก่อนที่จะเก็บใส่ list
+และแปลงเป็น numpy.array โดยที่ ret 
+จะคืนค่าเป็น True เมื่อการอ่านเฟรมมา
+สําเร็จและจะคืนค่าเป็น False เมื่ออ่าน
+เฟรมไม่สําเร็จ
+--- page 62 ---
+วิธีการสร้าง Convolution LSTM ด้วย Pytorch
+เมื่อสร้าง Dataset 
+เสร็จเรียบร้อยแล้ว ให้
+นักศึกษานําข้อมูลเข้าไปเพื่อเตรียมการแปลง
+ข้อมูลให้อยู่ในรูปแบบที่เหมาะสม รวมถึง
+กําหนดพารามิเตอร์ที่ต้องการ เช่น ขนาดแบตช์
+(batch 
+size) สําหรับพารามิเตอร์ num_
+workers เมื่อมีค่าเท่ากับ 0 หรือ 1 โปรแกรมจะ
+สร้าง Instance 
+เดียวในการโหลดข้อมูลผ่าน 
+CPU ในขณะที่ num_workers 
+มากกว่า 1 
+โปรแกรมจะสร้างจํานวน Instance 
+เท่ากับ
+จํานวนที่กําหนด เพื่อช่วยกันโหลดข้อมูลผ่าน 
+CPU โดยจํานวน num_workers ไม่ควรเกิน
+จากจํานวนคอร์(core) ของ CPU
+# Parameters
+root_dir = './action_classification_dataset/train'
+classes = ['Biking', 'Diving', 'HorseRiding']
+transform = transforms.Compose([
+    transforms.ToImage(),
+    transforms.ToDtype(torch.float32),
+    transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+])
+batch_size = 4
+max_frames = 30
+resize = (112, 112)
+# Create dataset
+train_dataset = VideoDataset(root_dir=root_dir, labels=classes, 
+transform=transform, max_frames=max_frames, resize=resize)
+train_dataloader = DataLoader(train_dataset, batch_size=batch_size, 
+shuffle=True, num_workers=0)
+หมายเหตุ num_workers มีการทํางานเบื้องต้นแบบ synchronize
+--- page 63 ---
+from network.convlstm import ConvLSTM
+import torch.nn as nn
+class ConvLSTMModel(nn.Module):
+    def __init__(self, num_classes, image_size, batch_size=1, hidden_dim=[64, 64]):
+        self.batch_size = batch_size
+        self.convlstm = ConvLSTM(input_dim=3, hidden_dim=hidden_dim, kernel_size=(3, 3), num_layers=2, batch_first=True)
+        self.fc = nn.Linear(image_size[0] * image_size[1] * hidden_dim[-1], num_classes)
+    def forward(self, x):
+_, last_state_list = self.convlstm(x)
+# dada shape (batch_size, time, c, h, w)
+x = last_state_list[-1][0].view(self.batch_size, -1)
+# reshape information from last hidden state
+        x = self.fc(x)
+        return x
+num_classes = len(classes)
+model = ConvLSTMModel(num_classes, image_size=(112, 112), batch_size=batch_size)
+วิธีการสร้าง Convolution LSTM ด้วย Pytorch
+2. กําหนด Convolution LSTM Network สําหรับการฝึกสอนโมเดล
+เนื่องจากในปัจจุบันนี้ชุดคําสั่งสําเร็จรูปสําหรับ Convolution LSTM ในชุดคําสั่ง Pytorch ยังไม่มีให้บริการ ดังนั้น นักศึกษาต้องกําหนดขึ้นมาเอง โดยลักษณะ
+โครงสร้างสามารถดูได้จากโฟลเดอร์ network ในไฟล์ชื่อ convlstm.py จากนั้น นําลักษณะโครงสร้างที่กําหนดมาต่อเข้ากับ Fully Connected Layer ในชั้น
+สุดท้ายเพื่อ Classification โดยสืบทอดคลาส nn.Module เพื่อบอกให้ Pytorch ทราบว่านี่คือโมเดล
+--- page 64 ---
+class ConvLSTMCell(nn.Module):
+    def __init__(self, input_dim, hidden_dim, kernel_size, bias):
+        super(ConvLSTMCell, self).__init__()
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.kernel_size = kernel_size
+        self.padding = kernel_size[0] // 2, kernel_size[1] // 2
+        self.bias = bias
+        self.conv = nn.Conv2d(in_channels=self.input_dim + self.hidden_dim,
+out_channels=4 * self.hidden_dim,
+                              kernel_size=self.kernel_size,
+padding=self.padding,
+bias=self.bias)
+    def forward(self, input_tensor, cur_state):
+        h_cur, c_cur = cur_state
+        combined = torch.cat([input_tensor, h_cur], dim=1)  # concatenate along channel axis
+        combined_conv = self.conv(combined)
+        cc_i, cc_f, cc_o, cc_g = torch.split(combined_conv, self.hidden_dim, dim=1)
+        i = torch.sigmoid(cc_i)
+        f = torch.sigmoid(cc_f)
+        o = torch.sigmoid(cc_o)
+        g = torch.tanh(cc_g)
+        c_next = f * c_cur + i * g
+        h_next = o * torch.tanh(c_next)
+        return h_next, c_next
+รายละเอียดเพิ่มเติม https://github.com/ndrplz/ConvLSTM_pytorch/blob/master/convlstm.py
+--- page 65 ---
+3. เลือก Loss Function และ Optimizer 
+นักศึกษาต้องกําหนดLoss Function และOptimizer ให้
+เหมาะสมและสอดคล้องกับงานที่ต้องการทําโดยพิจารณา
+ว่าเป็นงานRegression, Multiclass, Multilabel, หรือ
+Multitask เป็นต้น
+# define a Loss Function and an optimizer
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+วิธีการสร้าง Convolution LSTM ด้วย Pytorch
+--- page 66 ---
+4. การฝึกสอนโมเดล
+ตัวอย่างโปรแกรมฝึกสอนแบบจําลองจากโครงสร้าง
+แบบจําลอง model ที่กําหนดโดยอาศัยข้อมูลมาจาก 
+dataloader ที#นักศึกษาได้custom ขึ/นมาโดยมีการ
+เรียกใช้งานLoss Function ผ่านตัวแปรcriterion 
+และOptimizer เมื#อปรับปรุงWeight 
+ของ
+แบบจําลองผ่านกระบวนการฝึกสอน 
+หลังจากฝึกฝนแบบจําลองถึงจํานวนรอบที#กําหนดผ่าน
+ตัวแปรepoch แล้วโปรแกรมจะบันทึกแบบจําลองไว้
+ใช้งานในภายหลัง
+num_epochs = 10
+model.train()
+for epoch in range(num_epochs):
+    running_loss = 0.0
+    for batch_idx, (videos, labels) in enumerate(dataloader):
+        optimizer.zero_grad()
+        outputs = model(videos)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+        if batch_idx % 10 == 9:  # print every 10 batches
+print(f'Epoch [{epoch + 1}/{num_epochs}], Batch [{batch_idx 
++ 1}/{len(train_dataloader)}], Loss: {running_loss / 10:.4f}')
+            running_loss = 0.0
+print('Finished Training’)
+# Save model
+torch.save(model.state_dict(), 'video_classification_model.pt')
+วิธีการสร้าง Convolution LSTM ด้วย Pytorch
+--- page 67 ---
+5. การทดสอบและวัดผลโมเดล
+นักศึกษาสามารถเลือกใช้ตัวชี้วัดผ่านชุดคําสั่ง sklearn.metrics ได้
+from sklearn.metrics import accuracy_score
+model.eval()
+correct = 0
+total = 0
+# since we're not training, we don't need to calculate the 
+gradients for our outputs
+with torch.no_grad():
+    for inputs, labels in test_dataloader:
+        images, labels = inputs, labels
+        # calculate outputs by running images through the network
+        outputs = model(images)
+        _, predicted = torch.max(outputs.data, 1)
+        correct += accuracy_score(labels, predicted)
+        total += 1
+print(f'Accuracy of the network on the test video: {100 * correct / 
+total:.02f} %')
+วิธีการสร้าง Convolution LSTM ด้วย Pytorch
+--- page 68 ---
+import numpy as np
+import cv2
+def load_video(path, resize, max_frames):
+        cap = cv2.VideoCapture(path)
+        frames = []
+        try:
+            while True:
+                ret, frame = cap.read()
+                if not ret:
+                    break
+                if resize:
+                    frame = cv2.resize(frame, resize)
+                frames.append(frame)
+                if max_frames and len(frames) >= max_frames:
+                    break
+        finally:
+            cap.release()
+        return np.array(frames)
+ตัวอย่างโปรแกรมเรียกใช้งานแบบจําลอง
+--- page 69 ---
+max_frames = 30
+resize = (112, 112)
+video_path = 'action_classification_dataset/train/Biking/v_Biking_g01_c01.avi'
+video_frames = load_video(video_path, resize, max_frames)
+video_frames = [transform(frame) for frame in video_frames]
+# Stack frames to create a tensor
+video = torch.stack(video_frames)
+model.eval()
+video = video.to(device)
+video = video.unsqueeze(0)
+outputs = model(video)
+outputs = outputs.squeeze(0)
+score = torch.softmax(outputs, 0)
+_, predicted = torch.max(score, 0)
+print(f'Predicted: {classes[predicted]} {score[predicted] * 100:.02f}%')
+ตัวอย่างโปรแกรมเรียกใช้งานแบบจําลอง
+--- page 70 ---
+การใช้งาน Deep Learning สําหรับวีดิโอ 
+ConvLSTM
+Video
+Convolution Neural 
+Network
+Long Short-Term 
+Memory
+Feature Vector
+t
+t
+Predicted
+Result
+1
+Video
+t
+Predicted
+Result
+3D CNN
+Video
+t
+Predicted
+Result
+3
+4
+Neural Network
+(Optional)
+Neural Network
+(Optional)
+--- page 71 ---
+หัวข้อ
+•ข้อมูลแบบอนุกรมเวลา (Time Series) 
+•โครงข่ายประสาทแบบวนกลับ (Recurrent Neural Network: RNN)
+•หน่วยความจําระยะสั้นแบบยาว (Long Short-Term Memory: LSTM)
+•หน่วยความจําระยะสั้นแบบยาวด้วยคอนโวลูชั่น
+ (Convolution Long Short-Term Memory: ConvLSTM)
+•วิธีการสร้าง Convolution LSTM  ด้วย Pytorch
+•โครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติ
+--- page 72 ---
+โครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติ
+อ้างอิง https://www.reachiteasily.com/2021/06/3d-convolutional-neural-network-pytorch.html
+คือ โครงข่ายประสาทแบบคอนโวลูชัน
+ประเภทหนึ่งที่ได้รับการออกแบบมา
+เพื่อให้รองรับข้อมูลแบบ 3 มิติ โดยทั่วไป 
+โครงข่ายประสาทแบบคอนโวลูชันแบบ 
+3 มิติ จะใช้พื้นที่ (Memory) และเวลาใน
+การประมวลผลมากกว่าแบบ 2 มิติ แต่
+ค่อนข้างจะมีความแม่นยํามากกว่า
+มากกว่าโครงข่ายประสาทแบบคอนโวลู
+ชันแบบ 2 มิติ สําหรับข้อมูล 3 มิติ
+--- page 73 ---
+โครงสร้างข้อมูลวีดิโอสี
+ซึ่งโครงสร้างข้อมูลในลักษณะข้างต้นมักนิยมเรียกว่าTensor ที่มีดีกรี(Rank) อยู่ที่4 ซึ่งบางคนจะเรียกว่าข้อมูล4 มิติก็ได้
+V = {               ,             ,             ,             ,     . . .    ,               }
+Frame ที่ 1
+Frame ที่ 2
+Frame ที่ 3
+Frame ที่ 4
+Frame สุดท้าย
+1
+1
+8
+3
+0
+5
+5
+2
+0
+6
+7
+1
+1
+3
+3
+4
+1
+9
+9
+0
+1
+0
+8
+8
+7
+3
+0
+0
+7
+6
+4
+6
+4
+4
+7
+0
+1
+1
+3
+3
+8
+1
+9
+9
+0
+2
+0
+8
+8
+7
+6
+0
+0
+7
+6
+8
+0
+2
+4
+5
+9
+1
+1
+3
+3
+8
+1
+9
+9
+0
+0
+0
+8
+8
+7
+0
+0
+0
+7
+6
+1
+5
+2
+0
+6
+7
+1
+1
+3
+3
+4
+1
+9
+9
+0
+1
+0
+8
+8
+7
+3
+0
+0
+7
+6
+4
+Tensor Rank 0
+(Scalar)
+Tensor Rank 1
+(Vector)
+Tensor Rank 2
+(Matrix)
+Tensor Rank 3 or higher (Tensor)
+--- page 74 ---
+โครงสร้างข้อมูลวีดิโอสี
+V = {               ,             ,             ,             ,     . . .    ,               }
+Frame ที่ 1
+Frame ที่ 2
+Frame ที่ 3
+Frame ที่ 4
+Frame สุดท้าย
+V = {               ,             ,             ,             ,     . . .    ,               }
+--- page 75 ---
+3D Convolution Layer 
+การทํางานของConvolution Layer สําหรับข้อมูลแบบTensor ที่มีดีกรีเท่ากับ3 (แปลงมาจากTensor ที่มีดีกรีเท่ากับ4 ) จะ
+นิยมเรียกว่า3D Convolution Layer โดยทั่วไปการทําคอนโวลูชั่นแบบ2 มิตินักศึกษาจะขยับตัวกรองไปบนข้อมูลเพียงแกน 
+x และy เท่านั้นแล้วจะคํานวณจากทุกChannel (หรือแกนZ) แต่ขณะที่การทําคอนโวลูชั่นแบบ3 มิตินักศึกษาจะขยับตัว
+กรองไปบนข้อมูลทุกแกน (แกนx, y และz)
+• 2D Convolution Layer 
+• 3D Convolution Layer 
+--- page 76 ---
+3D Convolution Layer 
+(อ้างอิง https://towardsdatascience.com/deep-learning-on-video-part-one-the-early-days-8a3632ed47d4)
+ตัวอย่างการทํางานของ3D Convolution Layer กับข้อมูลแบบTensor ที่มีดีกรี
+เท่ากับ3 (แปลงมาจากTensor ที่มีดีกรีเท่ากับ4 )
+--- page 77 ---
+3D Convolution Layer 
+นอกจากนี้ ยังสามารถกล่าวได้ว่า 3D Convolution คือ ตัวดําเนินการ
+แบบการดําเนินงานเชิงพื้นที่ชั่วคราว  (Spatio-Temporal operation) 
+ซึ่งหมายความว่า เป็นตัวดําเนินการที่
+• สกัดคุณลักษณะเชิงตําแหน่ง (Spatial Feature) ของแต่ละเฟรม 
+• สกัดหาความสัมพันธ์ระหว่างเฟรมที่ต่อเนื่องกัน (Temporal 
+Feature)
+หรือสามารถกล่าวได้ว่า Spatial Feature สื่อถึงคุณลักษณะเชิงพื้นที่หรือ
+ตําแหน่ง แต่ขณะที่ Temporal Feature สื่อถึงคุณลักษณะเชิงเวลา
+คุณลักษณะเชิงตําแหน่ง (Spatial Feature) 
+ความสัมพันธ์ระหว่างเฟรมที่ต่อเนื่องกัน (Temporal Feature)
+หมายความว่าการสกัดคุณลักษณะ
+--- page 78 ---
+3D Convolution Layer 
+อ้างอิง https://ichi.pro/th/kar-chi-ngan-thi-la-khan-txn-3d-convolutional-neural-network-ni-keras-20820891513136
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+?
+?
+?
+?
+ข้อมูล (D)
+(4×4×4)
+ตัวกรอง (F)
+(3×3×3)
+ผลลัพธ์ (O)
+(2×2×2)
+∗
+(Convolution)
+=
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+F[0,:,:]
+F[1,:,:]
+F[2,:,:]
+∗
+(Convolution)
+=
+?
+?
+?
+?
+?
+?
+?
+?
+O[1,:,:]
+O[0,:,:]
+--- page 79 ---
+3D Convolution Layer 
+อ้างอิง https://ichi.pro/th/kar-chi-ngan-thi-la-khan-txn-3d-convolutional-neural-network-ni-keras-20820891513136
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+?
+?
+?
+?
+ข้อมูล (D)
+(4×4×4)
+ตัวกรอง (F)
+(3×3×3)
+ผลลัพธ์ (O)
+(2×2×2)
+∗
+(Convolution)
+=
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+F[0,:,:]
+F[1,:,:]
+F[2,:,:]
+∗
+(Convolution)
+=
+?
+?
+?
+?
+?
+?
+?
+?
+O[1,:,:]
+O[0,:,:]
+--- page 80 ---
+3D Convolution Layer 
+อ้างอิง https://ichi.pro/th/kar-chi-ngan-thi-la-khan-txn-3d-convolutional-neural-network-ni-keras-20820891513136
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+?
+?
+?
+?
+ข้อมูล (D)
+ตัวกรอง (F)
+ผลลัพธ์ (O)
+∗
+(Convolution)
+=
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+F[0,:,:]
+F[1,:,:]
+F[2,:,:]
+∗
+(Convolution)
+=
+-21
+?
+?
+?
+?
+?
+?
+?
+O[1,:,:]
+O[0,:,:]
+3+0-3-2+7-9-2-3+3 = -6 
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+0(1) + 0(-1) + 3(-1) + 2(-1) + 4(1) + 9(-1) + 1(-1) + 3(-1) + 3(1)
+3(1) + 0(-1) + 3(-1) + 2(-1) + 3(1) + 4(-1) + 1(-1) + 3(-1) + 3(1)
+3(1) + 0(-1) + 3(-1) + 2(-1) + 7(1) + 9(-1) + 1(-1) + 3(-1) + 3(1)
+0+0-3-2+4-9-1-3+3 = -11 
+3+0-3-2+3-4-1-3+3 = -4 
+--- page 81 ---
+3D Convolution Layer 
+อ้างอิง https://ichi.pro/th/kar-chi-ngan-thi-la-khan-txn-3d-convolutional-neural-network-ni-keras-20820891513136
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+?
+?
+?
+?
+ข้อมูล (D)
+ตัวกรอง (F)
+ผลลัพธ์ (O)
+∗
+(Convolution)
+=
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+F[0,:,:]
+F[1,:,:]
+F[2,:,:]
+∗
+(Convolution)
+=
+-21
+-37
+?
+?
+?
+?
+?
+?
+O[1,:,:]
+O[0,:,:]
+2-7-9-1+3-3-3-3+4 = -17 
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+2(1) + 4(-1) + 9(-1) + 1(-1) + 3(1) + 3(-1) + 3(-1) + 2(-1) + 4(1)
+2(1) + 3(-1) + 4(-1) + 1(-1) + 3(1) + 3(-1) + 1(-1) + 3(-1) + 4(1)
+2(1) + 7(-1) + 9(-1) + 1(-1) + 3(1) + 3(-1) + 3(-1) + 3(-1) + 4(1)
+2-4-9-1+3-3-3-2+4 = -13 
+2-3-4-1+3-3-1-3+4 = -7 
+--- page 82 ---
+3D Convolution Layer 
+อ้างอิง https://ichi.pro/th/kar-chi-ngan-thi-la-khan-txn-3d-convolutional-neural-network-ni-keras-20820891513136
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+?
+?
+?
+?
+ข้อมูล (D)
+ตัวกรอง (F)
+ผลลัพธ์ (O)
+∗
+(Convolution)
+=
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+F[0,:,:]
+F[1,:,:]
+F[2,:,:]
+∗
+(Convolution)
+=
+-20
+-37
+-15
+-55
+-24
+-29
+-22
+-55
+O[1,:,:]
+O[0,:,:]
+4-9-6-3+3-8-2-4+1 = -24
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+3(1) + 9(-1) + 3(-1) + 6(-1) + 3(1) + 1(-1) + 3(-1) + 4(-1) + 3(1)
+3(1) + 4(-1) + 3(-1) + 3(-1) + 3(1) + 6(-1) + 3(-1) + 4(-1) + 3(1)
+4(1) + 9(-1) + 6(-1) + 3(-1) + 3(1) + 8(-1) + 2(-1) + 4(-1) + 1(1)
+3-4-3-3+3-6-3-4+3 = -14 
+3-9-3-6+3-1-3-4+3 = -17
+--- page 83 ---
+3D Convolution Layer 
+อ้างอิง https://ichi.pro/th/kar-chi-ngan-thi-la-khan-txn-3d-convolutional-neural-network-ni-keras-20820891513136
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+-20
+-37
+-15
+-55
+ข้อมูล (D)
+ตัวกรอง (F)
+ผลลัพธ์ (O)
+∗
+(Convolution)
+=
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+F[0,:,:]
+F[1,:,:]
+F[2,:,:]
+∗
+(Convolution)
+=
+-20
+-37
+-15
+-55
+-24
+-29
+-22
+-55
+O[1,:,:]
+O[0,:,:]
+1
+-1
+-1
+-1
+1
+-1
+-1
+-1
+1
+--- page 84 ---
+3D Max Pooling Layer 
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+?
+?
+?
+?
+ข้อมูลก่อนทํา (D)
+(4×4×4)
+ผลลัพธ์ (O)
+(2×2×2)
+3D Max Pooling
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+?
+?
+?
+?
+?
+?
+?
+?
+O[1,:,:]
+O[0,:,:]
+3D Max Pooling
+--- page 85 ---
+3D Max Pooling Layer 
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+?
+?
+?
+?
+ข้อมูลก่อนทํา (D)
+(4×4×4)
+ผลลัพธ์ (O)
+(2×2×2)
+3D Max Pooling
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+7
+?
+?
+?
+?
+?
+?
+?
+O[1,:,:]
+O[0,:,:]
+3D Max Pooling
+--- page 86 ---
+3D Max Pooling Layer 
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+?
+?
+?
+?
+ข้อมูลก่อนทํา (D)
+(4×4×4)
+ผลลัพธ์ (O)
+(2×2×2)
+3D Max Pooling
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+7
+?
+9
+?
+?
+?
+?
+?
+O[1,:,:]
+O[0,:,:]
+3D Max Pooling
+--- page 87 ---
+3D Max Pooling Layer 
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+?
+?
+?
+?
+ข้อมูลก่อนทํา (D)
+(4×4×4)
+ผลลัพธ์ (O)
+(2×2×2)
+3D Max Pooling
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+7
+?
+9
+8
+?
+?
+?
+?
+O[1,:,:]
+O[0,:,:]
+3D Max Pooling
+--- page 88 ---
+3D Max Pooling Layer 
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+7
+3
+9
+8
+ข้อมูลก่อนทํา (D)
+(4×4×4)
+ผลลัพธ์ (O)
+(2×2×2)
+3D Max Pooling
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+7
+3
+9
+8
+3
+6
+9
+6
+O[1,:,:]
+O[0,:,:]
+3D Max Pooling
+--- page 89 ---
+3D Max Pooling Layer 
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+7
+3
+9
+8
+ข้อมูลก่อนทํา (D)
+(4×4×4)
+ผลลัพธ์ (O)
+(2×2×2)
+3D Max Pooling
+3
+2
+1
+3
+0
+7
+3
+3
+3
+9
+3
+4
+2
+3
+8
+3
+0
+2
+1
+3
+0
+4
+3
+2
+3
+9
+3
+4
+2
+6
+8
+1
+3
+2
+1
+1
+0
+3
+3
+3
+3
+4
+3
+4
+2
+3
+6
+3
+3
+2
+1
+3
+0
+3
+6
+3
+0
+9
+3
+4
+2
+3
+1
+3
+D[0,:,:]
+D[1,:,:]
+D[2,:,:]
+D[3,:,:]
+7
+3
+9
+8
+3
+6
+9
+6
+O[1,:,:]
+O[0,:,:]
+3D Max Pooling
+--- page 90 ---
+ตัวอย่างคําสั่ง Conv3d
+https://pytorch.org/docs/stable/generated/torch.nn.Conv3d.html
+--- page 91 ---
+ตัวอย่างคําสั่ง Conv3d
+https://pytorch.org/docs/stable/generated/torch.nn.Conv3d.html
+ตัวอย่างการเรียกใช้งาน
+จากคําสั่งm = nn.Conv3d(16, 33, 3, stride=2) ของPyTorch เป็นการสร้างเลเยอร์การคอนโวลูชัน3 มิติ(3D Convolutional Layer) ซึ่งมี
+พารามิเตอร์ต่างๆที่กําหนดลักษณะการทํางานของเลเยอร์ดังนี้
+• 16 คือจํานวนช่องอินพุต(input channels) ของข้อมูลที่เข้าสู่เลเยอร์คอนโวลูชัน
+• 33 คือจํานวนช่องเอาท์พุต(output channels) หรือจํานวนฟิลเตอร์ที่เลเยอร์คอนโวลูชันจะสร้างขึ้น
+• 3 คือขนาดของเคอร์เนล(kernel size) หรือฟิลเตอร์ที่ใช้ในคอนโวลูชันซึ่งในที่นี้คือ3 × 3 × 3
+• stride=2 คือ กําหนดขนาดของการก้าวข้าม(stride) ของฟิลเตอร์ในทุกมิติ
+# With square kernels and equal stride
+m = nn.Conv3d(16, 33, 3, stride=2)
+# non-square kernels and unequal stride and with padding
+m = nn.Conv3d(16, 33, (3, 5, 2), stride=(2, 1, 1), padding=(4, 2, 0))
+input = torch.randn(20, 16, 10, 50, 100)
+output = m(input)
+--- page 92 ---
+ถึงแม้ว่าโครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติจะค่อนข้างมี
+ความแม่นยํามากกว่ามากกว่าโครงข่ายประสาทแบบคอนโวลูชันแบบ 
+2 มิติสําหรับข้อมูล 3 มิติ อีกทั้ง ยังสามารถสกัดคุณลักษณะเชิง
+ตําแหน่ง (Spatial 
+Feature) 
+ของแต่ละเฟรมพร้อมกับสกัดหา
+ความสัมพันธ์ระหว่างเฟรมที่ต่อเนื่องกัน (Temporal Feature) ได้
+แต่อย่างไรก็ตาม โครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติ ก็มี
+จํานวนพารามิเตอร์ที่ใช้ค่อนข้างมาก สิ่งนี้ทําให้มีความเสี่ยงในการเกิด 
+Overfitting ค่อนข้างมาก และยังมี Pre-train ค่อนข้างน้อย
+โครงข่ายประสาทแบบคอนโวลูชันแบบ 3 มิติ
+--- page 93 ---
+การเรียนรู้เชิงลึกสําหรับข้อมูลประเภทวีดิโอ
+q สถาปัตยกรรม Slowfast (2019) 
+อ้างอิง C. Feichtenhofer, H. Fan, J. Malik and K. He, "SlowFast Networks for Video Recognition," 2019 
+IEEE/CVF International Conference on Computer Vision (ICCV), Seoul, Korea (South), 2019, pp. 6201-
+6210, doi: 10.1109/ICCV.2019.00630. 
+q สถาปัตยกรรม MViTv2 (2021) 
+อ้างอิง https://arxiv.org/abs/2112.01526 และ https://arxiv.org/pdf/2104.11227
+--- page 94 ---
+การเรียนรู้เชิงลึกสําหรับข้อมูลประเภทวีดิโอ
+q สถาปัตยกรรม X3D (2020) 
+อ้างอิง https://arxiv.org/pdf/2004.04730
+q สถาปัตยกรรม Temporal Pyramid Network (2020) 
+อ้างอิง https://arxiv.org/pdf/2004.03548
+--- page 95 ---
+การเรียนรู้เชิงลึกสําหรับข้อมูลประเภทวีดิโอ
+q สถาปัตยกรรม UniFormer (2023) 
+อ้างอิง https://arxiv.org/pdf/2201.09450
+q สถาปัตยกรรม Video Swin Transformer (2021) 
+อ้างอิง https://arxiv.org/pdf/2106.13230
+--- page 96 ---
+การเรียนรู้เชิงลึกสําหรับข้อมูลประเภทวีดิโอ
+q สถาปัตยกรรม TimeFormer (2025) 
+อ้างอิง https://patrickddj.github.io/TimeFormer/
+q สถาปัตยกรรม VideoMAE (2022) 
+อ้างอิง https://arxiv.org/pdf/2203.12602
+--- page 97 ---
+การใช้งาน Deep Learning สําหรับวีดิโอ 
+Spatial / Temporal 
+Feature Extraction
+Long Short-Term 
+Memory
+Signal
+Video
+Convolution Neural 
+Network
+Long Short-Term 
+Memory
+Feature Vector
+t
+t
+Predicted
+Result
+1
+Video
+t
+t
+or
+Feature Map
+Feature Vector
+or
+Convolution Neural 
+Network
+Predicted
+Result
+Predicted
+Result
+2
+--- page 98 ---
+ปัญหาหลักของงาน Action Recognition 
+• ชุดข้อมูลวิดีโอที่ใช้กันทั่วไป เช่น UCF-101, HMDB-51 มีขนาดค่อนข้างเล็ก ทําให้โมเดลที่ซับซ้อนมีโอกาสเกิดปัญหา Overfit
+• สถาปัตยกรรมที่ใช้ในงานภาพนิ่ง (ConvNet) นั้นพัฒนาไปมาก แต่เมื่อนํามาใช้งานบนวิดีโอที่ข้อมูลมีมิติเวลาร่วมด้วยค่อนข้างยาก
+• สถาปัตยกรรมที่ใช้ภาพนิ่งและคํานึงถึงมิติเวลาร่วมด้วย (3D ConvNet) มักมีพารามิเตอร์มาก ทําให้กระบวนการฝึกสอนทําได้ยาก
+• เพื่อแก้ไขปัญหาข้างต้น จึงได้นําแนวคิด Two-Stream ที่แยกการประมวลผลระหว่าง “ภาพ RGB” และ “อัตราการเคลื่อนที่ (Optical 
+Flow)” มาใช้งาน แต่ส่วนใหญ่ยังอาศัย ConvNet แบบ 2D จากนั้น จึงนําผลลัพธ์ของทั้งสอง Stream มารวมผล (fusion) ในภายหลัง
+อ้างอิง https://arxiv.org/pdf/1705.07750
+--- page 99 ---
+t
+t
+3D ConvNet
+3D ConvNet
+Average Pooling 3D
+Average Pooling 3D
+1x1 Convolution
+1x1 Convolution
+Average
+Softmax
+Predicted Result
+Score Function
+(1 x nc)
+Score Function
+(1 x nc)
+Average Score Function (1 x nc)
+Video (25x3x16x224x224)
+(Batch x Channel x Time x Height x Width)
+Optical Flow (25x3x16x224x224)
+(Batch x Channel x Time x Height x Width)
+Feature Map 
+(25x2048x2x7x7)
+Final Feature Vector* 
+(25x1x2048)
+Spatiotemporal 
+Features
+สถาปัตยกรรม “Inflated 3D ConvNet” หรือเรียกว่า I3D คือ การ
+เพิ่ม “มิติเวลา (inflate) ลงในโมเดล 2D ให้กลายเป็น 3D” โดย I3D 
+นําเสนอวิธีที่ผสานจุดเด่นของโมเดล 2D ที่ได้รับการออกแบบดีแล้ว 
+(เช่น Inception) เข้ากับแนวคิด 3D เพื่อให้โมเดล “มองเห็น” ทั้ง 
+spatial และ temporal ได้พร้อมกัน ซึ่งมีแนวคิดที่สําคัญดังนี้
+--- page 100 ---
+สถาปัตยกรรม Inflated 3D ConvNet
+อ้างอิง https://arxiv.org/pdf/1705.07750
+--- page 101 ---
+สถาปัตยกรรม Inflated 3D ConvNet
+qInflation (ขยายเป็น 3D)
+• เริ่มจากโครงสร้าง ConvNet 2D ที่ออกแบบดีแล้ว (Inception-v1)
+• แปลงตัวคอนโวลูชันฟิลเตอร์และการ pooling ที่เดิมเป็น 2D (ขนาด N × N) ให้กลายเป็น 3D ที่มีขนาด T × N × N โดย T คือความยาวในมิติเวลาหนึ่ง
+• จุดสําคัญคือ การเลือกว่า temporal stride / temporal pooling จะเป็นอย่างไร เพื่อให้ receptive field ทางเวลาเหมาะสม
+อ้างอิง https://arxiv.org/pdf/1705.07750
+--- page 102 ---
+สถาปัตยกรรม Inflated 3D ConvNet
+qตัวดําเนินการ 1×1×1 convolution ใน I3D 
+ใช้ 3D convolution ซึ่ง filter มี 3 มิติ ได้แก่
+• T = temporal (เวลา, กี่ frame ต่อ kernel)
+• H, W = spatial (ความสูง × ความกว้างของภาพ)
+ดังนั้น 1×1×1 convolution หมายถึง kernel ขนาด 
+• Temporal size = 1 (ไม่ครอบเวลา, ใช้ frame เดียวในเชิงเวลา)
+• Spatial size = 1×1 (ไม่ครอบพื้นที่, ใช้ pixel ตรงตําแหน่งเดียว)
+สรุป มันไม่ “มองพื้นที่” และไม่ “มองเวลา” แต่ทําการ linear combination ของ channels เท่านั้น
+qบทบาทของตัวดําเนินการ 1×1×1 convolution ใน I3D 
+ทําหน้าที่คล้าย 1×1 conv ในโมเดล 2D แต่ขยายสู่ 3D เพื่อ
+• Channel reduction ทําให้ลด computation, memory
+• Channel mixing รวมข้อมูลจากหลาย channel feature ให้เกิดการผสม (linear 
+combination) ทําให้โมเดลเรียน feature representation ที่มีความหมายใหม่ ๆ ได้
+• Non-linearity เมื่อทํางานร่วมกับ ReLU และ BatchNorm จะเพิ่มความซับซ้อนของฟังก์ชัน
+ที่เรียนรู้
+• Flexibility ในการออกแบบ Inception branch เพื่อให้ได้ feature “สั้นและเบา”
+อ้างอิง https://arxiv.org/pdf/1705.07750
+--- page 103 ---
+การใช้งาน Deep Learning สําหรับวีดิโอ 
+Spatial / Temporal 
+Feature Extraction
+Long Short-Term 
+Memory
+Signal
+Video
+2D/3D Convolution 
+Neural Network
+Long Short-Term 
+Memory
+Feature Vector
+t
+t
+Predicted
+Result
+1
+Video
+t
+t
+or
+Feature Map
+Feature Vector
+or
+Convolution Neural 
+Network
+Predicted
+Result
+Predicted
+Result
+2
+--- page 104 ---
+การใช้งาน Deep Learning สําหรับวีดิโอ 
+ConvLSTM
+Video
+Convolution Neural 
+Network
+Long Short-Term 
+Memory
+Feature Vector
+t
+t
+Predicted
+Result
+1
+Video
+t
+Predicted
+Result
+3D CNN
+Video
+t
+Predicted
+Result
+3
+4
+Neural Network
+(Optional)
+Neural Network
+(Optional)

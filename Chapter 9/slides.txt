@@ -1,0 +1,177 @@
+##### 6a90c8736b5bafb530c803d3.pdf (22 pages)
+--- page 1 ---
+บรรยายโดย ผศ.ดร.ธราวิเชษฐ์  ธิติจรูญโรจน์
+คณะเทคโนโลยีสารสนเทศ 
+สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
+Chapter 9: Multilabel Classification & 
+Image Regression & Multi-task Learning 
+--- page 2 ---
+หัวข้อ
+•ความแตกต่างระหว่าง Multiclass Image Classification, Multilabel Image 
+Classification และ Image Regression 
+•หลักการและการสร้างโมเดลสําหรับ Multilabel Image Classification  
+•หลักการและการสร้างโมเดลสําหรับ Image Regression
+•หลักการ Multi-task Learning 
+--- page 3 ---
+หัวข้อ
+•ความแตกต่างระหว่าง Multiclass Image Classification, Multilabel Image 
+Classification และ Image Regression 
+•การสร้างโมเดลสําหรับ Multilabel Image Classification  
+•การสร้างโมเดลสําหรับ Image Regression 
+•หลักการ Multi-task Learning  
+--- page 4 ---
+ความแตกต่าง
+Multilabel Image Classification 
+Image Regression
+Multiclass Image Classification
+https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*
+(2) https://stacked-editorial.sgp1.digitaloceanspaces.com/editorial/wp-content/uploads/2021/11/15153155/canninghill-piers-1-bedroom-study-living.jpg และ (3) https://www.vintagemovieposters.co.uk/wp-content/uploads/2023/03/IMG_1887-scaled.jpeg
+“Dog”
+“Action, Sci-Fi”
+“2,450,000”
+เหมาะกับงานที่ภาพแต่ละภาพเป็นหนึ่งใน
+หลายคลาสที่ไม่ทับซ้อน
+เหมาะกับงานที่ภาพแต่ละภาพสามารถมี
+หลายป้ายชื่อ
+เหมาะกับงานที่ต้องการทํานายค่าตัวเลข
+--- page 5 ---
+Multiclass Image Classification 
+Multiclass Image Classification (การจําแนกภาพแบบหลายคลาส)
+เป็นการจําแนกภาพออกเป็นคลาสต่าง ๆ ที่ไม่ทับซ้อนกัน (หนึ่งภาพเป็นเพียงหนึ่งคลาส) เช่น การจําแนกรูปภาพของสัตว์ โดยแต่ละภาพเป็นสุนัข แมว 
+หรือม้า นิยมใช้ในงานที่ภาพแต่ละภาพสามารถถูกจัดอยู่ในคลาสเดียว เช่น การจําแนกประเภทของดอกไม้, การจําแนกประเภทของยานพาหนะ
+--- page 6 ---
+Multilabel Image Classification 
+Multilabel Image Classification (การจําแนกภาพแบบหลายป้ายชื่อ)
+เป็นการจําแนกภาพออกเป็นหลายคลาสที่สามารถทับซ้อนกันได้ (หนึ่งภาพสามารถอยู่ในหลายคลาส) เช่น การจําแนกรูปภาพที่อาจมีทั้งแมวและสุนัขใน
+ภาพเดียวกัน ดังนั้น ภาพหนึ่งสามารถมีหลายป้ายชื่อ นิยมใช้ในงานที่ภาพแต่ละภาพสามารถถูกจัดอยู่ในหลายคลาส เช่น การจําแนกวัตถุในภาพที่อาจมีทั้ง
+รถยนต์ คน และต้นไม้ในภาพเดียวกัน หรือการบอกชนิดของภาพยนต์จากโปสเตอร์
+--- page 7 ---
+Image Regression 
+Image Regression (การถดถอยภาพ)
+เป็นการทํานายค่าตัวเลขต่อเนื่องจากภาพ เช่น การทํานายอายุจากภาพใบหน้า การทํานายความยาวของปลาในภาพ, การทํานายอุณหภูมิจากภาพถ่ายทาง
+อากาศใช้ในงานที่ต้องการทํานายค่าตัวเลขจากภาพ เช่น การทํานายระยะทาง, การทํานายราคาของอสังหาริมทรัพย์จากภาพ
+--- page 8 ---
+หัวข้อ
+•ความแตกต่างระหว่าง Multiclass Image Classification, Multilabel Image 
+Classification และ Image Regression 
+•การสร้างโมเดลสําหรับ Multilabel Image Classification  
+•การสร้างโมเดลสําหรับ Image Regression
+•หลักการ Multi-task Learning    
+--- page 9 ---
+การสร้างโมเดลสําหรับ Multilabel Image Classification 
+การสร้างโมเดล CNN 
+สําหรับ 
+Multilabel 
+Classification จาก
+โมเดล Multiclass 
+Classification
+โดยการกําหนด Activation 
+Function ของ Output Layer เป็น 
+Sigmoid แทน Softmax
+เมื่อพิจารณาจะพบว่า ค่าที่ได้รับจาก 
+Softmax ผลรวมของทุก output จะ
+มีค่าเท่ากับ 1 เสมอ ขณะที่ ค่าที่ได้รับ
+จาก Sigmoid ของ output จะมีค่า
+อยู่ในช่วง 0 - 1 และเป็นอิสระต่อกัน 
+และจํานวนโหนดของ Output 
+Layer เท่ากับจํานวนคลาสคําตอบ
+Multilabel Image Classification 
+Multiclass Image Classification
+--- page 10 ---
+การสร้างโมเดลสําหรับ Multilabel Image Classification 
+--- page 11 ---
+การสร้างโมเดลสําหรับ Multilabel Image Classification 
+การพิจารณาผลลัพธ์ของแบบจําลองและการคํานวณข้อผิดพลาด
+Multilabel Image Classification 
+Multiclass Image Classification
+--- page 12 ---
+หัวข้อ
+•ความแตกต่างระหว่าง Multiclass Image Classification, Multilabel Image 
+Classification และ Image Regression 
+•การสร้างโมเดลสําหรับ Multilabel Image Classification  
+•การสร้างโมเดลสําหรับ Image Regression
+•หลักการ Multi-task Learning  
+--- page 13 ---
+Image Regression 
+Image Regression (การถดถอยภาพ)
+เป็นการทํานายค่าตัวเลขต่อเนื่องจากภาพ เช่น การทํานายอายุจากภาพใบหน้า การทํานายความยาวของปลาในภาพ, การทํานายอุณหภูมิจากภาพถ่ายทาง
+อากาศใช้ในงานที่ต้องการทํานายค่าตัวเลขจากภาพ เช่น การทํานายระยะทาง, การทํานายราคาของอสังหาริมทรัพย์จากภาพ
+--- page 14 ---
+Image Regression 
+วิธีการทํา Regression มักจะใช้ในงานประเภทที่ข้อมูลมีลักษณะเป็น Series หรือข้อมูลแบบต่อเนื่อง (Continuous Data)  
+ดังนั้น การจัดการข้อมูลจึงมีความแตกต่างจากงานประเภท Classification หรือข้อมูลแบบไม่ต่อเนื่อง (Discrete Data) รวมถึง
+การเลือกใช้งาน Loss Function และตัวชี้วัดและการประเมินผลประสิทธิภาพด้วย
+Facial Age Estimation 
+อ้างอิง https://www.codeproject.com/Articles/5273642/Age-Estimation-With-Deep-Learning-Getting-Started
+House Prices Prediction  
+อ้างอิง https://pyimagesearch.com/2019/01/28/keras-regression-and-cnns/
+--- page 15 ---
+การสร้างโมเดลสําหรับ Image Regression
+การสร้างโมเดล CNN 
+สําหรับ 
+Image Regression จากโมเดล 
+Multiclass Classification โดยการ
+กําหนด Activation Function ของ 
+Output Layer เป็น Linear
+เมื่อพิจารณาจะพบว่า ค่าที่ได้รับ
+จาก Linear 
+Function 
+ของ 
+Output Layer จะมีค่าอยู่ในช่วง 
+−∞ถึง ∞และจํานวนโหนดของ 
+Output Layer เท่ากับ 1
+Image Regression 
+Multiclass Image Classification
+--- page 16 ---
+การสร้างโมเดลสําหรับ Image Regression
+--- page 17 ---
+การสร้างโมเดลสําหรับ Image Regression 
+การพิจารณาผลลัพธ์ของแบบจําลองและการคํานวณข้อผิดพลาด
+Image Regression 
+Multiclass Image Classification
+--- page 18 ---
+หัวข้อ
+•ความแตกต่างระหว่าง Multiclass Image Classification, Multilabel Image 
+Classification และ Image Regression 
+•หลักการและการสร้างโมเดลสําหรับ Multilabel Image Classification  
+•หลักการและการสร้างโมเดลสําหรับ Image Regression
+•หลักการ Multi-task Learning 
+--- page 19 ---
+Multi-task Learning (การเรียนรู้หลายงานพร้อมกัน)
+Multi-task 
+Learning เป็นการฝึกโมเดลเดียวให้
+สามารถทํานายผลได้หลายอย่างพร้อมกัน โดยมี
+หลายคําถาม (tasks) ในการทํานายแต่ละครั้ง อาทิ
+เช่น
+• ทํานายชนิดของผลไม้ เช่น แอปเปิ้ล, กล้วย, ส้ม
+• ทํานายสถานะของผลไม้ เช่น เน่าหรือไม่เน่า
+ประโยชน์ของการเรียนรู้หลายงานพร้อมกัน
+• ประหยัดทรัพยากร: ไม่ต้องฝึกโมเดลแยกกัน
+สําหรับแต่ละงาน ทําให้ประหยัดเวลาและ
+พลังงานในการคํานวณ
+• เรียนรู้ร่วมกัน: โมเดลสามารถใช้ข้อมูลร่วมกัน
+เพื่อพัฒนาความแม่นยําในการทํานายแต่ละงาน
+--- page 20 ---
+Multi-task Learning (การเรียนรู้หลายงานพร้อมกัน)
+สาระสําคัญบางประการที่ควรพิจารณาเมื่อใช้งานการเรียนรู้หลายงานพร้อมกัน (Multi-Task Learning) สําหรับการเรียนรู้เชิงลึก:
+• ความเกี่ยวข้องของงาน: Multi-Task Learning จะมีประสิทธิภาพสูงสุดเมื่อหลายงานมีความเกี่ยวข้องหรือมีบางอย่างที่เหมือนกัน 
+• ข้อจํากัดของข้อมูล: Multi-Task 
+Learning 
+สามารถมีประโยชน์เมื่อข้อมูลมีจํากัด เนื่องจากช่วยให้โมเดลสามารถใช้ข้อมูลที่แชร์ร่วมกัน
+ระหว่างงานเพื่อปรับปรุงประสิทธิภาพของโมเดลได้
+• การสกัดคุณลักษณะร่วมกัน (Shared Feature Extractor): Multi-Task Learning มักมีการใช้งาน Feature Extraction ร่วมกัน ซึ่งเป็น
+ส่วนหนึ่งของเครือข่ายที่ใช้ร่วมกันระหว่างงาน
+• การตัดสินใจเฉพาะงาน (Task-specific Heads): Multi-Task Learning มักจะใช้ neural network เฉพาะงาน กล่าวคือ neural 
+network หนึ่งเครือข่ายใช้ในการทํานายต่อหนึ่งงาน และมักจะเชื่อมต่อกับตัว Feature Extraction ที่สกัดคุณลักษณะข้อมูลร่วมกัน
+• การตัดสินใจร่วม (Shared Decision-making Layer): อีกวิธีหนึ่งคือการใช้ชั้นการตัดสินใจร่วม โดยใช้ส่วนของ Feature Extraction
+และ Neural Network ร่วมกันระหว่างงาน และชั้นเฉพาะงาน แต่ Output Layer (Layer สุดท้าย) จะใช้เฉพาะงาน
+--- page 21 ---
+Multi-task Learning (การเรียนรู้หลายงานพร้อมกัน)
+การออกแบบสถาปัตยกรรมของ Multi-Task Learning ควรถูกออกแบบอย่างรอบคอบเพื่อรองรับงานต่าง ๆ และเพื่อให้แน่ใจว่าคุณลักษณะที่
+แชร์ร่วมกันนั้นมีประโยชน์สําหรับทุกงาน และหลีกเลี่ยงการถ่ายโอนที่เป็นลบ (Negative Transfer) เมื่อหลายงานมีความแตกต่างกันมากหรือ
+เป็นอิสระกัน Multi-Task Learning อาจนําไปสู่ประสิทธิภาพที่ไม่ดีเมื่อเทียบกับการฝึกโมเดลสําหรับงานเดียว ดังนั้น จึงเป็นเรื่องสําคัญที่จะต้อง
+ทําให้แน่ใจว่าคุณลักษณะที่แชร์ร่วมกันนั้นมีประโยชน์สําหรับทุกงาน
+Multi-Task Learning 
+Multi-Model Learning 
+--- page 22 ---
+ทางเลือกในการเรียนรู้หลายงาน

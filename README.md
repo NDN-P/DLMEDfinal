@@ -22,7 +22,16 @@ Exam questions 3–7 come from Chapters 10–13; Chapters 8, 9, 14 and 15 feed t
 | Chapter 14 | Evaluation metrics (TA session) | [YouTube](https://www.youtube.com/watch?v=2_O0rgWbvxg) |
 | Chapter 15 | Transformers for computer vision | [YouTube](https://www.youtube.com/watch?v=NT0VGFoJxi0) |
 
-## Not in this repo
-Lecture audio, slide PDFs and full transcripts stay local (size, and they are the teacher's material).
-To re-create the transcripts: download audio with `yt-dlp --js-runtimes node -f "bestaudio[ext=m4a]" -o "Chapter N/lecture.m4a" <url>`,
-then run [`transcribe.py`](transcribe.py) (faster-whisper large-v3 on a CUDA GPU; ~2.5 h for all lectures on an RTX 5070 Laptop).
+## What each chapter folder contains
+| File | Content |
+|---|---|
+| `*.pdf` | lecture slides |
+| `slides.txt` | text of the slides, with page markers (searchable) |
+| `lecture*.txt` | Whisper transcript of the lecture, one timestamped line per segment |
+| `lecture*.th-orig.srt` | YouTube's Thai auto-captions (rougher than the Whisper transcript) |
+| `notes.md` | study notes |
+| `instruction` | course notes (Chapter 10: link to the course notebooks and datasets) |
+
+Lecture audio is not in the repo (734 MB, on YouTube). To re-create the transcripts, download the audio with
+`yt-dlp --js-runtimes node -f "bestaudio[ext=m4a]" -o "Chapter N/lecture.m4a" <url>`, then run
+[`transcribe.py`](transcribe.py) (faster-whisper large-v3 on a CUDA GPU; ~2.5 h for all lectures on an RTX 5070 Laptop).

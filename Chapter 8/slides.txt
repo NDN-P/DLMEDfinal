@@ -1,0 +1,1396 @@
+##### 6a90c8736b5bafb530c803d2.pdf (89 pages)
+--- page 1 ---
+1
+• Edit Master text styles
+13/08/68
+1
+บรรยายโดย ผศ.ดร.ธราวิเชษฐ2  ธิติจรูญโรจน2
+คณะเทคโนโลยีสารสนเทศ สถาบันเทคโนโลยีพระจอมเกล8าเจ8าคุณทหารลาดกระบัง
+Chapter 08: Pre-trained CNN Architecture 
+and Data Argumentation
+--- page 2 ---
+2
+• Edit Master text styles
+13/08/68
+2
+หัวข%อ
+วิธีการสนับสนุนการฝ.กสอนแบบจำลองโครงข8ายประสาทแบบคอนโวลูชัน
+•การโอนถ(ายองค,ความรู0 (Transfer Learning)
+•เทคนิคการเพิ่มจำนวนข0อมูล (Data Augmentation)
+--- page 3 ---
+3
+• Edit Master text styles
+13/08/68
+3
+ป"ญหาของการเรียนรู0เชิงลึก
+การเรียนรู)เชิงลึก(หรือที่เรียกกันว7าDeep Learning) เปDนวิธีการที่มี
+ประสิทธิภาพในงานทางด)านต7างๆอาทิเช7นการรู)จำรูปภาพ(image 
+recognition) การตรวจจับวัตถุ(Object Detection) การแบ7งส7วนของ
+ภาพ(Image Segmentation) หรือการขจัดสัญญาณรบกวนในภาพ
+(image Denoising) เปDนต)น
+และได)รับความนิยมเปDนอย7างมากใน
+ปdจจุบันแต7ถึงอย7างไรก็ตามหนึ่งในข"อจำกัดหลักของการเรียนรู)เชิงลึก
+คือต"องการข"อมูลฝ2กสอน(Training Image) จำนวนมหาศาลซึ่ง
+แบบจำลองที่มีประสิทธิภาพต7างๆที่ใช)งานจริงๆจะอาศัยภาพฝjกสอน
+สูงถึง1,000,000 ภาพเพื่อให)ได)รับแบบจำลองที่มีประสิทธิภาพและ
+ทนทานต7อสภาพแวดล)อมที่มีความไม7แน7นอนสูง 
+--- page 4 ---
+4
+• Edit Master text styles
+13/08/68
+4
+ป"ญหาของการเรียนรู0เชิงลึก
+Data Augmentation
+Original
+Synth
+esize
+Synth
+esize
+Synth
+esize
+Synth
+esize
+Trained
+New
+1 0 0 1 1 0 1
+Transfer Learning
+--- page 5 ---
+5
+• Edit Master text styles
+13/08/68
+5
+ป"ญหาของการเรียนรู0เชิงลึก
+Data Augmentation
+Original
+Synth
+esize
+Synth
+esize
+Synth
+esize
+Synth
+esize
+Trained
+New
+1 0 0 1 1 0 1
+Transfer Learning
+--- page 6 ---
+6
+• Edit Master text styles
+13/08/68
+6
+Data Augmentation
+ถึงแม&ว(าการใช&งานTransfer Learning จากแบบจำลองทั่วไปของโครงข(าย
+ประสาทแบบคอนโวลูชันอาทิเช(นLeNet, AlexNet, ResNet, VGGNet, และ
+Inception
+จะประสบความสำเร็จก็ตาม
+แต(กรณีที่เราต&องนำมาใช&งานกับ
+ฐานข&อมูลที่ค(อนข&างมีปริมาณภาพฝbกสอนน&อย(น&อยกว(า1,000 รูป) ก็ยังไม(
+เพียงพอสำหรับการฝbกสอนแบบจำลองให&มีประสิทธิภาพ
+ดังนั้นเทคนิคการเพิ่มจำนวนข&อมูลจากข&อมูลที่มีอยู(จะมีความจำเปkนอย(างยิ่ง
+ตัวอย(างเช(นถ&าฐานข&อมูลมีรูปภาพจำนวน500 รูปและต&องการเพิ่มภาพ
+ฝbกสอนจาก500 รูปไปเปkน1,000 รูปอาจจะอาศัยการแปลงภาพเชิงเรขาคณิต
+บนระนาบสองมิติมาใช&งานอาทิเช(นการเลื่อนภาพการหมุนภาพการย(อขยาย
+ขนาดการกลับรูปซ&ายขวาหรือบนล(างการสุ(มตัดบางส(วนของภาพเปkนต&น
+https://www.bualabs.com/archives/1170/what-is-data-augmentation-benefits-data-augmentaion-deep-learning-training-model-deep-neural-network-regularization-ep-1/
+--- page 7 ---
+7
+• Edit Master text styles
+13/08/68
+7
+https://blog.roboflow.com/yolov4-data-augmentation/
+การเพิ่มข*อมูลเป/นวิธีที่ช6วยให*แบบจำลองมีประสิทธิภาพที่ดีขึ้น โดยการเพิ่มข*อมูลฝHกสอนที่มีอยู6อย6างจำกัดให*มีจำนวนมากขึ้นและหลากหลายมาก
+ยิ่งขึ้น สิ่งนี้ส6งผลทำให*แบบจำลองจะต*องค*นหาคุณสมบัติใหม6ในข*อมูลเพื่อจดจำหรือระบุวัตถุภายในรูปภาพที่น6าสนใจแทนที่จะใช*คุณสมบัติเพียง
+บางอย6าง ซึ่งสามารถแบ6งออกได*เป/น 3 ประเภท ได*แก6
+• Distortion
+•
+Photometric Distortion
+•
+Geometric Distortion
+• Image Occlusion 
+•
+Random Erase
+•
+Cutout
+•
+Hide and Seek
+•
+Grid Mask
+•
+MixUp 
+• Data Augmentation Techniques in YOLOv4
+•
+CutMix
+•
+Mosaic
+Data Augmentation
+--- page 8 ---
+8
+• Edit Master text styles
+13/08/68
+8
+https://medium.com/lunit/photometric-data-augmentation-in-projection-radiography-bed3ae9f55c3
+Photometric Distortion คือ การเพิ่มข*อมูลที่จะเปลี่ยนแปลงค6าพิกเซล อาทิเช6น contrast, sharpness, blurring, brightness และ color 
+changes เป/นต*น
+Geometric Distortion คือ การเพิ่มข*อมูลที่จะเปลี่ยนแปลงรูปร6าง อาทิเช6น cropping, rotation, scaling และ translation เป/นต*น
+Distortion Data Augmentation
+--- page 9 ---
+9
+• Edit Master text styles
+13/08/68
+9
+https://medium.com/lunit/photometric-data-augmentation-in-projection-radiography-bed3ae9f55c3
+Photometric Distortion คือ การเพิ่มข*อมูลที่จะเปลี่ยนแปลงค6าพิกเซล อาทิเช6น contrast, sharpness, blurring, brightness และ color 
+changes เป/นต*น
+Geometric Distortion คือ การเพิ่มข*อมูลที่จะเปลี่ยนแปลงรูปร6าง อาทิเช6น cropping, rotation, scaling และ translation เป/นต*น
+Distortion Data Augmentation
+--- page 10 ---
+10
+• Edit Master text styles
+13/08/68
+10
+Distortion Data Augmentation
+https://www.bualabs.com/archives/1170/what-is-data-augmentation-benefits-data-augmentaion-deep-learning-training-model-deep-neural-network-regularization-ep-1/
+การหมุนภาพ
+การสุ+มตัด
+การขยาย/หด
+การสลับบนล+าง
+การปรับค+าความอิ่มสี
+เพิ่มสัญญาณรบกวน
+ภาพต?นฉบับ
+--- page 11 ---
+11
+• Edit Master text styles
+13/08/68
+11
+https://blog.roboflow.com/yolov4-data-augmentation/
+ลบแบบสุ4ม (Random Erase)
+คือ วิธีการเพิ่มข*อมูลที่จะแทนที่ข*อมูลบริเวณของภาพ
+ด*วยค6าสุ6ม (random) หรือ ค6าพิกเซลเฉลี่ย (Mean) 
+ของชุดการฝHก
+ซึ่งขอบเขตและสัดสวนของบริเวณที่จะถูกแทนที่จะใช*
+หลากหลายขนาดและหลากหลายอัตราส6วน วิธีการนี้
+กลายเป/นวิธีการมาตรฐานที่สามารถปkองกันการเกิด
+ปlญหา Overfitting ในขั้นตอนการฝHกสอนกับ
+แบบจำลอง
+Image Occlusion
+--- page 12 ---
+12
+• Edit Master text styles
+13/08/68
+12
+https://blog.roboflow.com/yolov4-data-augmentation/
+ตัดทิ้ง (Cutout)
+คือ วิธีการเพิ่มข*อมูลที่จะตัดพื้นที่ของรูปทิ้งไปเป/น
+ขนาดคงที่ในลักษณะสี่เหลี่ยมจัตุรัสตลอดช6วงฝHกสอน
+แบบจำลอง ซึ่งมีลักษณะคล*ายกับการลบแบบสุ6ม มี
+วัตถุประสงคrมีปkองกันการเกิดปlญหา Overfitting ใน
+ขั้นตอนการฝHกสอนกับแบบจำลอง
+Image Occlusion
+--- page 13 ---
+13
+• Edit Master text styles
+13/08/68
+13
+อFางอิง https://blog.roboflow.com/yolov4-data-augmentation/
+Image Occlusion
+ซ4อนหา(Hide and Seek)
+คือ วิธีการเพิ่มข*อมูลที่จะแบ6งภาพออกเป/นส6วนย6อย (Image Patch) จำนวน NXN และเลือกที่จะซ6อนแต6ละ Image Patch ตามค6าความน6าจะเป/น
+ของแต6ละส6วน ทำให*แบบจำลองสามารถเรียนรู*ได*ว6าวัตถุมีลักษณะอย6างไร โดยไม6ต*องเรียนรู*เฉพาะส6วนเดียวของวัตถุ
+อ"างอิง Singh, K., Yu, H., Sarmasi, A., Pradeep, G., & Lee, Y.J. (2018). Hide-and-Seek: A Data Augmentation Technique for Weakly-Supervised Localization and Beyond. ArXiv, abs/1811.02545.
+--- page 14 ---
+14
+• Edit Master text styles
+13/08/68
+14
+หนMากากแบบกริด(Grid Mask)
+คือ วิธีการเพิ่มข*อมูลที่จะซ6อนบางส6วนของภาพในลักษณะกริดคล*าย
+กับวิธีการซ6อนหา วิธีการนี้บังคับให*แบบจำลองพยายามเรียนรู*ส6วนต6าง 
+ๆ ของวัตถุภายในภาพจากสิ่งที่ประกอบขึ้นเป/นวัตถุแต6ละชิ้น
+Image Occlusion
+อFางอิง https://blog.roboflow.com/yolov4-data-augmentation/
+--- page 15 ---
+15
+• Edit Master text styles
+13/08/68
+15
+อEางอิง https://medium.com/mlearning-ai/yolox-explanation-mosaic-and-mixup-for-data-augmentation-3839465a3adf
+การผสมผสาน(Mixup)
+คือ การซ*อนทับหรือผสมผสานสองภาพเข*าด*วยกัน แต6เดิมแล*ว
+วิธีการผสมผสานได*รับการออกแบบมาสำหรับงานทางด*านการ
+จำแนกประเภท (Classification) แต6ก็ยังสามารถใช*งานได*ดีสำหรับ
+งานตรวจจับวัตถุ (Detection) 
+ซึ่งสามารถคำนวณได*จากสมการ
+ต6อไปนี้
+จากผลการทดลองพบว6าค6า α ที่เหมาะสม ได*แก6 0.2, 0.3 และ 0.4
+Image Occlusion
+อFางอิง https://www.kaggle.com/code/kaushal2896/data-augmentation-tutorial-basic-cutout-mixup
+อFางอิง https://medium.com/@wolframalphav1.0/easy-way-to-improve-image-classifier-performance-part-1-mixup-augmentation-
+with-codes-33288db92de5
+--- page 16 ---
+16
+• Edit Master text styles
+13/08/68
+16
+อEางอิง https://sarthakforwet.medium.com/cutmix-a-new-strategy-for-data-augmentation-bbc1c3d29aab
+ตัดผสม (CutMix)
+คือเทคนิคที่ดำเนินการตัดส6วนของภาพฝHกสอนและนำไปวางบนภาพการฝHกสอน
+อื่น ๆ แบบสุ6ม เพื่อหลีกเลี่ยงการสูญเสียข*อมูลในชุดข*อมูลฝHกสอนและเป/นการ
+เพิ่มประสิทธิภาพของแบบจำลองที่เหมาะสมกว6าแนวทางการสุ6มตัดข*อมูล
+บางส6วนทิ้งซึ่งวิธีการตัดผสมสามารถเพิ่มความสามารถของแบบจำลองในงาน
+ทางด*านตรวจจับวัตถุได*
+Image Occlusion
+--- page 17 ---
+17
+• Edit Master text styles
+13/08/68
+17
+https://medium.com/mlearning-ai/yolox-explanation-mosaic-and-mixup-for-data-augmentation-3839465a3adf
+Mosaic Data Augmentation เป#นวิธีการเพิ่มจำนวนรูปภาพฝ4กสอนที่ได:นำมาใช:งานครั้งแรกใน YOLO เวอรFชั่น 4 โดยอาศัย
+หลักการ “รวมภาพหลายภายให:เป#นภาพเพียงภายเดียว” โดยการปรับขนาดภาพทั้ง4 ภาพ จากนั้น จึงนำมาตSอเข:าด:วยกัน แล:ว
+สุSมตัดภาพที่เย็บออกเพื่อให:ได:ภาพในลักษณะโมเสก ซึ่งสามารถสรุปขั้นตอนได:ดังนี้
+Data Augmentation
+Final Mosaic image
+Four Input Images
+--- page 18 ---
+18
+• Edit Master text styles
+13/08/68
+18
+อEางอิง https://medium.com/mlearning-ai/yolox-explanation-mosaic-and-mixup-for-data-augmentation-3839465a3adf
+ขั้นที่ 1 ปรับขนาดภาพให:เป#นขนาด 256 × 256 พิกเซล
+Data Augmentation
+--- page 19 ---
+19
+• Edit Master text styles
+13/08/68
+19
+อEางอิง https://medium.com/mlearning-ai/yolox-explanation-mosaic-and-mixup-for-data-augmentation-3839465a3adf
+ขั้นที่ 2 ตSอภาพทั้งหมดเข:าด:วยกันให:เป#นภาพเดียวขนาด 512 × 512 พิกเซล
+Data Augmentation
+--- page 20 ---
+20
+• Edit Master text styles
+13/08/68
+20
+อEางอิง https://medium.com/mlearning-ai/yolox-explanation-mosaic-and-mixup-for-data-augmentation-3839465a3adf
+ขั้นที่ 3 ขยับขอบเขตของบริเวณที่นSาสนใจ (Bounding Box)
+Data Augmentation
+•
+Bounding Box ของภาพบริเวณซCายบน  ☛ไมHตCองดำเนินการขยับ
+•
+Bounding Box ของภาพบริเวณขวาบน  ☛ใหCขยับไปทางขวา 256 พิกเซล (x_new = x_old +256)
+•
+Bounding Box ของภาพบริเวณซCายลHาง  ☛ใหCขยับลงดCานลHาง 256 พิกเซล (y_new = y_old +256)
+•
+Bounding Box ของภาพบริเวณขวาลHาง  ☛ใหCขยับไปทางขวา 256 พิกเซล และลงดCานลHาง 256 พิกเซล (x_new = x_old +256 และ y_new = y_old +256)
+--- page 21 ---
+21
+• Edit Master text styles
+13/08/68
+21
+อEางอิง https://medium.com/mlearning-ai/yolox-explanation-mosaic-and-mixup-for-data-augmentation-3839465a3adf
+ขั้นที่ 4 สุSมตัดภาพแบบจัตุรัสให:มีขนาดอยูSในชSวง 16 ถึง 240 พิกเซลและต:องติดภาพทั้ง 4 ภาพ
+Data Augmentation
+--- page 22 ---
+22
+• Edit Master text styles
+13/08/68
+22
+อEางอิง https://medium.com/mlearning-ai/yolox-explanation-mosaic-and-mixup-for-data-augmentation-3839465a3adf
+ขั้นที่ 5 ลบขอบเขตของบริเวณที่นSาสนใจที่ถูกสุSมตัดออก
+Data Augmentation
+--- page 23 ---
+23
+• Edit Master text styles
+13/08/68
+23
+อEางอิง https://medium.com/mlearning-ai/yolox-explanation-mosaic-and-mixup-for-data-augmentation-3839465a3adf
+ขั้นที่ 6 ปรับภาพให:เหลือแตSบริเวณที่ไมSถูกสุSมตัดออกและปรับภาพผลลัพธFให:อยูSในขนาดที่เหมาะสมกับแบบจำลอง
+Data Augmentation
+--- page 24 ---
+24
+• Edit Master text styles
+13/08/68
+24
+อFางอิง Li, Chenghao, et al. "In-and-Out: a data augmentation technique for computer vision tasks." Journal of Electronic Imaging 31.1 (2022): 013023-013023.
+Data Augmentation
+--- page 25 ---
+25
+• Edit Master text styles
+13/08/68
+25
+หลักการ Dynamic Augmentation Per Epoch
+การปรับเปลี่ยนวิธีการทำ Data 
+Augmentation 
+สำหรับแต6ละ Epoch 
+คือ การเปลี่ยนหรือปรับพฤติกรรมของการแปลงภาพ 
+(augmentation) ในแต6ละรอบการฝHก (epoch) แทนที่จะใช*แบบเดียวกันตลอดการฝHกโมเดล
+การปรับ Data Augmentation เริ่มจาก Weak Augmentation เพื่อให*โมเดลเรียนรู*พื้นฐานได*ง6าย จากนั้น ค6อยๆ เพิ่มความซับซ*อนด*วย 
+Medium หรือ Strong Augmentation เพื่อเสริม Robustness และลด Overfitting ปรับตามสถานะของโมเดล
+แบบดั้งเดิม (Static)
+แบบปรับทุก epoch (Dynamic)
+• ใช# policy augmentation เดิมตลอดการฝ=ก
+• ปรับ intensity / type ของ augmentation ตาม epoch
+• เหมาะกับงานทั่วไป
+• เหมาะกับการฝ=กแบบ curriculum / robust learning
+• ไมPรู#สถานะของโมเดล
+• ตอบสนองตPอ loss, accuracy หรือ sample difficulty ได#
+--- page 26 ---
+26
+• Edit Master text styles
+13/08/68
+26
+ป"ญหาของ Traditional Data Augmentation
+• การใชL Data Augmentation เดียวกันสำหรับทุก epoch
+Ø Static Configuration คือ กำหนด augmentation policy ตั้งแตSเริ่มต:นแล:วใช:ตลอดทั้งกระบวนการเทรน
+Ø One-Size-Fits-All คือ ใช: parameter เดียวกัน เชSน rotation 30°, brightness ±0.3 ตั้งแตS epoch 1 จนจบ
+Ø ไมSมีการปรับตัว คือ ไมSวSาโมเดลจะเรียนรู:ไปแคSไหนแล:ว ยังคงได:รับข:อมูลที่มีความซับซ:อนเทSาเดิม
+• ไมYสนใจวYาโมเดลมีความพรLอมแคYไหน หรือการละเลยสถานะของโมเดล
+Ø ไมSพิจารณา Learning Progress คือ ไมSดูวSาโมเดลเรียนรู: basic features แล:วหรือยัง
+Ø ไมSคำนึงถึง Model Capacity คือ ไมSสนใจวSาโมเดลมีความสามารถรับมือกับความซับซ:อนแคSไหน
+Ø ขาดการ Monitor คือ ไมSติดตามวSา augmentation ป‡จจุบันเหมาะสมกับระดับการเรียนรู:หรือไมS
+--- page 27 ---
+27
+• Edit Master text styles
+13/08/68
+27
+ป"ญหาของ Traditional Data Augmentation
+• โมเดลใหม4ยังไม4แข็งแกร4ง แต4ไดMรับขMอมูลที่ผิดเพี้ยนมาก มักเกิดป`ญหาในช4วงตMนการเทรน(Early Training)
+ØOverwhelming Complexity คือ โมเดลใน epoch แรกๆ ยังไมPรู#จัก basic pattern เลยการให#ข#อมูลที่ rotate 30°, มี noise สูง, หรือ cutout ทำให#สับสน
+เหมือนการสอนเด็กอนุบาลด#วยตำราระดับมหาวิทยาลัย
+ØGradient Instability คือ การ augment มากเกินไปทำให# gradient กระเด็นไปมา Loss function ไมPเสถียร เพราะข#อมูลแตPละ batch แตกตPางกันมากการ 
+converge ช#าลงหรืออาจไมP converge เลย
+ØFeature Learning Disruption คือ การเรียนรู# basic features (edges, shapes, colors) ถูกรบกวน โดยโมเดลพยายามจำข#อมูลที่ผิดเพี้ยนแทนที่จะเรียนรู# 
+pattern จริง
+• โมเดลแก4แลMวยังไดMรับขMอมูลง4ายๆ มักเกิดป`ญหาในช4วงหลังการเทรน(Late Training)
+ØInsufficient 
+Challenge คือ โมเดลใน epoch 
+80-100 
+มีความสามารถสูงแล#ว การให#ข#อมูลที่ไมPท#าทายทำให#เกิด overfitting เหมือนการให#นักเรียน
+มหาวิทยาลัยทำแบบฝ=กหัดอนุบาล
+ØMissed Generalization Opportunity คือ โมเดลที่แข็งแกรPงแล#ว ควรได#รับข#อมูลที่หลากหลายมากขึ้น การใช# augmentation เบาๆ ทำให#พลาดโอกาสใน
+การเรียนรู# robust features สPงผลทำให# Generalization performance ต่ำกวPาที่ควรจะเปyน
+ØResource Wastage คือ ใช#เวลาและ computational resources ไปกับข#อมูลที่ไมPได#ชPวยปรับปรุงโมเดล สPงผลให#การเทรนใช#เวลานานกวPาที่จำเปyน
+--- page 28 ---
+28
+• Edit Master text styles
+13/08/68
+28
+ผลกระทบของ Traditional Data Augmentation
+• ด"านประสิทธิภาพ
+ØSlower Convergence: การ converge ชEาลง
+ØLower Final Accuracy: ประสิทธิภาพสุดทEายต่ำกว[าที่ควรจะเป`น
+ØPoor Generalization: ทำงานกับขEอมูลใหม[ไดEไม[ดี
+• ด"านทรัพยากร
+ØLonger Training Time: ใชEเวลาเทรนนานขึ้น
+ØComputational Waste: ใชE GPU/CPU ไม[มีประสิทธิภาพ
+ØHigher Cost: ค[าใชEจ[ายในการเทรนสูงขึ้น
+• ด"านความเสถียร
+ØUnstable Training: การเทรนไม[เสถียร
+ØInconsistent Results: ผลลัพธuไม[สม่ำเสมอ
+ØNeed Multiple Runs: ตEองเทรนหลายรอบเพื่อใหEไดEผลที่ดี
+สรุปการทำ Data Augmentation แบบดังเดิม หรือ (Fixed Policy) เป`นแนวทางที่ไดEเริ่มไดEรับความนิยมนEอยลง การปรับ Data Augmentation ใหEเขEา
+กับระดับการเรียนรูEของแบบจำลองจะช[วยแกEป{ญหาขEางตEน และทำใหEไดEรับแบบจำลองที่มีประสิทธิภาพ
+--- page 29 ---
+29
+• Edit Master text styles
+13/08/68
+29
+Weak To Strong Augmentation
+ระดับ
+ตัวอยNาง Augmentation
+รายละเอียด
+เบามาก (Very Mild)
+• Flip (horizontal/vertical)
+• Brightness/contrast (เล็กน<อย)
+ไม#เปลี่ยน semantics ของภาพ 
+เบา (Mild)
+• Rotate ±5–10°
+• Translate ±5%
+• Color jitter ต่ำ
+• Gaussian noise (low std)
+• Random crop + resize
+รักษารูปร#างหลักของภาพ 
+ปานกลาง (Moderate)
+• Shear ±10–20°
+• Cutout เล็ก
+• AutoContrast / Equalize
+• Brightness/Contrast กลาง
+แกA geometry และ color โครงสรAางภาพ 
+แรง (Strong)
+• Rotate ±30–45°
+• Color jitter รุนแรง
+• CutMix / MixUp / Random erasing ใหญe
+• Posterize / Solarize
+• Translate ±30–50%
+ทำใหAรูปเปลี่ยนมาก การจำแนกยากขึ้น 
+รุนแรงมาก (Very Strong)
+• Rotate ±90°+  /  Perspective warp
+• High std noise, strong blur, JPEG artefacts
+• Adversarial transforms
+เบี่ยงเบนจากขAอมูลจริงมาก ใชAเฉพาะโมเดลที่มั่นใจว#าเรียนรูAแลAว 
+--- page 30 ---
+30
+• Edit Master text styles
+13/08/68
+30
+การปรับ Data Augmentation แบบยืดหยุTน
+การใช* Data Augmentation แบบ Dynamic หมายถึง การที่ augmentation ไม6ถูกกำหนดตายตัว แต6มีการเปลี่ยนแปลงในแต6ละ epoch 
+หรือแม*กระทั่งในแต6ละ sample เพื่อเพิ่มประสิทธิภาพการเรียนรู*ของโมเดล
+วิธี
+ลักษณะการทำงาน
+จุดเด4น
+Progressive
+เพิ่มความแรงของ augment ตามเวลา
+คล*ายเรียนจากง6ายไปยาก
+Adaptive Scheduling
+ปรับตาม training loss / val metric
+โมเดลขับเคลื่อนการปรับเอง
+Sample-Aware
+ปรับตาม class หรือ sample difficulty
+เน*นความยุติธรรมและ customization
+--- page 31 ---
+31
+• Edit Master text styles
+13/08/68
+31
+Progressive Augmentation
+เป/นหลักการที่เชื่อว6าโมเดลในช6วงต*นของการเทรนยังไม6แข็งแกร6งพอที่จะรับมือกับ Strong 
+Augmentation 
+การเริ่มต*นด*วย 
+Weak
+augmentation จะช6วยให*โมเดลเรียนรู* pattern พื้นฐานก6อนได*ดีกว6า อาทิเช6น
+• Epoch 1-20: เริ่มด*วย rotation ±5°, brightness ±0.1
+• Epoch 21-50: เพิ่มเป/น rotation ±15°, brightness ±0.2, เพิ่ม gaussian noise
+• Epoch 51+: ใช* augmentation เต็มรูปแบบ เช6น rotation ±30°, cutout, mixup
+ประโยชนt
+• หลีกเลี่ยง underfitting ช6วงแรก ที่โมเดลยังไม6เข*าใจข*อมูล
+• คล*ายแนวคิด curriculum learning ที่ให*เรียนจากง6ายไปยาก
+อ"างอิง Ye, M., Shen, S., Zhang, T., Dai, P., & Fang, B. (2021). Efficient contrastive learning via novel data augmentation and curriculum learning. Proceedings of EMNLP 2021, 1832-1838.
+--- page 32 ---
+32
+• Edit Master text styles
+13/08/68
+32
+import torch
+import torchvision
+import torchvision.transforms as transforms
+from torch import nn, optim
+from torch.utils.data import DataLoader
+import torchvision.datasets as datasets
+# Define CNN
+class SimpleCNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(3, 16, 3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+            nn.Conv2d(16, 32, 3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2)
+        )
+        self.fc = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(32 * 8 * 8, 100),
+            nn.ReLU(),
+            nn.Linear(100, 10)
+        )
+    def forward(self, x):
+        return self.fc(self.conv(x))
+ตัวอยาง Progressive Augmentation
+--- page 33 ---
+33
+• Edit Master text styles
+13/08/68
+33
+# Define Progressive Augmentation Scheduler
+def get_transform(epoch):
+    if epoch < 10:
+        print("Progressive Augmentation >>> Case 1")
+        return transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor()
+        ])
+    elif epoch < 20:
+        print("Progressive Augmentation >>> Case 2")
+        return transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(brightness=0.2, contrast=0.2),
+            transforms.ToTensor()
+        ])
+    else:
+        print("Progressive Augmentation >>> Case 3")
+        return transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3),
+            transforms.RandomRotation(15),
+            transforms.RandomErasing(p=0.2),
+            transforms.ToTensor()
+        ])
+ตัวอยาง Progressive Augmentation
+--- page 34 ---
+34
+• Edit Master text styles
+13/08/68
+34
+# Parameter Set Up
+model = SimpleCNN()
+# Device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
+# Loss Function
+criterion = nn.CrossEntropyLoss()
+# Optimizer
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+total_epochs = 30
+ตัวอยาง Progressive Augmentation
+--- page 35 ---
+35
+• Edit Master text styles
+13/08/68
+35
+# Training Model
+for epoch in range(total_epochs):
+  # Progressive Transform
+  transform = get_transform(epoch)
+  # Dataset with Progressive Transform
+  trainset = datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+  trainloader = DataLoader(trainset, batch_size=64, shuffle=True)
+  model.train()
+  total_loss = 0
+  for images, labels in trainloader:
+    images, labels = images.to(device), labels.to(device)
+    outputs = model(images)
+    loss = criterion(outputs, labels)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    total_loss += loss.item()
+  # แสดงค่าlearning rate และloss
+  current_lr = optimizer.param_groups[0]['lr']
+  print(f"Epoch {epoch+1}: LR = {current_lr:.6f}, Loss = {total_loss:.4f}")
+ตัวอยาง Progressive Augmentation
+--- page 36 ---
+36
+• Edit Master text styles
+13/08/68
+36
+ตัวอยาง Progressive Augmentation
+--- page 37 ---
+37
+• Edit Master text styles
+13/08/68
+37
+Adaptive Scheduling
+จะติดตาม training metrics (อาทิเช6น Loss หรือ Error) แล*วปรับ augmentation policy ให*เหมาะสม ตัวอย6างเช6น 
+• ถ*า validation loss ยังสูง →คงความเบาของ augmentation
+• แต6ถ*า loss เริ่มลด →เพิ่มความรุนแรงเพื่อหลีกเลี่ยง overfitting
+ซึ่งอาจจะสังเกตได*ว6าโมเดลอาจ "สบายใจ" เกินไป ได*ดังนี้ 
+• เมื่อ validation loss ไม6ลดลงใน 5 epochs ติดต6อกัน
+• เมื่อ accuracy ไม6เพิ่มขึ้นเกิน threshold ที่กำหนด
+• เมื่อ gradient มีขนาดเล็กเกินไป 
+ประโยชนt
+• ให* augmentation สอดคล*องกับ learning stage ของโมเดล
+• ช6วยลดความเสี่ยงของ over/under augmentation
+อ"างอิง Hou, J., Li, M., Wang, Y., & Chen, X. (2023). When to learn what: Model-adaptive data augmentation curriculum. Proceedings of ICCV 2023. และ Li, X., et al. (2022). Universal adaptive data augmentation. arXiv preprint arXiv:2207.06658.
+--- page 38 ---
+38
+• Edit Master text styles
+13/08/68
+38
+import torch
+import torchvision
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader
+import torchvision.datasets as datasets
+from torch import nn, optim
+# CNN โมเดลพื/นฐาน
+class SimpleCNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(3, 16, 3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+            nn.Conv2d(16, 32, 3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2)
+        )
+        self.fc = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(32 * 8 * 8, 100),
+            nn.ReLU(),
+            nn.Linear(100, 10)
+        )
+    def forward(self, x):
+        return self.fc(self.conv(x))
+ตัวอยาง Adaptive Scheduling
+--- page 39 ---
+39
+• Edit Master text styles
+13/08/68
+39
+# ฟังก์ชันสร้างmulti-augmentation ตามค่าmagnitude
+def build_transform(mag):
+    return transforms.Compose([
+        transforms.RandomHorizontalFlip(),
+        transforms.ColorJitter(
+            brightness=mag,
+            contrast=mag,
+            saturation=mag
+        ),
+        transforms.RandomRotation(degrees=mag * 45),  # ปรับตามmag
+        transforms.RandomAffine(degrees=0, translate=(mag * 0.2, mag * 0.2)),
+        transforms.ToTensor(),
+        transforms.RandomErasing(p=mag * 0.5)
+    ])
+ตัวอยาง Adaptive Scheduling
+--- page 40 ---
+40
+• Edit Master text styles
+13/08/68
+40
+# Parameter Set Up
+model = SimpleCNN()
+# Device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
+# Loss Function
+criterion = nn.CrossEntropyLoss()
+# Optimizer
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+total_epochs = 30
+# ค่าเริ2มต้นของความแรง
+magnitude = 0.1  
+last_val_loss = None
+ตัวอยาง Adaptive Scheduling
+--- page 41 ---
+41
+• Edit Master text styles
+13/08/68
+41
+# Training Model
+for epoch in range(total_epochs):
+  # สร้างtransform ใหม่ตามmagnitude
+  transform = build_transform(magnitude)
+  # Dataset with Adaptive Transform
+  trainset = datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+  trainloader = DataLoader(trainset, batch_size=64, shuffle=True)
+  model.train()
+  total_loss = 0
+  for images, labels in trainloader:
+    images, labels = images.to(device), labels.to(device)
+    outputs = model(images)
+    loss = criterion(outputs, labels)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    total_loss += loss.item()
+  # แสดงค่าlearning rate และloss
+  current_lr = optimizer.param_groups[0]['lr']
+  print(f"Epoch {epoch+1}: LR = {current_lr:.6f}, Loss = {total_loss:.4f}")
+ตัวอยาง Adaptive Scheduling
+--- page 42 ---
+42
+• Edit Master text styles
+13/08/68
+42
+for epoch in range(total_epochs):
+  #... สไลน์ก่อนหน้า
+  # Dataset for Validation Only
+  valset = datasets.CIFAR10(root='./data', train=False, download=True, transform=transforms.ToTensor())
+  valloader = DataLoader(valset, batch_size=64, shuffle=False)
+  val_loss = 0
+# ประเมินบนvalidation set
+  model.eval()
+  val_loss = 0
+  with torch.no_grad():
+    for images, labels in valloader:
+      images, labels = images.to(device), labels.to(device)
+      outputs = model(images)
+      loss = criterion(outputs, labels)
+      val_loss += loss.item()
+    val_loss /= len(valloader)
+  # ปรับmagnitude ตามtrend ของvalidation loss
+  if last_val_loss is not None:
+    if val_loss > last_val_loss:  # โมเดลแย่ลง→ ลดความแรง
+magnitude = max(0.05, magnitude - 0.05)
+    else:  # โมเดลดีขึ1น→ เพิ5มความแรง
+magnitude = min(0.6, magnitude + 0.05)
+  last_val_loss = val_loss
+--- page 43 ---
+43
+• Edit Master text styles
+13/08/68
+43
+ตัวอยาง Adaptive Scheduling
+--- page 44 ---
+44
+• Edit Master text styles
+13/08/68
+44
+Sample-Aware Augmentation
+คือ การเลือกใช,เทคนิคการเพิ่มข,อมูล (augmentation) 
+ให,เหมาะสมกับแตGละตัวอยGางหรือแตGละคลาส แทนที่จะใช,รูปแบบ
+เดียวกันกับข,อมูลทั้งหมด กลGาวคือ เปPนการปรับระดับหรือประเภทของ augmentation ตามความยากของภาพ
+q กลยุทธ'ย(อย Difficulty-Aware Per-sample
+• ถ,า sample ที่โมเดลทำนายถูกต,องอยGางมั่นใจ (confidence > 0.9) →ให,ใช, Strong Augmentation เพื่อเพิ่มความ
+ท,าทาย
+• ถ,า sample ที่โมเดลทำนายผิดหรือไมGมั่นใจ (confidence < 0.6) →ให,ใช, Weak Augmentation เพื่อไมGให,ยากเกินไป
+• ถ,า sample ที่อยูGระหวGางกลาง →ให,ใช, Medium Augmentation 
+q กลยุทธ'ย(อย Class-Aware
+• ถ,าคลาสไหนมี accuracy ต่ำ →ให,ใช, Strong Augmentation (เพิ่มข,อมูล)
+• ถ,าคลาสไหนมี accuracy สูง → ให,ใช, Weak Augmentation เพื่อหลีกเลี่ยง noise
+อ"างอิง Ye, M., Shen, S., Zhang, T., Dai, P., & Fang, B. (2021). Efficient contrastive learning via novel data augmentation and curriculum learning. Proceedings of EMNLP 2021, 1832-1838.
+--- page 45 ---
+45
+• Edit Master text styles
+13/08/68
+45
+ป"ญหาของการเรียนรู0เชิงลึก
+Data Augmentation
+Original
+Synth
+esize
+Synth
+esize
+Synth
+esize
+Synth
+esize
+Trained
+New
+1 0 0 1 1 0 1
+Transfer Learning
+--- page 46 ---
+46
+• Edit Master text styles
+13/08/68
+46
+Transfer Learning
+คือ การนำบางส-วนของแบบจำลองที่ผ-านกระบวนการฝ9กสอน
+เรียบร<อยมาใช<ใหม-อีกครั้ง โดยนำมาเชื่อมต-อหรือประกอบเข<ากับ
+แบบจำลองใหม- เนื่องจากแบบจำลองส-วนใหญ-จะมีความซับซ<อน
+และมีตัวแปรที่ต<องกำหนดค-าค-อนข<างมาก ทำให<ต<องใช<ทรัพยากร 
+คอมพิวเตอรKและเวลาในการประมวลผลค-อนข<างมากสำหรับการ
+ฝ9กสอนเพื่อหาค-าตัวแปรต-าง ๆ ที่เหมาะสมและทำให<แบบจำลองมี
+ประสิทธิภาพสูงสุด ซึ่งอาจจะกินเวลาเนินนานเปRน วัน สัปดาหK 
+เดือน เปRนต<น ดังนั้น การอาศัยเทคนิค Transfer Learning (หรือ
+สามารถเรียกว-า Pretrained 
+Networks) จะช-วยลดเวลาในการ
+ฝ9กสอนแบบจำลองลงได<ค-อนข<างมาก โดยอาศัยบางส-วนของ
+แบบจำลองที่มีลักษณะงานใกล<เคียงกันมาใช<ในแบบจำลองใหม- 
+--- page 47 ---
+47
+• Edit Master text styles
+13/08/68
+47
+Transfer Learning
+•
+Yamashita, R., Nishio, M., Do, R.K.G. et al. Convolutional neural networks: an overview and application in radiology. Insights Imaging 9, 611–629 (2018).
+นอกจากนี้ การเรียนรูEแบบยEายถ[าย (transfer learning) นิยมนำมาใชEงาน
+กับการฝ•กบนชุดขEอมูลขนาดเล็กเนื่องจากเป`นกลยุทธuที่ใชEบ[อยและมี
+ประสิทธิภาพในการฝ•กโมเดลบนชุดขEอมูลขนาดเล็ก โดยที่โมเดลจะถูกฝ•ก
+บนชุดขEอมูลขนาดใหญ[มาก เช[น ImageNet ซึ่งประกอบดEวยภาพ 1.4 
+ลEานภาพที่มี 1,000 ประเภท จากนั้นนำกลับมาใชEใหม[และประยุกตuใชEกับ
+งานที่สนใจ สมมติฐานพื้นฐานของการเรียนรูEแบบยEายถ[ายคือคุณสมบัติ
+ทั่วไปที่เรียนรูEจากชุดขEอมูลขนาดใหญ[สามารถแชรuระหว[างชุดขEอมูลที่ดู
+เหมือนแตกต[างกันไดE ทำใหEสามารถพกพาของคุณสมบัติทั่วไปที่เรียนรูEมา
+ใชEประโยชนuในงานโดเมนต[าง ๆ ที่มีชุดขEอมูลขนาดเล็ก ป{จจุบัน หลาย
+โมเดลที่ถูกฝ•กบนชุดขEอมูล ImageNet ไดEเป‹ดใหEสาธารณชนเขEาถึงและใชE
+งานไดEง[าย พรEอมกับเคอรuเนลและน้ำหนักที่เรียนรูEมา เช[น AlexNet, VGG, 
+ResNet, Inception และ DenseNet ในทางปฏิบัติมี 2 วิธีในการใชE
+โมเดลที่ถูกฝ•กไวEแลEว(1) การสกัดคุณสมบัติที่ถูกตรึง (fixed feature 
+extraction) และ(2) การปรับแต[ง (fine-tuning)
+--- page 48 ---
+48
+• Edit Master text styles
+13/08/68
+48
+Transfer Learning
+•
+Yamashita, R., Nishio, M., Do, R.K.G. et al. Convolutional neural networks: an overview and application in radiology. Insights Imaging 9, 611–629 (2018).
+การสกัดคุณสมบัติที่ถูกตรึง (fixed feature extraction) 
+เป`นกระบวนการที่นำFC layer ออกจากเครือข[ายที่ถูกฝ•กบน ImageNet 
+และรักษาเครือข[ายที่เหลือ ซึ่งประกอบดEวยชุดของเลเยอรuการคอนโวลูชัน
+และการพูลไวE เรียกว[าเบสคอนโวลูชัน (convolutional base) เพื่อเป`นตัว
+สกัดคุณสมบัติที่ถูกตรึง ในสถานการณuนี้ เครื่องจำแนกประเภทใด ๆ ก็ไดE 
+เช[น ป‘าแบบสุ[ม (random forests) และเครื่องจักรเวกเตอรuสนับสนุน 
+(support vector machines) รวมถึง FC layer ที่ใน CNNs สามารถถูก
+เพิ่มไวEบนตัวสกัดคุณสมบัติที่ถูกตรึง 
+ส[งผลใหEการฝ•กถูกจำกัดอยู[แค[ตัว
+จำแนกที่เพิ่มขึ้นบนชุดขEอมูลที่สนใจ วิธีนี้ไม[ค[อยพบในงานวิจัยการเรียนรูE
+เชิงลึกบนภาพทางการแพทยuเนื่องจากความไม[เหมือนกันระหว[าง 
+ImageNet และภาพทางการแพทยuที่ใหEมา
+--- page 49 ---
+49
+• Edit Master text styles
+13/08/68
+49
+Transfer Learning
+•
+Yamashita, R., Nishio, M., Do, R.K.G. et al. Convolutional neural networks: an overview and application in radiology. Insights Imaging 9, 611–629 (2018).
+การปรับแตOง (fine-tuning)
+คือ การไม[เพียงแค[แทนที่ FC layer ของโมเดลที่ถูกฝ•กดEวยชุด FC layer 
+ใหม[เพื่อฝ•กบนชุดขEอมูลที่ใหEมา 
+แต[ยังปรับแต[งเคอรuเนลทั้งหมดหรือ
+บางส[วนในเบสคอนโวลูชันที่ถูกฝ•กไวEแลEวดEวยการถอยกลับ 
+(backpro
+pagation) เลเยอรuทั้งหมดในเบสคอนโวลูชันสามารถถูกปรับแต[งหรือ เล
+เยอรuบางส[วนที่อยู[ก[อนหนEาอาจถูกตรึงไวEในขณะที่ปรับแต[งเลเยอรuที่ลึก
+กว[าที่เหลือ แรงจูงใจของวิธีนี้มาจากการสังเกตว[า คุณสมบัติของเลเยอรuที่
+อยู[ก[อนหนEาดูเหมือนจะเป`นคุณสมบัติทั่วไป 
+รวมถึงคุณสมบัติเช[นขอบที่
+สามารถประยุกตuใชEกับชุดขEอมูลและงานที่หลากหลาย ในขณะที่คุณสมบัติ
+ในเลเยอรuหลัง ๆ จะค[อย ๆ เฉพาะเจาะจงมากขึ้นกับชุดขEอมูลหรืองานใด
+งานหนึ่ง ซึ่งถูกประยุกตuใชEในการวิจัยรังสีวิทยามากกว[า
+--- page 50 ---
+50
+• Edit Master text styles
+13/08/68
+50
+Transfer Learning
+•
+Yamashita, R., Nishio, M., Do, R.K.G. et al. Convolutional neural networks: an overview and application in radiology. Insights Imaging 9, 611–629 (2018).
+ข"อเสียของการเรียนรูEแบบยEายถ[ายคือขEอจำกัดในมิติของขEอมูลนำเขEา 
+ภาพที่นำเขEาตEองเป`นภาพสีบนปริภูมิ RGB เนื่องจากชุดขEอมูล ImageNet 
+ประกอบดEวยภาพสีบนปริภูมิ 
+RGB 
+ในขณะที่ภาพเกรยuสเกลทาง
+การแพทยuมีเพียงช[องสีเดียว (ระดับของสีเทา) อย[างไรก็ตาม ความสูงและ
+ความกวEางของภาพที่นำเขEาอาจเป`นไปตามตEองการ แต[ไม[เล็กเกินไป โดย
+การเพิ่มGlobal Pooling Layer ระหว[างเบสคอนโวลูชันและ FC Layer 
+ที่เพิ่มขึ้น
+--- page 51 ---
+51
+• Edit Master text styles
+13/08/68
+51
+Transfer Learning
+แบบที่1 นำแบบจำลองที่ฝ-กสอนเรียบร3อยแล3วมาฝ-กสอนเพิ่มเติมกับข3อมูลชุดใหมB โดยไมBมีการนำสBวนใด
+ของแบบจำลองเดิมออกเพื่อให3ได3ประสิทธิภาพที่สูงขึ้นกับงานใหมB (ใช#ทั้งแบบจำลอง)
+https://www.bualabs.com/archives/3493/what-is-transfer-learning-build-headless-mobilenet-model-transfer-learning-machine-learning-mobilenet-json-retrain-webcam-tensorflow-js-tfjs-ep-10/
+--- page 52 ---
+52
+• Edit Master text styles
+13/08/68
+52
+Transfer Learning
+แบบที่2 นำสSวนของ Feature Extraction ของแบบจำลองที่ฝ4กสอนแล:วมาใช:งานตัวอยSางเชSน นำแบบจำลองของConvNet 
+มาใช:งานโดยการนำสSวนของDense Layer สุดท:ายออกจากนั้นสรLาง Classifier ใหมYและนำไปฝ4กสอนใหมSกับชุดข:อมูล
+ฝ4กสอนใหมSที่มีขนาดเล็กกวSาหรือข:อมูลที่มีความจำเพาะมากยิ่งขึ้น (ใช$ส&วนการสกัดคุณลักษณะเท&านั้น)
+https://www.bualabs.com/archives/3493/what-is-transfer-learning-build-headless-mobilenet-model-transfer-learning-machine-learning-mobilenet-json-retrain-webcam-tensorflow-js-tfjs-ep-10/
+--- page 53 ---
+53
+• Edit Master text styles
+13/08/68
+53
+Transfer Learning
+แบบที่
+3
+อาศัยบางส%วนของแบบจำลองที่มีลักษณะงานใกล7เคียงกันมาใช7ในแบบจำลองใหม<
+(ใช*แค%บางส%วน
+โดยเฉพาะอย%างยิ่งส%วนของการสกัดคุณลักษณะ)
+https://www.bualabs.com/archives/3493/what-is-transfer-learning-build-headless-mobilenet-model-transfer-learning-machine-learning-mobilenet-json-retrain-webcam-tensorflow-js-tfjs-ep-10/
+--- page 54 ---
+54
+• Edit Master text styles
+13/08/68
+54
+Transfer Learning
+แบบจำลองที่มีประสิทธิภาพในระดับสากล อาทิเช6น AlexNet, ResNet, VGG-19,  
+GoogLeNet, MobiliNet, Inception, หรือ DenseNet เป/นต*น ซึ่งแต6ละแบบจำลอง
+ข*างต*นก็มีความเหมาะสมกับงานหรือปlญหาที่แตกต6างกันออกไป ซึ่งการเลือกใช*งาน
+แบบจำลองข*างต*นควรคำนึงถึง 3 ปlจจัยหลัก ได*แก6 ความแม4นยำ 
+(Accuracy) 
+ความเร็ว (Speed) และขนาดของแบบจำลอง (Size)
+--- page 55 ---
+55
+• Edit Master text styles
+13/08/68
+55
+แนะนำเกี่ยวกับโครงข2ายประสาทเชิงคอนโวลูชันที่เป<นที่นิยม
+Introduction to Conventional Convolutional Neural Networks
+--- page 56 ---
+56
+• Edit Master text styles
+13/08/68
+56
+--- page 57 ---
+57
+• Edit Master text styles
+13/08/68
+57
+--- page 58 ---
+58
+• Edit Master text styles
+13/08/68
+58
+AlexNet Architecture
+AlexNet เป`นสถาป{ตยกรรมของโครงข[ายประสาทเทียม
+แบบคอนโวลูชั่นที่ไดEรับการนำเสนอขึ้นในป” 2012 โดย 
+Alex 
+Krizhevsky และคณะในการแข[งขัน ImageNet
+ซึ่งสถาป{ตยกรรมแบบ AlexNet ประกอบไปดEวย 
+convolutional layers จำนวน 5 เลเยอรu และ fully-
+connected 
+layers จำนวน 3 เลเยอรu อย[างไรก็ตาม 
+สถาป{ตยกรรมแบบ AlexNet ประสบกับป{ญหา 
+overfitting เนื่องจากมีจำนวนพารามิเตอรu 60 ลEานตัว 
+นอกจากนี้ AlexNet ไดE (1) ใชEงาน ReLU 
+แทนการใชE
+งาน Tanh แบบเดิม (2) มีการนำเทคนิค Dropout มาใชE
+งานเพื่อหลีกเลี่ยงป{ญหา overfitting แต[ก็ทำใหEใชEเวลา
+ในการคำนวณมากขึ้นถึง 2 เท[า
+อ"างอิง https://www.jeremyjordan.me/convnet-architectures/
+--- page 59 ---
+59
+• Edit Master text styles
+13/08/68
+59
+อ"างอิง Ferguson et al. (2017). Automatic localization of casting defects with convolutional neural networks. 1726-1735. และ https://medium.com/analytics-vidhya/vggnet-architecture-explained-e5c7318aa5b6
+VGG เป`นสถาป{ตยกรรมของโครงข[ายประสาทเทียบแบบคอนโวลูชั่นรูปแบบหนึ่งที่ไดEรับการนำเสนอขึ้นในป” 2014 โดย Simonyan และคณะจาก University 
+of Oxford ก[อนหนEานี้ สถาป{ตยกรรมแบบ AlexNet ไดEมุ[งเนEนไปที่หนEาต[าง (Window size) และการขยับ (Stride) ขนาดเล็กในเลเยอรuคอนโวลูชั่นตEน ซึ่งใน
+สถาป{ตยกรรมแบบVGG กล[าวถึงอีกแง[มุมที่สำคัญมาก CNNs คือ ผลกระทบของความลึกของเครือข[ายประสาทที่ส[งผลต[อความแม[นยำ
+สถาป{ตยกรรมแบบVGG รองรับภาพสีขนาด 224 x 224 พิกเซล จากนั้น จะมีการทำPre-processing โดยการ Normalization ช[วงของขEอมูลใหEอยู[ในช[วง 0 
+ถึง 255 ก[อนนำผลลัพธuที่ไดEไปลบดEวยค[าเฉลี่ยสีจากชุดขEอมูลฝ•กสอน (ImageNet) ซึ่ง VGG จะประกอบไปดEวย convolutional layers จำนวน 13 เลเยอรu
+และ fully connected layers อีก 3 เลเยอรu ซึ่งทุก convolutional layers จะกำหนดใหEตัวกรองมาก (ลึกมาก) และมีขนาด 3 x 3 พิกเซล ซึ่ง Simonyan
+และคณะมีความเชื่อว[ามันจะมีประสิทธิภาพไม[ต[างจากตัวกรองขนาด 7 x 7 พิกเซล นอกจากนี้ VGG  ไดEอาศัยหลักการ 1 x1 convolutional layer สำหรับ
+การทำนายค[าของผลลัพธu
+VGG Architecture
+--- page 60 ---
+60
+• Edit Master text styles
+13/08/68
+60
+VGG Architecture
+--- page 61 ---
+61
+• Edit Master text styles
+13/08/68
+61
+SqueezeNet Architecture
+อ"างอิง https://medium.com/@avidrishik/squeezenets-architecture-compressed-neural-network-7741d24ca56f และ https://towardsdatascience.com/review-squeezenet-image-classification-e7414825581a
+https://codelabs.developers.google.com/codelabs/keras-flowers-squeezenet#6
+SqueezeNet เป`นสถาป{ตยกรรมของโครงข[ายประสาทเทียมแบบคอน
+โวลูชั่นที่ไดEรับการนำเสนอขึ้นในป” 2016 ซึ่งไดEนำเสนอโมดูล Fire ที่ไดEรับ
+การออกแบบมาจาก 3 แนวคิด ไดEแก[
+• แทนที่ตัวกรองขนาด 3x3 ดEวยตัวกรองขนาด 1x1 (point-wise 
+filters) เนื่องจากมีจำนวนพารามิเตอรuลดลง 9 เท[า
+• การใชEงานตัวกรองขนาด 1x1 สามารถลดความลึกของแผนที่
+คุณลักษณะและเวลาที่ใชEในการคำนวณไดE
+• การใชE Pooling 
+ล[าชEา เพื่อเก็บรักษาภาพรวมของแผนที่
+คุณลักษณะไวE ส[งผลทำใหEเพิ่มประสิทธิภาพการทำงาน
+โมดูล Fire จะประกอบดEวย 2 ส[วน ไดEแก[ squeeze layer และ expand 
+layer
+--- page 62 ---
+62
+• Edit Master text styles
+13/08/68
+62
+SqueezeNet Architecture
+อ"างอิง https://medium.com/@avidrishik/squeezenets-architecture-compressed-neural-network-7741d24ca56f และ https://towardsdatascience.com/review-squeezenet-image-classification-e7414825581a
+--- page 63 ---
+63
+• Edit Master text styles
+13/08/68
+63
+GoogLeNet (aka Inception) Architecture
+GoogLeNet (หรือ Inception) เป`นสถาป{ตยกรรมของโครงข[ายประสาทเทียบแบบคอนโวลูชั่นที่ไดEรับการนำเสนอขึ้นในป” 2014 โดยทีมนักวิจัยจาก Google 
+เพื่อ (1) ประหยัดทรัพยากรในการคำนวณ อาทิเช[น ลดจำนวนพารามิเตอรu ลดจำนวนครั้งของ operator ลง โดยอาศัยหลักการ 1x1 convolution ร[วมกับ
+หลักการInception cell จำนวน 9 cell ซึ่งภายใน Inception cell จะประกอบไปดEวยชุดของตัวกรองขนาด 1x1, 3x3 และ 5x5 ที่สามารถเรียนรูEที่จะสกัด
+คุณลักษณะในขนาดของวัตถุที่แตกต[างกันจากในภาพไดE
+อ"างอิง https://www.jeremyjordan.me/convnet-architectures/ และ https://medium.com/coinmonks/paper-review-of-googlenet-inception-v1-winner-of-ilsvlc-2014-image-classification-c2b3565a64e7
+อ"างอิง https://www.jeremyjordan.me/convnet-architectures/
+--- page 64 ---
+64
+• Edit Master text styles
+13/08/68
+64
+GoogLeNet (aka Inception) Architecture
+อ"างอิง https://www.jeremyjordan.me/content/images/2018/04/inception-model.png
+--- page 65 ---
+65
+• Edit Master text styles
+13/08/68
+65
+GoogLeNet (aka Inception) Architecture
+Max 
+Pooling
+--- page 66 ---
+66
+• Edit Master text styles
+13/08/68
+66
+GoogLeNet (aka Inception) Architecture
+ตัวดำเนินการ 1×1 convolution ไดEรับการคิดคEนขึ้นในป” 2014 จากบทความที่มีชื่อว[า Network in Network (NIN) เพื่อทำใหEแบบจำลองมีประสิทธิภาพดี
+ขึ้นโดยการเพิ่มความเป`น Non-linearity ของแบบจำลองใหEเหมาะสมกับขEอมูลประเภท Non-linear ซึ่งนิยมใชEงานร[วมกับ ReLU แต[ใน GoogLeNet ไดEนำ 
+1×1 convolution มาใชEงานเพื่อลดขนาดของแผนที่คุณลักษณะลง ส[งผลใหEลดการใชEทรัพยากรสำหรับการคำนวณลง ซึ่งจากรูปจะพบว[า 1×1 และ 5×5 
+convolution จะใชEจำนวนครั้งในการประมวลผลที่ต[างกัน นอกจากนี้ 1×1 convolution สามารถช[วยลดพารามิเตอรuของแบบจำลองลง ส[งผลทำใหEช[วยลด
+ป{ญหา overfitting ไดE
+อ"างอิง https://medium.com/coinmonks/paper-review-of-googlenet-inception-v1-winner-of-ilsvlc-2014-image-classification-c2b3565a64e7
+Number of operations = (14×14×48)×(5×5×480) = 112.9M
+Number of operations for 1×1 = (14×14×16)×(1×1×480) = 1.5M
+Number of operations for 5×5 = (14×14×48)×(5×5×16) = 3.8M
+Total number of operations 
+= 1.5M + 3.8M 
+= 5.3M
+• กรณี 5×5 convolution
+• กรณี 1×1 convolution
+--- page 67 ---
+67
+• Edit Master text styles
+13/08/68
+67
+GoogLeNet (aka Inception) Architecture
+โมดูล inception ไดEรับการออกแบบเพื่อใหEแบบจำลองสามารถสกัดแผนที่คุณลักษณะไดEจากตัวกรองแบบคอนโวลูชั่นที่ขนาดที่หลากหลายไดE โดยอาศัย 1×1 
+conv, 3×3 conv, 5×5 conv, และ 3×3 max pooling นำผลลัพธuที่ไดEมาต[อกัน แต[เพื่อลดขนาดของแผนที่คุณลักษณะลงและลดการใชEทรัพยากรสำหรับการ
+คำนวณลง ตัวดำเนินการ 1×1 convolution จึงถูกนำมาใชEงานร[วมดEวย
+อ"างอิง https://medium.com/coinmonks/paper-review-of-googlenet-inception-v1-winner-of-ilsvlc-2014-image-classification-c2b3565a64e7
+--- page 68 ---
+68
+• Edit Master text styles
+13/08/68
+68
+GoogLeNet (aka Inception) Architecture
+Global average pooling ไดEถูกนำมาใชEงานช[วงทEายของแบบจำลอง (ก[อน Output Layer) เพื่อลดแผนที่คุณลักษณะลงทำใหEแบบจำลองรองรับภาพที่มีขนาด
+แตกต[างกันไดE อีกทั้งยัง ลดการใชEทรัพยากรสำหรับการคำนวณลง โดยการหาค[าเฉลี่ยของแผนที่คุณลักษณะขนาด 7×7 ใหEเหลือขนาด 1×1
+อ"างอิง https://medium.com/coinmonks/paper-review-of-googlenet-inception-v1-winner-of-ilsvlc-2014-image-classification-c2b3565a64e7
+--- page 69 ---
+69
+• Edit Master text styles
+13/08/68
+69
+เปรียบเทียบสถาปKตยกรรม AlexNet, VGG และ GoogLeNet
+--- page 70 ---
+70
+• Edit Master text styles
+13/08/68
+70
+รูปแบบการเชื่อมตXอระหวXางชั้นใน CNN
+อFางอิง https://cvinvolution.medium.com/why-isnt-densenet-adopted-as-extensive-as-resnet-1bee84101160
+จากภาพไดEแสดงใหEเห็นถึงรูปแบบการเชื่อมต[อของเลเยอรuต[างๆ ในโครงข[ายประสาทเทียมแบบคอนโวลูชัน 3 รูปแบบ ไดEแก[ Standard Connectivity, ResNet 
+Connectivity และ DenseNet Connectivity ดังนี้
+• การเชื่อมตOอมาตรฐาน (Standard Connectivity)
+ลักษณะการเชื่อมต[อในโครงข[ายประสาทเทียมแบบดั้งเดิม การคอนโวลูชันในแต[ละเลเยอรuจะถูกดำเนินการต[อเนื่องกัน (successive convolutions) โดย
+ผลลัพธuจากเลเยอรuหนึ่งจะถูกส[งตรงไปยังเลเยอรuถัดไป ขEอดีของการเชื่อมต[อแบบนี้ คือ โครงสรEางง[ายและตรงไปตรงมา แต[อาจก[อใหEเกิดป{ญหา Gradient 
+Vanishing หรือ Gradient Exploding ในโครงข[ายที่มีความลึกมาก
+--- page 71 ---
+71
+• Edit Master text styles
+13/08/68
+71
+รูปแบบการเชื่อมตXอระหวXางชั้นใน CNN
+อFางอิง https://cvinvolution.medium.com/why-isnt-densenet-adopted-as-extensive-as-resnet-1bee84101160
+• การเชื่อมตOอแบบ ResNet Connectivity
+ใชEเทคนิคการเชื่อมต[อแบบ Residual Connection หรือ Skip Connection โดยจะมีการเพิ่มการเชื่อมต[อแบบลัดระหว[างเลเยอรu ทำใหEขEอมูลสามารถไหล
+ขEามเลเยอรuไปไดE ผลลัพธuจากเลเยอรuที่ขEามจะถูกนำมาบวกกันแบบ element-wise addition กับเลเยอรuที่ตามมา ขEอดีของการเชื่อมต[อแบบนี้ คือ ช[วยลด
+ป{ญหา Gradient Vanishing ทำใหEสามารถสรEางโครงข[ายที่มีความลึกมากขึ้นไดEอย[างมีประสิทธิภาพ แต[โครงสรEางมีความซับซEอนขึ้นเล็กนEอย
+• การเชื่อมตOอแบบ DenseNet Connectivity
+ใชEเทคนิคการเชื่อมต[อแบบ Dense Connection โดยแต[ละเลเยอรuจะไดEรับขEอมูลจากทุกเลเยอรuก[อนหนEานี้ ทำใหEเกิดการรวมขEอมูล (Feature Concatenation) 
+ของทุกเลเยอรuก[อนหนEา ผลลัพธuจากการเชื่อมต[อแบบนี้จะถูกนำมารวมกันแบบ channel-wise concatenation ขEอดีของการเชื่อมต[อแบบนี้ คือ เพิ่มการเรียนรูE
+ฟ”เจอรuที่มีประสิทธิภาพมากขึ้นเนื่องจากทุกเลเยอรuมีการรับขEอมูลจากทุกเลเยอรuก[อนหนEานี้ แต[การเชื่อมต[อแบบนี้ตEองการหน[วยความจำมากขึ้นในการเก็บ
+ฟ”เจอรuที่เกิดขึ้นในทุกเลเยอรu
+--- page 72 ---
+72
+• Edit Master text styles
+13/08/68
+72
+ResNet-18
+อFางอิง DOI: 10.3390/app13010240 และ https://medium.com/analytics-vidhya/resnet-understand-and-implement-from-scratch-d0eb9725e0db
+ResNet-18 เป`นส[วนหนึ่งของตระกูล Residual Networks (ResNets) ที่ถูกพัฒนาโดย Microsoft Research เพื่อแกEป{ญหาที่เกิดขึ้นกับการฝ•กสอนโครงข[าย
+ประสาทเทียมที่มีความลึกมาก (Deep Neural Networks) โดยใชEเทคนิค Residual Learning ซึ่งช[วยใหEสามารถสรEางโครงข[ายที่มีความลึกมากขึ้นไดEอย[างมี
+ประสิทธิภาพ โครงสรEางภายในประกอบไปดEวย (1) Convolution Block, (2) Identity Block และ (3) Skip Connections โดยที่ Convolution Block และ 
+Identity Block คือ Residual Block ที่มี Connection ที่แตกต[างกัน เมื่อใดก็ตามที่ตEองปรับขนาดของผลลัพธuเพื่อใหEสามารถใชEการเชื่อมต[อดEวยหลักการ Skip 
+Connections ไดE จำเป`นตEองใชEตัวดำเนินการ Convolution มาช[วย ดังนั้น จึงเรียก Residual Block นั้นว[า Convolution Block ขณะที่ เมื่ออินพุตและ
+เอาตuพุตมีขนาดเท[ากัน นักศึกษาตEองใชEการเชื่อมต[อแบบ Identity จึงเรียก Residual 
+Block นั้นว[า Identity 
+Block โดยที่ การเชื่อมต[อแบบลัด (skip 
+connections) คือ การนำเอาผลลัพธuจากเลเยอรuก[อนหนEามาบวกกับผลลัพธuของเลเยอรuป{จจุบัน ซึ่งช[วยลดป{ญหา Gradient Vanishing และ Gradient 
+Exploding ทำใหEการฝ•กสอนโครงข[ายที่ลึกมากเป`นไปไดEอย[างมีประสิทธิภาพ
+--- page 73 ---
+73
+• Edit Master text styles
+13/08/68
+73
+อFางอิง DOI: 10.3390/app13010240 และ https://medium.com/analytics-vidhya/resnet-understand-and-implement-from-scratch-d0eb9725e0db
+อินพุตของ Convolution Block เป`นภาพที่มีขนาด (56x56) และมี 64 channel
+ชั้น Convolution 
+แรกจะเปลี่ยนภาพนี้เป`นภาพขนาด (28x28) 
+โดยมี 128 
+channel โดยใชCตัวกรองขนาด 3x3, stride 2x2 และ padding 1x1 พรCอมกับใชC
+ฟpงกqชัน ReLU ตHอจากนั้น ชั้น Convolution ที่สองจะรับภาพนี้เป`นอินพุตและใหC
+ผลลัพธqเป`นภาพที่มีขนาดเดียวกัน (28x28x128) ในการที่จะใชCการเชื่อมตHอแบบ 
+Skip Connection ตCองนำผลลัพธqของบล็อก Residual Block ชั้นกHอนหนCา ที่มี
+ขนาด (56x56x64) 
+มารวมกับผลลัพธqของ Convolution 
+ที่สองที่มีขนาด 
+(28x28x128) เพื่อทำเชHนนี้ จำเป`นตCองแปลงผลลัพธqของ Residual Block ชั้นกHอน
+หนCา ใหCมีขนาดเป`น (28x28x128) ซึ่งทำไดCโดยการใชC Convolution อีกชั้นหนึ่ง
+ดCวยตัวกรองขนาด 1x1 และ stride 2x2 โดยมีชHองทางอินพุตเป`น 64 และชHองทาง
+เอาตqพุตเป`น 128 หรือสามารถกลHาวไดCวHา บล็อก {Conv(1,1) s(2,2)} มีหนCาที่ใน
+การแปลงผลลัพธqจากบล็อกหนึ่งโดยใชCการทำ Convolution เพื่อใหCสามารถใชCรวม
+กับผลลัพธqของบล็อก Convolution อื่นไดCอยHางมีประสิทธิภาพ หลังจากการรวม
+เสร็จสิ้น จะมีการใชCฟpงกqชัน Activation (ReLU) กับผลลัพธqและสHงไปยัง Identity 
+Block
+อินพุตและเอาตqพุตของIdentity Block มีขนาดเทHากัน ทำใหCการเชื่อมตHอแบบ 
+Skip connection ไมHจำเป`นตCองแปลงผลลัพธqของ Convolution Block ดังนั้น 
+การใชC Residual connection ตCองนำผลลัพธqของ Convolution Block กHอนหนCา 
+มารวมกับผลลัพธqของชั้น Identity Block จากนั้น นำไปผHาน ReLU กับผลลัพธqที่
+ไดC
+--- page 74 ---
+74
+• Edit Master text styles
+13/08/68
+74
+DenseNet
+อ"างอิง https://doi.org/10.3389/fenvs.2022.991173 และ https://towardsdatascience.com/review-densenet-image-classification-b6631a8ef803
+Densely Connected Convolutional Networks (DenseNet) เป`นสถาป{ตยกรรมโครงข[ายประสาทเทียมที่ถูกนำเสนอโดย Gao Huang และคณะ ในป” 
+2016 สถาป{ตยกรรม DenseNet มีวัตถุประสงคuเพื่อแกEป{ญหาการเรียนรูEในโครงข[ายที่มีขนาดลึกมาก โดยการใชEประโยชนuจากขEอมูลเชิงลึกที่ไดEจากทุกเลเยอรu
+ในโครงข[าย โครงสรEางของ DenseNet ประกอบดEวย 3 ส[วน
+• Dense Blocks
+ใน DenseNet 
+แต[ละเลเยอรuจะไดEรับขEอมูลจากทุกเลเยอรuก[อนหนEา ซึ่งต[างจากการเชื่อมต[อแบบลำดับ (Sequential) 
+ทั่วไปดEวยการเชื่อมต[อแบบนี้ ทำใหE 
+Feature map ที่เรียนรูEจากเลเยอรuก[อนหนEาไม[สูญหาย แต[จะถูกนำมาใชEในทุกเลเยอรuภายใน Dense Blocks
+• Transition Layers
+คือ กลุ[มของเลเยอรuที่เรียงลำดับ Batch Normalization, ReLU, 1x1 Convolution เพื่อลดจำนวน Channels จากนั้น ค[อยผ[าน 2x2 Average Pooling 
+เพื่อลดขนาดของ Feature Map
+--- page 75 ---
+75
+• Edit Master text styles
+13/08/68
+75
+• Dense Blocks - Basic DenseNet Composition Layer
+อ"างอิง https://doi.org/10.3389/fenvs.2022.991173 และ https://towardsdatascience.com/review-densenet-image-classification-b6631a8ef803
+ในแต6ละเลเยอรrการประกอบจะมีการทำPre-Activation ซึ่งประกอบไปด*วย Batch Normalization (BN) และ ReLU ก6อนที่จะทำการ 
+Convolution ขนาด 3×3 โดยมี Feature Map เอาตrพุตที่มี Channel จำนวน k ช6อง โดยก6อนที่จะทำการ Convolution จะมีการทำBatch 
+Normalization และการใช*ฟlงกrชันการกระตุ*น ReLU ก6อน ซึ่งช6วยให*การฝHกสอนโมเดลมีประสิทธิภาพและเสถียรมากขึ้น และการดำเนินการ 
+3x3 Convolution ทำให* Feature Map ของข*อมูลเปลี่ยนไปตามจำนวน Channel ที่กำหนด
+--- page 76 ---
+76
+• Edit Master text styles
+13/08/68
+76
+• Dense Blocks - DenseNet Bottleneck Layers
+อ"างอิง https://doi.org/10.3389/fenvs.2022.991173 และ https://towardsdatascience.com/review-densenet-image-classification-b6631a8ef803
+ได*รับการออกแบบมาเพื่อลดความซับซ*อนและขนาดของโมเดล จะประกอบไปด*วย Batch Normalization, ReLU และ 1×1 Conv จากนั้น จะ
+ดำเนินการ Batch Normalization, ReLU และ 3×3 Conv ซึ่งการทำConvolution ขนาด 1x1 เพื่อลดจำนวน Channels ของ Feature 
+Map ก6อน จากนั้น จึงทำ Convolution ขนาด 3x3 เพื่อสกัด Feature Map ใหม6 สิ่งนี้ช6วยลดจำนวนพารามิเตอรrและการคำนวณ ทำให*โมเดลมี
+ขนาดเล็กลงและมีประสิทธิภาพมากขึ้น
+--- page 77 ---
+77
+• Edit Master text styles
+13/08/68
+77
+• การเชื่อมตXอแบบ DenseNet Connectivity
+อ"างอิง https://doi.org/10.3389/fenvs.2022.991173 และ https://towardsdatascience.com/review-densenet-image-classification-b6631a8ef803
+ภายใน Dense Block ทุกเลเยอรFจะสร:าง Feature Map ที่มีขนาดเชิงพื้นที่เทSากัน ทำให:สามารถรวม Feature Map ที่ได:จาก
+หลายเลเยอรFเข:าด:วยกันได:อยSางงSายดายโดยใช:การ Channel-wise Concatenation สิ่งนี้สามารถชSวยให: Feature Map มี
+หลากหลายมากขึ้น (More Diversified Features) และรักษาฟ•เจอรFที่มีความซับซ:อนต่ำ (Maintains Low Complexity 
+Features) นอกจากนี้ การเชื่อมตSอแบบ DenseNet 
+Connectivity ยังถือวSาเป#นการทำ Feature 
+Reuse เนื่องจากชSวยให: 
+Feature Map ที่ได:จากเลเยอรFกSอนหน:านี้ไมSสูญหาย แตSถูกนำมาใช:ซ้ำ ทำให:การเรียนรู:มีประสิทธิภาพและลดจำนวนพารามิเตอรF
+ที่ต:องการใช:
+--- page 78 ---
+78
+• Edit Master text styles
+13/08/68
+78
+• การเชื่อมตXอแบบ DenseNet Connectivity
+อ"างอิง https://doi.org/10.3389/fenvs.2022.991173 และ https://towardsdatascience.com/review-densenet-image-classification-b6631a8ef803
+ชSวยให: Feature Map มีหลากหลายมากขึ้น (More Diversified Features) เนื่องจากแตSละเลเยอรFใน DenseNet ได:รับข:อมูล
+จากทุกเลเยอรFกSอนหน:านี้เป#นอินพุต ฟ•เจอรFที่ได:จึงมีความหลากหลายมากขึ้นและมักจะมีรูปแบบที่สมบูรณFมากขึ้น
+--- page 79 ---
+79
+• Edit Master text styles
+13/08/68
+79
+• การเชื่อมตXอแบบ DenseNet Connectivity
+อ"างอิง https://doi.org/10.3389/fenvs.2022.991173 และ https://towardsdatascience.com/review-densenet-image-classification-b6631a8ef803
+การรักษาฟ•เจอรFที่มีความซับซ:อนต่ำ ใน DenseNet
+สSวนของตัวจำแนกประเภทใช:ฟ•เจอรFที่มีความซับซ:อน
+ทุกระดับ ทำให:การตัดสินใจมีความราบรื่นมากขึ้น และ 
+เป#นผลดีในการเรียนรู:จากข:อมูลที่มีจำนวนจำกัด จึง
+สามารถทำงานได:ดีแม:มีข:อมูลการฝ4กสอนไมSเพียงพอ
+--- page 80 ---
+80
+• Edit Master text styles
+13/08/68
+80
+• Transition Layers
+อ"างอิง https://doi.org/10.3389/fenvs.2022.991173 และ https://towardsdatascience.com/review-densenet-image-classification-b6631a8ef803
+Transition Layers ประกอบด*วย 1×1 Conv ตามด*วย 2×2 Average Pooling ใช*เป/นเลเยอรrระหว6างกลางระหว6างสอง Dense Blocks ที่
+ติดกัน โดยที่ การใช* Convolution ขนาด 1x1 เป/นการลดจำนวน Channels ของฟœเจอรrแมปลง ซึ่งช6วยลดจำนวนพารามิเตอรrและการคำนวณ 
+จากนั้น ใช* Average Pooling ขนาด 2x2 เพื่อลดขนาดของ Feature Map (Downsampling) ทำให* Feature Map ที่ได*จาก Dense Block 
+หนึ่งสามารถเชื่อมต6อกับ Dense Block ถัดไปได*อย6างราบรื่น ทำให*ขนาดของ Feature Map จะเหมือนกันภายใน Dense Block ดังนั้น สามารถ
+เชื่อมต6อกันได*อย6างง6ายดาย
+--- page 81 ---
+81
+• Edit Master text styles
+13/08/68
+81
+Growth Rate
+อ"างอิง https://doi.org/10.3389/fenvs.2022.991173 และ https://towardsdatascience.com/review-densenet-image-classification-b6631a8ef803
+คือ จำนวน Feature Map ที่
+แต<ละเลเยอรJเพิ่มเข7ามาใน 
+Dense Block ซึ่งจะกำหนดให7
+แต<ละเลเยอรJเพิ่มจำนวน 
+Feature Map เข7ามาเรื่อย ๆ
+--- page 82 ---
+82
+• Edit Master text styles
+13/08/68
+82
+MobileNetV3 Architecture
+MobileNetV3 block (bottleneck block) ไดEรับการ
+ออกแบบมาเพื่อเพิ่มประสิทธิภาพโดยรวมของแบบจำลอง
+และลดการใชEทรัพยากรหน[วยความจำ
+อ"างอิง S. Qian, C. Ning and Y. Hu, "MobileNetV3 for Image Classification," 2021 IEEE 2nd International Conference on Big Data, Artificial Intelligence and Internet of Things Engineering (ICBAIE), Nanchang, China, 2021, pp. 490-497, 
+DOI: 10.3390/e23111383 และ https://towardsdatascience.com/everything-you-need-to-know-about-mobilenetv3-and-its-comparison-with-previous-versions-a5d5e5a6eeaa 
+--- page 83 ---
+83
+• Edit Master text styles
+13/08/68
+83
+โครงสรEางภายใน MobileNetV3 block ประกอบดEวย 2 องคu 
+ประกอบหลัก ไดEแก[
+• Inverted residual block
+• 1x1 Expansion Convolution
+• Depthwise Separable Convolution
+• 1x1 projection layer
+• Skip connection
+• Squeeze-And-Excite (SE) block 
+อ"างอิง https://doi.org/10.3390/diagnostics13091579 และ https://doi.org/10.3390/e23111383
+--- page 84 ---
+84
+• Edit Master text styles
+13/08/68
+84
+• ตัวดำเนินการ 1x1 Expansion Convolution
+เป`นส[วนที่ขยายจำนวน channels ของขEอมูลอินพุตก[อนที่จะทำการ Depthwise Convolution โดยเริ่มจากการขยายจำนวนช[องทางของขEอมูลอินพุตโดยการใชE 
+1x1 Convolution เพิ่มมิติของขEอมูลเพื่อใหEสามารถจับลักษณะเชิงพื้นที่ไดEมากขึ้นในขั้นตอน Depthwise Convolution อีกทั้ง ยังเป`นการช[วยใหEโมเดลสามารถ
+เรียนรูEลักษณะที่ซับซEอนมากขึ้นก[อนที่จะทำการลดมิติในขั้นตอนถัดไป
+• ตัวดำเนินการ 1x1 Projection Convolution
+เป`นส[วนที่ลดจำนวน channels ของขEอมูลเอาตuพุตหลังจากที่ทำการ Depthwise Convolution โดยเริ่มจากการลดจำนวนช[องทางของขEอมูลโดยการใชE 1x1 
+Convolution ทำใหEขEอมูลที่ไดEมีขนาดเล็กลงและง[ายต[อการประมวลผลในขั้นตอนถัดไป สิ่งนี้ทำใหEช[วยลดจำนวนพารามิเตอรuและการคำนวณที่ใชEในโมเดล
+อ"างอิง https://global.discourse-cdn.com/dlai/original/3X/0/1/017036506b0d47805b188a5ced7fc41c888bd2b7.jpeg
+MxNx3
+MxNx16
+MxNx16
+MxNx3
+1x1 Expansion
+Convolution 
+16 Filter (1 Kernel)
+โดยมีขนาด 1x1x3
+Depthwise 
+Separable 
+Convolution  
+1x1x16
+Squeeze-And-Excite 
+(SE) layer  
+MxNx16
+1x1 Projection
+Convolution 
+3 Filter (1 Kernel)
+โดยมีขนาด 1x1x16
+MxNx3
+Skip Connection
+--- page 85 ---
+85
+• Edit Master text styles
+13/08/68
+85
+Depthwise Separable Convolution ไดEรับการออกแบบมาทำงานแทนที 
+Convolution Layer แบบดังเดิมเพื่อลดขนาดของแบบจำลองลง ซึ่งประกอบไป
+ดEวย 2 ส[วนย[อย ไดEแก[
+• 3x3 Depthwise Convolution, BN และ H-swish
+• 1x1 Pointwise Convolution, BN และ H-swish
+ตัวอยHางการทำงานของ Depthwise Sqparable Convolution
+Depthwise
+Convolution
+Pointwise
+Convolution
+อ"างอิง https://medium.com/@zurister/depth-wise-convolution-and-depth-wise-separable-convolution-37346565d4ec
+--- page 86 ---
+86
+• Edit Master text styles
+13/08/68
+86
+Depthwise Separable Convolution ไดEรับการออกแบบมาทำงานแทนที 
+Convolution Layer แบบดังเดิมเพื่อลดขนาดของแบบจำลองลง ซึ่งประกอบไป
+ดEวย 2 ส[วนย[อย ไดEแก[
+• 3x3 Depthwise Convolution, BN และ H-swish
+ในการคอนโวลูชันแบบเดิม ฟ‹ลเตอรuจะถูกนำไปใชEกับทุก channel ของขEอมูล
+อินพุตพรEอมกัน แต[ใน Depthwise Convolution ฟ‹ลเตอรuคอนโวลูชันจะถูก
+นำไปใชEกับแต[ละ channel ของขEอมูลอินพุตแยกกัน ฟ‹ลเตอรuแต[ละตัวจะทำงาน
+กับช[องทางเดียวเท[านั้น โดย Depthwise Convolution ไดEรับการออกแบบมา
+เพื่อลดจำนวนพารามิเตอรuและการคำนวณลง เนื่องจากการคอนโวลูชันแต[ละ
+ฟ‹ลเตอรuจะทำงานกับช[องทางเดียว จำนวนการคำนวณและพารามิเตอรuที่ใชEจะ
+นEอยลงเมื่อเทียบกับการคอนโวลูชันแบบเดิม และส[งผลทำใหEการฝ•กสอนโมเดลจะ
+เร็วขึ้นและใชEทรัพยากรนEอยลง
+• 1x1 Pointwise Convolution, BN และ H-swish
+ตัวอยHางการทำงานของ Depthwise Sqparable Convolution
+Depthwise
+Convolution
+Pointwise
+Convolution
+อ"างอิง https://medium.com/@zurister/depth-wise-convolution-and-depth-wise-separable-convolution-37346565d4ec
+--- page 87 ---
+87
+• Edit Master text styles
+13/08/68
+87
+Depthwise Separable Convolution ไดEรับการออกแบบมาทำงานแทนที 
+Convolution Layer แบบดังเดิมเพื่อลดขนาดของแบบจำลองลง ซึ่งประกอบไป
+ดEวย 2 ส[วนย[อย ไดEแก[
+• 3x3 Depthwise Convolution, BN และ H-swish
+• 1x1 Pointwise Convolution, BN และ H-swish
+ฟ‹ลเตอรuที่ใชEในการคอนโวลูชันนี้มีขนาด 1x1 ซึ่งหมายความว[ามันจะทำการคอน
+โวลูชันกับค[าพิกเซลเดียวในแต[ละ channel ของขEอมูลอินพุต ส[งผลทำใหEเกิดการ
+รวมขEอมูลจากหลาย channel ณ พิกเซลนั้น เพื่อสรEาง channel ใหม[ในขEอมูล
+เอาตuพุต (Feature Map) ซึ่งช[วยในการเปลี่ยนแปลงจำนวนช[องทางของขEอมูล
+อินพุต (channel depth) ซึ่ง 1x1 Pointwise Convolution ไดEรับการออกแบบ
+มาเพื่อช[วยเปลี่ยนแปลงจำนวน channel ของขEอมูลอินพุต กล[าวคือ สามารถ
+เพิ่มหรือลดจำนวน channel ของขEอมูลอินพุตไดEตามตEองการ ซึ่งเป`นประโยชนu
+ในการปรับขนาดของโมเดลใหEมีประสิทธิภาพสูงสุด อีกทั้ง ยังถือว[าเป`นการ
+ผสมผสานขEอมูลจากหลาย channel เขEาดEวยกัน เพื่อใหEไดEขEอมูลเชิงลึกที่มากขึ้น
+ตัวอยHางการทำงานของ Depthwise Sqparable Convolution
+Depthwise
+Convolution
+Pointwise
+Convolution
+อ"างอิง https://medium.com/@zurister/depth-wise-convolution-and-depth-wise-separable-convolution-37346565d4ec
+--- page 88 ---
+88
+• Edit Master text styles
+13/08/68
+88
+อFางอิงhttps://towardsdatascience.com/introduction-to-squeeze-excitation-networks-f22ce3a43348
+Squeeze-and-Excitation (SE) block 
+Squeeze-and-Excite (SE) Block เปeนส#วนประกอบที่ใชAในสถาปgตยกรรม MobileNetV3 ซึ่งช#วยเพิ่มความสามารถในการรับรูAของโมเดลโดยการสรAางความสัมพันธpระหว#าง
+ช#องทาง (channel) ในโครงข#ายประสาทเทียมแบบคอนโวลูชัน บล็อกนี้ถูกนำเสนอครั้งแรกในงานวิจัยชื่อ "Squeeze-and-Excitation Networks" โดย Jie Hu และคณะ ซึ่ง
+SE Block สามารถเพิ่มความสามารถในการรับรูAของแบบจำลองไดAโดยการสรAางความสัมพันธpระหว#าง Channel ส#งผลทำใหAโมเดลสามารถโฟกัสที่ Feature map ที่สำคัญไดA
+มากขึ้น จึงทำใหAประสิทธิภาพโดยรวมสูงขึ้น การทำงานของ SE Block ประกอบดAวย 2 ส#วน ไดAแก#
+• Squeeze (Global Average Pooling)
+คือการ "บีบอัด" ขAอมูลโดยการใชA Global Average Pooling ซึ่งจะลดมิติขAอมูลเชิงพื้นที่ (ความสูงและความกวAาง) ของ Feature map ลงเหลือค#าเดียวต#อ Channel ทำใหA
+ไดAตัวบ#งชี้ Channel ที่จับขAอมูลเชิงพื้นที่แบบ Global ของแต#ละ Channel สำหรับ Feature map ที่มีมิติ H×W×C (ความสูง H, ความกวAาง W, และจำนวนช#องทาง C) 
+ขั้นตอนนี้จะไดAผลลัพธpเปeนเทนเซอรp 1×1×C
+--- page 89 ---
+89
+• Edit Master text styles
+13/08/68
+89
+อFางอิงhttps://towardsdatascience.com/introduction-to-squeeze-excitation-networks-f22ce3a43348
+• Excitation (Fully Connected Layers)
+หลังผ#านกระบวนการ Squeeze ขAอมูลจะผ#านไปยังชั้น Fully Connected (FC) จำนวน 2 ชั้นเพื่อจับความสัมพันธpระหว#าง Channel โดยชั้น FC แรกจะลดมิติขAอมูลลงและ
+ชั้น FC ที่สองจะคืนมิติขAอมูลกลับไปเหมือนเดิม ซึ่งผลลัพธpจาก FC แรกจะผ#านฟgงกpชันการกระตุAน (นิยมกำหนดใหAเปeน ReLU) และผลลัพธpจาก FC ที่สองจะผ#านฟgงกpชันการ
+กระตุAน (นิยมกำหนดใหAเปeน sigmoid) เพื่อสรAางชุดน้ำหนักที่ปรับแต#ละ Channel ไดA (per-channel modulation weights) ซึ่งน้ำหนักเหล#านี้จะกำหนดความสำคัญของแต#
+ละ Channel
+• Recalibration (Channel-wise Multiplication)
+คือ การปรับ Feature map โดยการคูณน้ำหนักที่ปรับแต#ละช#องทางกับ Feature map เดิม การคูณนี้ช#วยปรับค#าการตอบสนองของ Feature map ใหAความสำคัญกับ 
+Channel ที่สำคัญและลดความสำคัญของ Channel ที่ไม#สำคัญ
