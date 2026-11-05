@@ -5,7 +5,7 @@
 
 | # | Question topic | Study from |
 |---|---|---|
-| 1 | The project you did (โปรเจค 1) | Your own project: be able to explain task, input → output, why, architecture and results |
+| 1 | Project 1: Thai character segmentation (โปรเจค 1) | Details to be added. Be able to explain task, input → output, why, data prep, model, metric, results. Related lectures: Ch 8 `[00:41:04]` (augmentation for Thai characters: no colour change, no left-right flip, do rotate/tilt), Ch 10 P1 `[01:17:20]` (pad to square before resize to keep character proportions), Ch 12 (segmentation), Ch 14 (Dice/IoU) |
 | 2 | Case study: how to apply the knowledge | Pick task type → output layer/activation/loss → architecture → metric for a medical scenario. Ch 9 (output layers), Ch 10 (pipeline, data leakage), Ch 8 (transfer learning, augmentation), Ch 14 (which metric), Ch 15 (CNN vs Transformer: "depends on dataset/application") |
 | 3 | Video | `Chapter 13/notes.md`: spatial vs temporal, CNN→LSTM vs ConvLSTM vs 3D conv vs two-stream, LSTM gates, 3D-conv output size |
 | 4 | Image segmentation | `Chapter 12/notes.md`: semantic/instance/panoptic, encoder-decoder, U-Net (skip = concat), 1×1 output conv, output channels = classes, Dice/IoU |

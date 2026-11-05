@@ -2,65 +2,22 @@
 
 ใช้คู่กับ `mock-exam.md` ทุกข้อมี **จุดให้คะแนน (marking points)** และ **ที่มาในโน้ต** (ที่มา:)
 ตัวเลขที่คำนวณทุกค่า (transposed conv, IoU, NMS, 3D conv, shape, metrics, LSTM) ตรวจด้วย Python แล้ว (เทียบ transposed conv กับ `torch.nn.functional.conv_transpose2d` และ NMS กับ `torchvision.ops.nms`)
-ตัวเลขข้อ 1 มาจาก `DLMED/results/RESULTS.md` และ `DLMED/README.md` เท่านั้น
+ข้อ 1 (โปรเจค 1) ยังไม่มีเฉลย รอข้อมูลโปรเจค
 
 ---
 
-## ข้อ 1. โปรเจค (15)
+## ข้อ 1. โปรเจค 1: Segmentation ตัวอักษรไทย (15)
 
-### 1.1 (3)
-- **Input:** MRI สมอง T1-weighted contrast-enhanced 1 slice, 1 channel, resize เป็น 256×256, normalised → tensor `(B, 1, 256, 256)` (1)
-- **Output 2 อย่าง** (1):
-  - segmentation mask `(B, 1, 256, 256)`: binary segmentation (tumor / background) ทีละ pixel
-  - tumor type `(B, 3)`: **multiclass** classification (meningioma / glioma / pituitary) หนึ่งภาพหนึ่งคำตอบ
-- **Dataset:** Figshare brain tumor dataset (Cheng et al. 2015), 3,064 slices, 233 patient IDs, 2 โรงพยาบาล; meningioma 708 · glioma 1,426 · pituitary 930 (0.5)
-- **Research question:** ถ้าโมเดลเดียวเรียนสองงานพร้อมกัน (multi-task learning) แต่ละงานดีขึ้นกว่าเรียนงานเดียวหรือไม่ (0.5)
+> **ยังไม่มีเฉลย** รอข้อมูลโปรเจค 1
 
-ที่มา: `DLMED/results/RESULTS.md` → §1 Problem, §2 Data, §3 Method (ตาราง Setting) · `DLMED/src/model.py` (comment ของ `forward`)
-
-### 1.2 (4)
-- **Diagram** (1.5): MRI → **shared encoder ResNet-34 (pretrained ImageNet)** → แยกสองทาง
-  - **U-Net decoder:** upsampling + **skip connections จาก encoder (concat ที่ scale เดียวกัน)** → 1×1 conv → mask 1 channel
-  - **classification head** บน feature ชั้นลึกสุดของ encoder: global average pooling → dropout 0.2 → linear → 3 classes
-- **Output layer / activation / loss** (1.5):
-  - seg: 1 channel + **sigmoid** (threshold 0.5); loss = **BCE + Dice**
-  - cls: 3 nodes + **softmax** (argmax); loss = **cross-entropy**
-  - **total loss:** `L = w_seg · L_seg + w_cls · L_cls`
-- **ทำไมเป็น multi-task / ต่างจาก multilabel** (1): หนึ่ง network, encoder ร่วมกัน, สอง output ที่ **ความหมายต่างกัน** (where = mask, what = ชนิด) ฝึกพร้อมกันด้วย loss รวม; multilabel คือหลายคำตอบที่ **ความหมายเดียวกัน** (ตอบคำถามเดียว เช่นภาพนี้มีโรคอะไรบ้าง) ใช้ sigmoid ทุก node
-  - ในโน้ตเรียกโครงนี้ว่า **shared feature extractor + task-specific heads** (แบบ b)
-
-ที่มา: `RESULTS.md` → §3 Method, §11 Q&A ("Why is this multi-task learning?") · `Chapter 9/notes.md` → Multi-task Learning, Multilabel vs Multi-task, Three ways (b) · `Chapter 12/notes.md` → 7. U-Net
-
-### 1.3 (4)
-- **การทดลอง** (1.5):
-
-| ID | ฝึกอะไร | loss weights |
-|---|---|---|
-| A | classification อย่างเดียว | w_seg = 0, w_cls = 1 |
-| B | segmentation อย่างเดียว | w_seg = 1, w_cls = 0 |
-| C | ทั้งสองงาน | w_seg = 1, w_cls = 1 (equal) |
-| D | ทั้งสองงาน | learned (uncertainty weighting, Kendall et al. 2018) |
-
-  A และ B คือ **single-task baselines** ใช้ network, split, augmentation policy, lr, epochs และ seed labels เดียวกัน แค่ปิด loss อีกตัว จึงเทียบได้ว่าการเพิ่มงานที่สองช่วยหรือไม่
-- **ผล test set (mean ± SD, 3 runs)** (1.5):
-  - classification: Macro-F1 **A 0.916 ± 0.010 → C 0.938 ± 0.003** (D 0.923 ± 0.012); C − A = **+0.022** และดีขึ้นครบ **3/3 seeds** → MTL ช่วย classification อย่างสม่ำเสมอ
-  - segmentation: Dice **B 0.774 ± 0.006 vs C 0.775 ± 0.008** (D 0.769); C − B = +0.001 ดีกว่าแค่ 2/3 seeds → **ใกล้เคียงกัน** ไม่ได้พิสูจน์ว่าดีขึ้นหรือเท่ากันจริง
-  - equal weights (C) ดีกว่า learned weights (D)
-  - ข้อจำกัดของข้อสรุป: มีแค่ 3 runs ไม่มี significance test
-- **ทำไม Macro-F1** (1): class ไม่สมดุล (glioma ≈ 2× meningioma) accuracy จะถูก class ใหญ่ครอบงำ Macro-F1 เฉลี่ย F1 ของแต่ละ class ให้ทุกชนิดมีน้ำหนักเท่ากัน (meningioma ยากสุด: F1 A 0.851 → C 0.889)
-
-ที่มา: `RESULTS.md` → §4 Experiments, §5 Main result (ตาราง test set + paired differences), §6, §11 ("Why Macro-F1") · `Chapter 14/notes.md` → 1. Classification (accuracy misleads)
-
-### 1.4 (4)
-- **Split by patient** (1.5): slice จากผู้ป่วยคนเดียวกันหน้าตาเกือบเหมือนกัน ถ้าอยู่ทั้ง train และ test คะแนน test จะสูงเกินจริง (**data leakage**) จึงใช้ `StratifiedGroupKFold` (group = ผู้ป่วย, stratify = ชนิด tumor) และรวม ID ที่มี suffix (เช่น `MR040240B`) ไว้กลุ่มเดียวกันแบบ conservative: 233 IDs → **209 groups** → train/val/test = **151/29/29 groups (2,194/434/436 ภาพ)**; split ถูก commit ไว้และทุกการทดลองใช้ไฟล์เดียวกัน
-- **เลือก lr บน validation เท่านั้น** (0.5): ลอง 1e-4 / 3e-4 / 1e-3 กับการทดลอง C seed 0 → **3e-4** ได้ val score สูงสุด (0.877); เลือก best epoch จาก validation; test ไม่ได้ใช้ปรับ hyperparameter (ข้อจำกัด: tune บน C อย่างเดียวแล้วใช้กับ A, B, D)
-- **Error analysis** (1):
-  - patient ID **103673** ทำให้เกิด meningioma → pituitary 54 error predictions (18 slices × 3 seeds) = **61% ของ errors ของ A และ 86% ของ C**; ถ้าไม่นับคนนี้ C เหลือ 9 errors (accuracy 99.3%)
-  - segmentation ล้มเหลว (Dice = 0) เกือบทั้งหมดเป็น **glioma** (45 จาก 51 predictions ของ C); Dice ต่อชนิด meningioma ≈ 0.93, glioma ≈ 0.66; median Dice ของ C 0.865 สูงกว่า mean 0.775
-- **ปกป้อง shared encoder** (1): คำถามวิจัยคือ "เรียนร่วมกันช่วยไหม" ซึ่งต้องใช้ shared encoder จึงจะตอบได้; สองงานเกี่ยวข้องกัน (รู้ว่า tumor อยู่ไหน → ช่วยบอกชนิด; ข้อนี้เป็นสมมติฐาน ยังไม่ได้ยืนยันด้วย Grad-CAM); ประหยัด resource กว่าสองโมเดล; ความเสี่ยงคือ **negative transfer** ถ้างานไม่เกี่ยวกัน และต้องเลือก loss weights (D ไม่ได้ดีกว่า C); ผลจริง: Dice ไม่ได้แย่ลงเฉลี่ย ส่วน classification ดีขึ้น
-- ข้อจำกัดอื่นที่ใส่ได้: test set เล็ก (29 groups), ข้อมูลชุดเดียว 1 sequence, 2D slice ทีละภาพ, ทุก slice มี tumor (ไม่มีภาพปกติ), augmentation เดิมไม่ได้ seed
-
-ที่มา: `RESULTS.md` → §2 Data (split table), §3 (lr table), §7, §8 Error analysis, §9 Limitations · `Chapter 10/notes.md` → What the teacher emphasised → Data leakage · `Chapter 12/notes.md` → teacher [01:28:17] · `Chapter 9/notes.md` → Negative Transfer
+เนื้อหาจากคาบเรียนที่เกี่ยวกับงานตัวอักษรไทย (ใช้ได้เลย):
+- **Data augmentation** (Chapter 8 `[00:41:04]`): งานรู้จำตัวอักษรไทย **ไม่ต้องปรับสี** (ตัวอักษรไม่ได้แยกกันด้วยสี)
+  **ไม่ flip ซ้าย-ขวา** (ภาพจริงแทบไม่มี) flip บน-ล่างเฉพาะถ้าภาพจริงกลับหัวได้ แต่ **หมุนและเอียงควรทำ**
+  หลักคือ augment เฉพาะความแปรปรวนที่เกิดจริงและไม่เปลี่ยนความหมายของตัวอักษร
+- **Resize** (Chapter 10 P1 `[01:17:20]`–`[01:18:20]`): resize ตรง ๆ ทำให้สัดส่วน (proportion) เพี้ยน
+  ตัวอักษรที่ต่างกันที่สัดส่วน (เช่น ตัวที่มีหางยาวกับตัวที่ไม่มี) จะดูคล้ายกันจน classify ผิดเพิ่มขึ้น
+  ให้ **pad ด้วย 0 จนเป็นสี่เหลี่ยมจัตุรัสก่อน แล้วค่อย resize** เพื่อคงสัดส่วน
+- Segmentation ตัวอักษรใช้ความรู้ Chapter 12: output channels = จำนวนคลาส, U-Net + skip connection, วัดผลด้วย Dice/IoU (Chapter 14)
 
 ---
 
@@ -213,7 +170,7 @@ TP = 45, FN = 15, FP = 30, TN = 910 (รวม 1,000; มี effusion จริ�
   - **Pixel accuracy** = (TP+TN)/36 = 32/36 = **0.889**
 - เหตุผล (0.5): pixel accuracy ถูก background ที่มีจำนวนมากดันให้สูง (ภาพจริง tumor เล็กมาก ทาย background ทั้งภาพก็ได้ accuracy สูง); Dice/IoU วัดเฉพาะการทับซ้อนของ foreground; **Dice loss = 1 − Dice** ช่วยเรื่อง imbalanced data (tumor เล็ก vs background ใหญ่) และ optimise overlap โดยตรง
 
-ที่มา: `Chapter 12/notes.md` → Formulas → Overlap metrics and losses (worked example), 9. PSPNet (Dice loss ช่วย imbalanced) · `DLMED/results/RESULTS.md` → §11 ("Why BCE + Dice loss?")
+ที่มา: `Chapter 12/notes.md` → Formulas → Overlap metrics and losses (worked example), 9. PSPNet (Dice loss ช่วย imbalanced)
 
 ---
 

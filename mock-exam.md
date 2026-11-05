@@ -11,7 +11,7 @@
 
 | ข้อ | หัวข้อ | คะแนน |
 |---|---|---|
-| 1 | โปรเจคของนักศึกษา | 15 |
+| 1 | โปรเจค 1: Segmentation ตัวอักษรไทย (รอข้อมูล) | 15 |
 | 2 | Case study: ประยุกต์ใช้ความรู้กับโจทย์การแพทย์ | 15 |
 | 3 | Video (Chapter 13) | 14 |
 | 4 | Image segmentation (Chapter 12) | 14 |
@@ -21,30 +21,21 @@
 
 ---
 
-## ข้อ 1. โปรเจคของนักศึกษา (15 คะแนน)
+## ข้อ 1. โปรเจค 1: Segmentation ตัวอักษรไทย (15 คะแนน)
 
-ตอบตามโปรเจค **Brain tumor segmentation + classification ด้วย Multi-task Learning** (ภาพ MRI สมอง, shared ResNet-34 encoder + U-Net decoder + classification head, การทดลอง A/B/C/D)
+> **ยังไม่ได้เขียนข้อนี้** รอข้อมูลโปรเจค 1 (โจทย์, dataset, input/output, โมเดล, ผลลัพธ์) แล้วจะออกข้อสอบจำลองให้
 
-**1.1 (3 คะแนน)** อธิบายโจทย์ของโปรเจค:
-- **Input** และ **Output** ของโมเดลคืออะไร (ระบุ shape ของ input และ output ทั้งสอง)
-- แต่ละ output เป็นงานประเภทใด (classification / segmentation; binary / multiclass / multilabel)
-- ใช้ dataset อะไร มีกี่ภาพ กี่ class และ **คำถามวิจัย (research question)** ของโปรเจคคืออะไร
+ระหว่างนี้ ฝึกอธิบายโปรเจค 1 ของตัวเองให้ได้: โจทย์คืออะไร, input/output, ทำไปเพื่ออะไร, เตรียมข้อมูลอย่างไร,
+ใช้โมเดลอะไรและทำไม, วัดผลด้วยอะไร ได้ผลเท่าไร, ข้อผิดพลาดและข้อจำกัด
 
-**1.2 (4 คะแนน)** อธิบายสถาปัตยกรรมของโมเดล:
-- วาด block diagram: encoder, decoder (skip connections), classification head ระบุว่าแต่ละส่วนคืออะไร
-- ระบุ **output layer, activation และ loss** ของแต่ละ head และ **total loss** ที่ใช้รวมสองงาน
-- อธิบายว่าทำไมเรียกโมเดลนี้ว่า **multi-task learning** และต่างจาก **multilabel** อย่างไร
-
-**1.3 (4 คะแนน)** การทดลองและผลลัพธ์:
-- การทดลอง A, B, C, D แต่ละอันฝึกอะไร และใช้ loss weights อย่างไร ทำไมต้องมี A และ B
-- จากผลบน test set (ค่าเฉลี่ย 3 runs) **multi-task ช่วย classification และ segmentation หรือไม่** อ้างตัวเลข Macro-F1 และ Dice
-- ทำไมรายงาน **Macro-F1** เป็นตัวชี้วัดหลักแทน accuracy
-
-**1.4 (4 คะแนน)** ความน่าเชื่อถือและข้อจำกัด:
-- แบ่ง train / validation / test อย่างไร ทำไมต้องแบ่ง **by patient** (อธิบายคำว่า data leakage)
-- เลือก learning rate อย่างไร โดยไม่ใช้ test set
-- error analysis พบอะไรที่สำคัญ (classification errors มาจากไหน, segmentation ล้มเหลวกับ tumor ชนิดใด)
-- อาจารย์เคยพูดในคาบ segmentation ว่างาน multi-task "แยก architecture ไปเถอะ ง่ายกว่า" นักศึกษาจะปกป้องการเลือกใช้ shared encoder อย่างไร และมีความเสี่ยงอะไร (เช่น negative transfer)
+เนื้อหาจากคาบเรียนที่เกี่ยวกับงานตัวอักษรไทย (ใช้ได้เลย):
+- **Data augmentation** (Chapter 8 `[00:41:04]`): งานรู้จำตัวอักษรไทย **ไม่ต้องปรับสี** (ตัวอักษรไม่ได้แยกกันด้วยสี)
+  **ไม่ flip ซ้าย-ขวา** (ภาพจริงแทบไม่มี) flip บน-ล่างเฉพาะถ้าภาพจริงกลับหัวได้ แต่ **หมุนและเอียงควรทำ**
+  หลักคือ augment เฉพาะความแปรปรวนที่เกิดจริงและไม่เปลี่ยนความหมายของตัวอักษร
+- **Resize** (Chapter 10 P1 `[01:17:20]`–`[01:18:20]`): resize ตรง ๆ ทำให้สัดส่วน (proportion) เพี้ยน
+  ตัวอักษรที่ต่างกันที่สัดส่วน (เช่น ตัวที่มีหางยาวกับตัวที่ไม่มี) จะดูคล้ายกันจน classify ผิดเพิ่มขึ้น
+  ให้ **pad ด้วย 0 จนเป็นสี่เหลี่ยมจัตุรัสก่อน แล้วค่อย resize** เพื่อคงสัดส่วน
+- Segmentation ตัวอักษรใช้ความรู้ Chapter 12: output channels = จำนวนคลาส, U-Net + skip connection, วัดผลด้วย Dice/IoU (Chapter 14)
 
 ---
 
