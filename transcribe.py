@@ -1,4 +1,4 @@
-"""Transcribe every Chapter*/lecture*.m4a to a timestamped .txt next to it (skips ones already done).
+"""Transcribe every Chapter*/lecture*.m4a (also under materials/) to a timestamped .txt next to it (skips ones already done).
 
 Usage: C:/Users/guymy/.venvs/dlmed/Scripts/python transcribe.py
 """
@@ -31,7 +31,7 @@ def load_audio(path):
 
 def main():
     root = Path(__file__).parent
-    files = sorted(root.glob("Chapter*/lecture*.m4a"))
+    files = sorted(root.rglob("Chapter*/lecture*.m4a"))
     todo = [f for f in files if not f.with_suffix(".txt").exists()]
     print(f"{len(files)} audio files, {len(todo)} to transcribe")
     if not todo:

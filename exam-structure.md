@@ -7,11 +7,11 @@
 |---|---|---|
 | 1 | Project 1: Thai Character & Number Recognition (โปรเจค 1) | [`Project1/notes.md`](Project1/notes.md): 72-class **multiclass classification** → 72 nodes + softmax + CE, map index → 3-digit class_id. Pad to square before resize (Ch 10 P1 `[01:17:20]`), augmentation for Thai characters: no colour change, no flips, slight rotate/tilt (Ch 8 `[00:41:04]`), confusable pairs + confusion matrix, score = accuracy, inference in 30 min. **Fill in your group's model and results there.** |
 | 2 | Case study: how to apply the knowledge | Pick task type → output layer/activation/loss → architecture → metric for a medical scenario. Ch 9 (output layers), Ch 10 (pipeline, data leakage), Ch 8 (transfer learning, augmentation), Ch 14 (which metric) |
-| 3 | Video | `Chapter 13/notes.md`: spatial vs temporal, CNN→LSTM vs ConvLSTM vs 3D conv vs two-stream, LSTM gates, 3D-conv output size |
-| 4 | Image segmentation | `Chapter 12/notes.md`: semantic/instance/panoptic, encoder-decoder, U-Net (skip = concat), 1×1 output conv, output channels = classes, Dice/IoU |
-| 5 | **Transposed conv by hand** (write and calculate manually) | `Chapter 12/notes.md` worked example (slides p.29–47). Output = (H−1)·s − 2p + k. Practise the full matrix by hand. **Slide p.41 is wrong**: more padding → *smaller* output |
-| 6 | Object detection | `Chapter 11/notes.md`: IoU, NMS steps, anchors (k = 9, 9 score + 36 coord filters), R-CNN → Fast → Faster (RPN), YOLO grid/loss, two-stage vs one-stage |
-| 7 | Coding | `Chapter 10/notes.md`: training loop order (`train()` → `zero_grad` → forward → loss → `backward` → `step`), `eval()` + `no_grad()`, replacing `model.fc`, `state_dict` save/load, transforms (augment train only), `cuda.is_available()` |
+| 3 | Video | `materials/Chapter 13/notes.md`: spatial vs temporal, CNN→LSTM vs ConvLSTM vs 3D conv vs two-stream, LSTM gates, 3D-conv output size |
+| 4 | Image segmentation | `materials/Chapter 12/notes.md`: semantic/instance/panoptic, encoder-decoder, U-Net (skip = concat), 1×1 output conv, output channels = classes, Dice/IoU |
+| 5 | **Transposed conv by hand** (write and calculate manually) | `materials/Chapter 12/notes.md` worked example (slides p.29–47). Output = (H−1)·s − 2p + k. Practise the full matrix by hand. **Slide p.41 is wrong**: more padding → *smaller* output |
+| 6 | Object detection | `materials/Chapter 11/notes.md`: IoU, NMS steps, anchors (k = 9, 9 score + 36 coord filters), R-CNN → Fast → Faster (RPN), YOLO grid/loss, two-stage vs one-stage |
+| 7 | Coding | `materials/Chapter 10/notes.md`: training loop order (`train()` → `zero_grad` → forward → loss → `backward` → `step`), `eval()` + `no_grad()`, replacing `model.fc`, `state_dict` save/load, transforms (augment train only), `cuda.is_available()` |
 
 No standalone question on Ch 8, 9 or 14 (metrics), but they feed Q2 (case study) and Q1 (project).
 
