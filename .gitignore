@@ -1,0 +1,9 @@
+# Teacher material and large files stay local
+*.m4a
+*.pdf
+*.srt
+slides.txt
+lecture*.txt
+instruction
+*.part
+*.log
