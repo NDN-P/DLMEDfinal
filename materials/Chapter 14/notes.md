@@ -1,330 +1,330 @@
-# Chapter 14 — Evaluation Metrics
+# Chapter 14 — Evaluation Metrics (ตัววัดผลโมเดล)
 
-Metrics for six task types: classification, object detection, image segmentation, video processing, regression and RAG (retrieval plus answering). The thread through the whole lecture is that every task asks a different question, so it needs its own ground truth and metric, and one number alone can mislead you (accuracy on imbalanced data, MAE on a shifted regression line).
+metric สำหรับงาน 6 แบบ: classification, object detection, image segmentation, video processing, regression และ RAG (ค้นข้อมูลแล้วตอบ) ใจความหลักของทั้งคาบคือ งานแต่ละแบบถามคำถามไม่เหมือนกัน เลยต้องมี ground truth และ metric ของตัวเอง และการดูตัวเลขแค่ตัวเดียวอาจหลอกเราได้ (เช่น accuracy บนข้อมูล imbalanced หรือ MAE บนเส้น regression ที่เลื่อนไปทั้งเส้น)
 
-> **Who presented what** (slides by Pitawas, Janya, Witchaya, Chetsadaporn, Chinnatip; advisor Asst. Prof. Dr. Taravichet Titijaroonroj)
+> **ใครพรีเซนต์ส่วนไหน** (สไลด์โดย Pitawas, Janya, Witchaya, Chetsadaporn, Chinnatip; อาจารย์ที่ปรึกษา Asst. Prof. Dr. Taravichet Titijaroonroj)
 > - **พี่บุ๊ค**: Classification, [00:01:44]–[00:15:44]
-> - **พี่ใหม่**: Object Detection and Image Segmentation, [00:15:54]–[00:42:20]
+> - **พี่ใหม่**: Object Detection และ Image Segmentation, [00:15:54]–[00:42:20]
 > - **พี่ฟิล**: Video Processing, [00:43:00]–[01:08:12]
-> - **อาจารย์** (covering พี่เจมส์'s part): Regression, [01:08:18]–[01:31:22]
-> - **พี่ชิน**: RAG / retrieval and LLM-as-a-Judge, [01:31:56]–[01:56:36]
-> - พี่ปอโท was introduced at [00:00:24], but no section is clearly attributed to them in the transcript.
+> - **อาจารย์** (สอนแทนส่วนของพี่เจมส์): Regression, [01:08:18]–[01:31:22]
+> - **พี่ชิน**: RAG / retrieval และ LLM-as-a-Judge, [01:31:56]–[01:56:36]
+> - พี่ปอโทถูกแนะนำตัวที่ [00:00:24] แต่ใน transcript ไม่เห็นชัดว่าพูดส่วนไหน
 >
-> **Not covered in this lecture** (so don't expect them unless another chapter has them): Hausdorff distance, R², MAPE, and explicit "macro vs micro averaging". Specificity is only implied, through FPR on the ROC curve. Dice is never named, but it is mathematically the same as the segmentation F1 (see below).
+> **ไม่ได้สอนในคาบนี้** (ไม่ต้องคาดว่าจะออก เว้นแต่บทอื่นมี): Hausdorff distance, R², MAPE และเรื่อง "macro vs micro averaging" แบบตรงๆ ส่วน Specificity มีแค่แฝงอยู่ผ่าน FPR ใน ROC curve ส่วน Dice ไม่ได้พูดชื่อเลย แต่ในทางคณิตศาสตร์มันคือตัวเดียวกับ F1 ของ segmentation (ดูข้างล่าง)
 
 ---
 
-## Key concepts
+## แนวคิดหลัก
 
 ### 1. Classification (พี่บุ๊ค)
 
-**Confusion matrix** is a table of *Actual vs Predicted*. In the slide's COVID example, Positive = has COVID and Negative = no COVID.
-- **TP**: predicted COVID, really has COVID.
-- **TN**: predicted no COVID, really doesn't have it.
-- **FP**: predicted COVID, but actually healthy (false alarm).
-- **FN**: predicted no COVID, but actually sick (missed case).
-- Slide numbers: TP = 80, FN = 20, TN = 885, FP = 15.
-- What it's for: (1) it shows predictions in detail; (2) it is the basis for Accuracy, Precision and Recall; (3) it shows **what kind of errors** the model makes.
-  - Multi-class example (slide 6; rows = actual, columns = predicted):
+**Confusion matrix** คือตารางของ *Actual vs Predicted* ในตัวอย่าง COVID บนสไลด์ Positive = เป็น COVID และ Negative = ไม่เป็น COVID
+- **TP**: ทายว่าเป็น COVID และเป็นจริง
+- **TN**: ทายว่าไม่เป็น และไม่เป็นจริง
+- **FP**: ทายว่าเป็น COVID แต่จริงๆ ปกติดี (เตือนผิด)
+- **FN**: ทายว่าไม่เป็น แต่จริงๆ ป่วย (หลุดไป)
+- ตัวเลขบนสไลด์: TP = 80, FN = 20, TN = 885, FP = 15
+- ใช้ทำอะไร: (1) ดูผลการทายได้ละเอียด; (2) เป็นฐานของ Accuracy, Precision และ Recall; (3) บอกว่าโมเดลผิด**แบบไหน**
+  - ตัวอย่าง multi-class (สไลด์ 6; แถว = actual, คอลัมน์ = predicted):
     - Dog: 100 / 0 / 0
     - Cat: 0 / 70 / 30
     - Tiger: 0 / 50 / 50
-  - Dog is never wrong, but cat and tiger get confused with each other. That suggests the two classes look alike [00:04:39]–[00:05:11].
+  - Dog ไม่ผิดเลย แต่ cat กับ tiger สับสนกันเอง แปลว่าสองคลาสนี้น่าจะหน้าตาคล้ายกัน [00:04:39]–[00:05:11]
 
-**Accuracy** is the fraction of all samples predicted correctly. Range 0–1.
-- **Misleads on imbalanced data.** Slide example: 1,000 patients, of whom 100 have COVID and 900 don't. A model that predicts "no COVID" for everyone gets TP = 0, FN = 100, TN = 900, FP = 0, so **Accuracy = 90%**, yet it finds **zero** COVID cases. "ถามว่า โมเดลนี้เป็นโมเดลที่ดีไหม ก็ต้องตอบว่าไม่ครับ" [00:06:53].
+**Accuracy** คือสัดส่วนของตัวอย่างทั้งหมดที่ทายถูก ค่าอยู่ช่วง 0–1
+- **หลอกเราได้ถ้าข้อมูล imbalanced** ตัวอย่างบนสไลด์: คนไข้ 1,000 คน เป็น COVID 100 คน ไม่เป็น 900 คน ถ้าโมเดลทาย "ไม่เป็น COVID" ทุกคน จะได้ TP = 0, FN = 100, TN = 900, FP = 0 ดังนั้น **Accuracy = 90%** แต่หาคนเป็น COVID ไม่เจอ**เลยสักคน** "ถามว่า โมเดลนี้เป็นโมเดลที่ดีไหม ก็ต้องตอบว่าไม่ครับ" [00:06:53]
 
-**Recall** (= Sensitivity = TPR) answers: of all real positives, how many did the model find?
-- It focuses on **FN**. High recall means few missed cases.
-- Use it when **missing a positive is costly**: malware detection, defect detection, **medical screening**. Example: COVID screening to quarantine everyone who might be infected, where false alarms are acceptable [00:09:06].
+**Recall** (= Sensitivity = TPR) ตอบคำถามว่า: ในบรรดา positive จริงทั้งหมด โมเดลหาเจอกี่ตัว?
+- เน้นที่ **FN** recall สูง = หลุดน้อย
+- ใช้ตอน**พลาด positive แล้วเสียหายหนัก**: ตรวจจับ malware, ตรวจหาของเสีย, **คัดกรองทางการแพทย์ (screening)** ตัวอย่าง: คัดกรอง COVID เพื่อกักตัวทุกคนที่อาจติด ยอมให้เตือนผิดได้ [00:09:06]
 
-**Precision** answers: when the model says "positive", how often is it right? It is the trustworthiness of positive predictions.
-- It focuses on **FP**. High precision means few false alarms.
-- Use it when **a false alarm is costly**:
-  - Email spam: an important email must not go to spam.
-  - Face recognition: a stranger must not unlock your phone.
-  - **Medical confirmatory test**: confirm that the patient really has the disease before treating [00:10:54].
+**Precision** ตอบคำถามว่า: เวลาโมเดลบอกว่า "positive" มันถูกบ่อยแค่ไหน? คือความน่าเชื่อถือของการทายว่า positive
+- เน้นที่ **FP** precision สูง = เตือนผิดน้อย
+- ใช้ตอน**เตือนผิดแล้วเสียหายหนัก**:
+  - Email spam: อีเมลสำคัญต้องไม่หลุดไปอยู่ใน spam
+  - Face recognition: คนแปลกหน้าต้องปลดล็อกมือถือเราไม่ได้
+  - **การตรวจยืนยันทางการแพทย์ (confirmatory test)**: ยืนยันให้ชัวร์ว่าคนไข้เป็นโรคจริงก่อนรักษา [00:10:54]
 
-**F1-score** is the **harmonic mean** of Precision and Recall. It measures the balance between them.
-- F1 is low if *either* one is low.
-- The medical example is cancer detection, where you want both:
-  - **High recall**: don't miss patients, treat them in time, less severe disease, lower death risk.
-  - **High precision**: avoid misdiagnosis, unnecessary treatment, patient stress and wasted medical resources [00:12:20]–[00:13:10].
+**F1-score** คือ **harmonic mean** ของ Precision กับ Recall ใช้วัดความสมดุลระหว่างสองตัวนี้
+- ถ้าตัวใดตัวหนึ่งต่ำ F1 ก็จะต่ำ
+- ตัวอย่างทางการแพทย์คือการตรวจหามะเร็ง ซึ่งต้องการทั้งสองอย่าง:
+  - **Recall สูง**: ไม่พลาดคนไข้ ได้รักษาทันเวลา โรคไม่รุนแรง เสี่ยงตายน้อยลง
+  - **Precision สูง**: ไม่วินิจฉัยผิด ไม่รักษาเกินจำเป็น คนไข้ไม่เครียด ไม่เปลืองทรัพยากรการแพทย์ [00:12:20]–[00:13:10]
 
-**ROC curve** plots **TPR (y-axis) vs FPR (x-axis)** as the decision **threshold** changes.
-- TPR is the same thing as recall.
-- The top-left corner is the "perfect classifier", so a good curve bows toward it (high TPR, low FPR).
-- The diagonal is a random classifier.
-- In the slide figure: blue = best model, green = second, orange = worst [00:13:59]–[00:14:28].
+**ROC curve** พล็อต **TPR (แกน y) vs FPR (แกน x)** ตอนที่เราเปลี่ยนค่า **threshold** ในการตัดสินใจ
+- TPR คือตัวเดียวกับ recall
+- มุมซ้ายบนคือ "perfect classifier" เส้นที่ดีจะโค้งเข้าหามุมนี้ (TPR สูง, FPR ต่ำ)
+- เส้นทแยงมุมคือ classifier แบบสุ่ม
+- ในรูปบนสไลด์: น้ำเงิน = โมเดลดีสุด, เขียว = อันดับสอง, ส้ม = แย่สุด [00:13:59]–[00:14:28]
 
-**AUC** is the area under the ROC curve. It turns the curve into **one number**, which makes models easy to compare.
-- AUC close to 1: separates the classes very well.
-- AUC = 0.5: no better than random.
-- AUC < 0.5: the model separates in the **wrong direction** (its predictions are inverted).
+**AUC** คือพื้นที่ใต้ ROC curve มันแปลงเส้นโค้งให้เป็น**ตัวเลขตัวเดียว** เลยเทียบโมเดลกันได้ง่าย
+- AUC ใกล้ 1: แยกคลาสได้ดีมาก
+- AUC = 0.5: ไม่ดีไปกว่าการเดาสุ่ม
+- AUC < 0.5: โมเดลแยก**ผิดทิศ** (ผลทายกลับหัว)
 
-> Clarification (standard fact): **Specificity = TN/(TN+FP) = 1 − FPR**. It is the "recall of the negative class".
+> อธิบายเพิ่ม (ความรู้ทั่วไป ไม่ได้อยู่ในสไลด์): **Specificity = TN/(TN+FP) = 1 − FPR** คือ "recall ของคลาส negative"
 
 ### 2. Object Detection (พี่ใหม่)
 
-**Task:** find *where* each object is (roughly) and *what* it is.
-- **Output:** bounding box, class label and confidence score (e.g. "dog 0.98", "cat 0.85").
-- **Ground truth:** bounding box and class label.
-- **Box formats:**
-  - **Corner coordinates**: top-left and bottom-right corners.
-  - **Center + width/height**.
-  - **Top-left + width/height**: the format used in the slide. Example: Cat (x = 5, y = 40, w = 160, h = 300), Dog (140, 180, 280, 220).
+**งาน:** หาว่าวัตถุแต่ละชิ้นอยู่*ตรงไหน* (คร่าวๆ) และ*เป็นอะไร*
+- **Output:** bounding box, class label และ confidence score (เช่น "dog 0.98", "cat 0.85")
+- **Ground truth:** bounding box และ class label
+- **รูปแบบของ box:**
+  - **Corner coordinates**: มุมซ้ายบนกับมุมขวาล่าง
+  - **Center + width/height**
+  - **Top-left + width/height**: แบบที่ใช้ในสไลด์ ตัวอย่าง: Cat (x = 5, y = 40, w = 160, h = 300), Dog (140, 180, 280, 220)
 
-**IoU (Intersection over Union)** = area of overlap ÷ area of union between the predicted box and the GT box.
-- Range 0–1; higher means better localisation.
-- An **IoU threshold** (commonly **0.5**) decides correctness. A detection is correct if **IoU ≥ threshold AND the class is correct**.
-- The threshold reflects how strict the evaluation is [00:21:31].
+**IoU (Intersection over Union)** = พื้นที่ที่ซ้อนทับกัน ÷ พื้นที่รวม (union) ระหว่าง box ที่ทายกับ box ของ GT
+- ค่า 0–1 ยิ่งสูงยิ่งระบุตำแหน่งได้แม่น
+- ใช้ **IoU threshold** (ส่วนใหญ่ **0.5**) ตัดสินว่าถูกไหม detection จะถูกก็ต่อเมื่อ **IoU ≥ threshold และ class ถูก**
+- threshold บอกว่าเราประเมินเข้มแค่ไหน [00:21:31]
 
-**TP / FP / FN / TN in detection:**
-- **TP**: object detected, correct class, and IoU ≥ threshold.
-- **FP**: detection with the **wrong class**, **or IoU < threshold**, **or no real object there**.
-- **FN**: a real object the model did not detect.
-- **TN**: usually **not used**. The number of "no-object" regions is huge and can't be defined clearly [00:23:00].
+**TP / FP / FN / TN ในงาน detection:**
+- **TP**: เจอวัตถุ, class ถูก และ IoU ≥ threshold
+- **FP**: detection ที่ **class ผิด**, **หรือ IoU < threshold**, **หรือตรงนั้นไม่มีวัตถุจริง**
+- **FN**: วัตถุจริงที่โมเดลหาไม่เจอ
+- **TN**: ปกติ**ไม่ใช้** เพราะบริเวณที่ "ไม่มีวัตถุ" มีเยอะมากและนิยามให้ชัดไม่ได้ [00:23:00]
 
-**Precision, Recall and F1** work as in classification, but they **count objects (boxes)**.
+**Precision, Recall และ F1** ใช้เหมือนใน classification แต่**นับเป็นวัตถุ (box)**
 
-**AP (Average Precision)** is the **area under the Precision–Recall curve for ONE class**. You build the curve by sweeping the **confidence threshold**.
-- High threshold: only very confident predictions survive, so precision is high and recall is low.
-- Lowering the threshold accepts more predictions, so recall rises, FP rises and precision falls [00:27:06]–[00:27:35].
+**AP (Average Precision)** คือ**พื้นที่ใต้ Precision–Recall curve ของคลาสเดียว** สร้างเส้นนี้โดยไล่ค่า **confidence threshold**
+- threshold สูง: เหลือแค่ตัวที่มั่นใจมากๆ precision เลยสูง recall ต่ำ
+- ลด threshold ลง: รับ prediction เพิ่ม recall ขึ้น FP ขึ้น precision ลง [00:27:06]–[00:27:35]
 
-**mAP** is the **mean of AP over all classes**.
+**mAP** คือ**ค่าเฉลี่ยของ AP ทุกคลาส**
 
 ### 3. Image Segmentation (พี่ใหม่)
 
-**Task:** assign a class to **every pixel**. The output and the GT are both a **pixel mask**, aligned pixel-for-pixel with the image.
+**งาน:** ให้ class กับ**ทุก pixel** ทั้ง output และ GT เป็น **pixel mask** ที่ตรงกับภาพทีละ pixel
 
-**Label settings:**
-- **Binary**: 2 classes (object / background), e.g. giraffe vs background.
-- **Multi-class**: many classes, but **each pixel belongs to exactly one** (car, road, tree…).
-- **Multi-label**: a pixel can have **more than one class** (a hand holding a pen: some pixels are both "hand" and "pen"). Evaluate each class **separately, as binary segmentation**.
+**รูปแบบ label:**
+- **Binary**: 2 คลาส (วัตถุ / พื้นหลัง) เช่น ยีราฟ vs พื้นหลัง
+- **Multi-class**: หลายคลาส แต่**แต่ละ pixel เป็นได้แค่คลาสเดียว** (รถ, ถนน, ต้นไม้…)
+- **Multi-label**: pixel หนึ่งเป็น**ได้มากกว่าหนึ่งคลาส** (มือถือปากกา: บาง pixel เป็นทั้ง "มือ" และ "ปากกา") ให้ประเมินแต่ละคลาส**แยกกัน แบบ binary segmentation**
 
-**Unit = pixels.** In detection the unit is objects; here TP/FP/FN/TN count pixels [00:33:07].
-- **TP**: object pixel predicted as object.
-- **FP**: background pixel predicted as object.
-- **FN**: object pixel predicted as background.
-- **TN**: background pixel predicted as background.
+**หน่วย = pixel** ใน detection หน่วยคือวัตถุ แต่ตรงนี้ TP/FP/FN/TN นับเป็น pixel [00:33:07]
+- **TP**: pixel ของวัตถุ ทายว่าเป็นวัตถุ
+- **FP**: pixel พื้นหลัง ทายว่าเป็นวัตถุ
+- **FN**: pixel ของวัตถุ ทายว่าเป็นพื้นหลัง
+- **TN**: pixel พื้นหลัง ทายว่าเป็นพื้นหลัง
 
-**Metrics** (all range 0–1, higher is better):
-- **Pixel Accuracy**: fraction of all pixels predicted correctly.
-- **Precision**: of the pixels predicted as object, the fraction that are correct.
-- **Recall**: of the real object pixels, the fraction found.
-- **F1**: balance of precision and recall.
-- **IoU**: overlap of prediction with GT.
+**Metrics** (ทุกตัวค่า 0–1 ยิ่งสูงยิ่งดี):
+- **Pixel Accuracy**: สัดส่วน pixel ทั้งหมดที่ทายถูก
+- **Precision**: ใน pixel ที่ทายว่าเป็นวัตถุ ถูกกี่ส่วน
+- **Recall**: ใน pixel ที่เป็นวัตถุจริง หาเจอกี่ส่วน
+- **F1**: สมดุลของ precision กับ recall
+- **IoU**: ส่วนที่ทับกันระหว่าง prediction กับ GT
 
-**Multi-class:** compute TP/FP/FN/TN **per class, one-vs-all**, then average to get **mPrecision, mRecall, mF1 and mIoU**.
-- This is the same as macro-averaging (my clarification; the lecture calls it the "mean").
+**Multi-class:** คิด TP/FP/FN/TN **แยกทีละคลาส แบบ one-vs-all** แล้วเอามาเฉลี่ยเป็น **mPrecision, mRecall, mF1 และ mIoU**
+- อันนี้คือ macro-averaging นั่นเอง (ผมอธิบายเพิ่ม; ในคาบเรียกว่า "mean")
 
-"เราก็ไม่ควรแค่พิจารณาค่าตัวชีวัตรค่าใดค่าหนึ่ง เราก็ต้องพิจารณาหลายๆมุมมอง" [00:37:54]: each metric sees the model from a different angle.
+"เราก็ไม่ควรแค่พิจารณาค่าตัวชีวัตรค่าใดค่าหนึ่ง เราก็ต้องพิจารณาหลายๆมุมมอง" [00:37:54]: metric แต่ละตัวมองโมเดลคนละมุม
 
-> Clarification (standard facts):
-> - **Dice coefficient = 2|A∩B| / (|A|+|B|) = 2TP/(2TP+FP+FN) = F1** for pixels. Dice and IoU are linked: **Dice = 2·IoU/(1+IoU)**, and Dice ≥ IoU always.
-> - Pixel accuracy is inflated by large background areas, because TN dominates. This is the same imbalance problem as classification accuracy, so for small lesions or tumours prefer IoU or Dice.
+> อธิบายเพิ่ม (ความรู้ทั่วไป ไม่ได้อยู่ในสไลด์):
+> - **Dice coefficient = 2|A∩B| / (|A|+|B|) = 2TP/(2TP+FP+FN) = F1** ของ pixel Dice กับ IoU เชื่อมกันด้วย **Dice = 2·IoU/(1+IoU)** และ Dice ≥ IoU เสมอ
+> - Pixel accuracy จะสูงเกินจริงถ้าพื้นหลังเยอะ เพราะ TN กินพื้นที่ส่วนใหญ่ เป็นปัญหา imbalance แบบเดียวกับ accuracy ใน classification ดังนั้นถ้ารอยโรคหรือเนื้องอกเล็กๆ ให้ใช้ IoU หรือ Dice ดีกว่า
 
 ### 4. Video Processing (พี่ฟิล)
 
-**Image vs video:**
-- An image is spatial only, with no time.
-- A video adds the **temporal dimension**: order matters, and the output is at clip, frame or time-interval level.
-- Key example: the **same frames** shown in one order mean "sitting down" and in reverse order mean "standing up". "งานวิดีโอมันไม่ได้มีแค่เอาภาพมาต่อ ๆ กัน" [00:45:32].
+**ภาพนิ่ง vs วิดีโอ:**
+- ภาพนิ่งมีแค่มิติ spatial ไม่มีเวลา
+- วิดีโอเพิ่ม **temporal dimension (มิติเวลา)**: ลำดับมีผล และ output อยู่ระดับ clip, frame หรือช่วงเวลา
+- ตัวอย่างสำคัญ: **frame ชุดเดียวกัน** ถ้าเรียงแบบหนึ่งหมายถึง "นั่งลง" ถ้าเรียงกลับหมายถึง "ลุกขึ้น" "งานวิดีโอมันไม่ได้มีแค่เอาภาพมาต่อ ๆ กัน" [00:45:32]
 
-| Video task | Image analogue | Input | Ground truth | Metrics |
+| งานวิดีโอ | เทียบกับงานภาพ | Input | Ground truth | Metrics |
 |---|---|---|---|---|
-| **Video Classification** | Image classification + time | **Trimmed** clip with one clear main content | 1 label per clip (swimming, archery, running) | Accuracy, Precision, Recall, F1 |
-| **Temporal Action Segmentation** | Image segmentation + time | Long **untrimmed** video with many consecutive actions | Label for **every frame** (one label per frame) | Frame-wise Accuracy, **Edit score**, **Segmental F1@k** |
-| **Temporal Action Localization** | Object detection + time | Untrimmed video including irrelevant parts | List of (class, start, end) for **actions of interest only** | **tIoU**, AP, **mAP@tIoU** |
+| **Video Classification** | Image classification + เวลา | clip ที่ **trimmed** (ตัดมาแล้ว) มีเนื้อหาหลักชัดเจนอย่างเดียว | 1 label ต่อ clip (ว่ายน้ำ, ยิงธนู, วิ่ง) | Accuracy, Precision, Recall, F1 |
+| **Temporal Action Segmentation** | Image segmentation + เวลา | วิดีโอยาว **untrimmed** (ไม่ได้ตัด) มีหลาย action ต่อกัน | label **ทุก frame** (frame ละ 1 label) | Frame-wise Accuracy, **Edit score**, **Segmental F1@k** |
+| **Temporal Action Localization** | Object detection + เวลา | วิดีโอ untrimmed ที่มีช่วงไม่เกี่ยวข้องปนอยู่ | list ของ (class, start, end) **เฉพาะ action ที่สนใจ** | **tIoU**, AP, **mAP@tIoU** |
 
-**Example uses from the slides:**
-- Video classification: sport type, human activity, exercise pose.
-- Action segmentation: analysing the steps of **surgery**, cooking, or factory assembly.
-- Action localization: goals and fouls in football, **elderly falls on CCTV**, accidents in traffic video.
+**ตัวอย่างการใช้งานจากสไลด์:**
+- Video classification: ประเภทกีฬา, กิจกรรมของคน, ท่าออกกำลังกาย
+- Action segmentation: วิเคราะห์ขั้นตอน**การผ่าตัด**, การทำอาหาร, การประกอบในโรงงาน
+- Action localization: ประตูและฟาวล์ในฟุตบอล, **ผู้สูงอายุล้มในกล้อง CCTV**, อุบัติเหตุในวิดีโอจราจร
 
-**Frame-wise accuracy** = correctly predicted frames ÷ total frames.
+**Frame-wise accuracy** = จำนวน frame ที่ทายถูก ÷ จำนวน frame ทั้งหมด
 
-**Edit score** measures whether the **order of actions** is correct, and it penalises **over-segmentation**, where the model splits an action into too many small pieces.
-1. Collapse consecutive identical labels into segments.
-2. Compute the **Levenshtein distance** D(P, G): the minimum number of **insertions, deletions and substitutions** needed to turn the predicted sequence into the GT sequence.
-3. Normalise by the longer sequence.
-- High score: the order matches and there are few extra segments.
-- Low score: actions are missing, extra, swapped, or fragmented.
+**Edit score** วัดว่า**ลำดับของ action** ถูกไหม และลงโทษ **over-segmentation** คือตอนที่โมเดลหั่น action เดียวออกเป็นชิ้นเล็กๆ หลายชิ้นเกินไป
+1. ยุบ label ที่ซ้ำติดกันให้เป็น segment
+2. คำนวณ **Levenshtein distance** D(P, G): จำนวน**การแทรก, ลบ และแทนที่**ที่น้อยที่สุด ที่ต้องใช้เปลี่ยนลำดับที่ทายให้เป็นลำดับของ GT
+3. normalise ด้วยลำดับที่ยาวกว่า
+- คะแนนสูง: ลำดับตรงกัน และ segment เกินมีน้อย
+- คะแนนต่ำ: action หาย, เกิน, สลับกัน หรือแตกเป็นชิ้นๆ
 
-**Segmental F1@k** is like F1, but a predicted segment is TP only if its **IoU with the GT segment ≥ k** (k = 10%, 25%, 50%) and the class is right.
-- **Each GT segment can be counted as TP only once.** Extra fragments become FP, which again penalises over-segmentation.
-- @10 is the most lenient ("did it find the action at all?"); @50 is the strictest of the three.
+**Segmental F1@k** คล้าย F1 แต่ segment ที่ทายจะเป็น TP ก็ต่อเมื่อ **IoU กับ segment ของ GT ≥ k** (k = 10%, 25%, 50%) และ class ถูก
+- **segment ของ GT แต่ละอันนับเป็น TP ได้แค่ครั้งเดียว** ชิ้นที่เกินมากลายเป็น FP ซึ่งก็คือลงโทษ over-segmentation อีกที
+- @10 หลวมที่สุด ("หา action เจอบ้างไหม?"); @50 เข้มที่สุดในสามตัวนี้
 
-**tIoU (temporal IoU)** is the IoU of time intervals.
-- A localisation counts as TP if the **class is correct AND tIoU ≥ threshold**; otherwise it is FP.
-- Common thresholds: **0.3 / 0.5 / 0.7**.
-- **AP** per class is computed at a fixed tIoU (area under the PR curve over confidence).
-- **mAP@tIoU** is the mean over classes, usually reported at several tIoU values.
+**tIoU (temporal IoU)** คือ IoU ของช่วงเวลา
+- การ localise จะนับเป็น TP ถ้า **class ถูก และ tIoU ≥ threshold** ไม่งั้นเป็น FP
+- threshold ที่ใช้บ่อย: **0.3 / 0.5 / 0.7**
+- **AP** ของแต่ละคลาสคิดที่ tIoU ค่าหนึ่งที่ fix ไว้ (พื้นที่ใต้ PR curve โดยไล่ confidence)
+- **mAP@tIoU** คือค่าเฉลี่ยทุกคลาส ปกติจะรายงานหลายค่า tIoU
 
 ### 5. Regression (อาจารย์)
 
 **Classification vs regression:**
-- Classification predicts **categorical / discrete** labels and looks for a **boundary that separates** classes.
-- Regression predicts **numerical / continuous** values (room price, age, **heart rate**, test score, income) and looks for a **line that represents** the data.
-- "อันหนึ่งแบ่ง อันหนึ่งเป็น(ตัวแทน)" [01:10:02].
-- Slide dataset example: California housing (target = MedHouseVal, in units of 100k USD).
-- Slide models: Linear, Lasso (L1), Ridge (L2), XGBoost, Neural Network.
+- Classification ทาย label ที่เป็น **categorical / discrete** และหา**เส้นแบ่ง (boundary)** ระหว่างคลาส
+- Regression ทายค่า **numerical / continuous** (ราคาห้อง, อายุ, **อัตราการเต้นหัวใจ**, คะแนนสอบ, รายได้) และหา**เส้นที่เป็นตัวแทน**ข้อมูล
+- "อันหนึ่งแบ่ง อันหนึ่งเป็น(ตัวแทน)" [01:10:02]
+- dataset ตัวอย่างบนสไลด์: California housing (target = MedHouseVal หน่วยเป็น 100k USD)
+- โมเดลบนสไลด์: Linear, Lasso (L1), Ridge (L2), XGBoost, Neural Network
 
-**There are two families of regression metrics** [01:10:12]:
+**metric ของ regression มีสองกลุ่ม** [01:10:12]:
 
-**1. Error-based** (MAE, MSE, RMSE) measures the gap between prediction and actual (the residual).
-- Range **0 to ∞**; lower is better. Zero is ideal but impossible in practice.
-- Absolute value and squaring both remove the **sign (direction)**, so these metrics measure only the **magnitude** of the error.
-- **MAE** weights every error equally and stays in the **original unit**. It is **less sensitive to outliers**.
-- **MSE** squares the error, which **amplifies large errors**: "ยิ่งผิดเยอะ ยิ่งโดนโทษเยอะ" [01:16:06]. Its unit is **not** the original unit (it is unit²). It is **sensitive to outliers**.
-- **RMSE = √MSE**. It is designed to keep MSE's "punish big errors more" property *and* return to the original unit like MAE [01:19:50]. Like MSE, it is sensitive to outliers.
-- **Rule of thumb from อาจารย์** [01:17:31]–[01:17:53]:
-  - If big errors should be punished more than small ones, use **MSE (or RMSE)**.
-  - If all errors should be punished equally, use **MAE**.
-- **"MAE is always smaller than MSE"? Not necessarily** [01:22:58]–[01:23:27].
-  - Slide 97 uses 4 images with errors [0, 0, 0, e], so MAE = |e|/4, MSE = e²/4 and RMSE = |e|/2.
-  - **Target range [0, 1]** (max |e| = 1): MSE ≤ MAE everywhere.
-  - **Target range [−1, 1]** (max |e| = 2): MAE > MSE while |e| < 1, and MSE > MAE once |e| > 1.
-  - **Unbounded range** (e.g. |e| up to 10): "MSE grows fastest" (MSE = 25 vs MAE = 2.5 at |e| = 10).
-  - The range of the output affects how you read these metrics.
-- **Slide 98 (pros and cons):**
+**1. Error-based** (MAE, MSE, RMSE) วัดระยะห่างระหว่างค่าที่ทายกับค่าจริง (residual)
+- ค่า **0 ถึง ∞** ยิ่งต่ำยิ่งดี ศูนย์คือดีที่สุดแต่ในชีวิตจริงเป็นไปไม่ได้
+- ทั้งการใส่ค่าสัมบูรณ์และการยกกำลังสองจะตัด**เครื่องหมาย (ทิศทาง)** ทิ้ง metric พวกนี้เลยวัดแค่**ขนาด**ของ error
+- **MAE** ให้น้ำหนัก error ทุกตัวเท่ากัน และอยู่ใน**หน่วยเดิม** **ไวต่อ outlier น้อยกว่า**
+- **MSE** ยกกำลังสอง error ทำให้ **error ใหญ่ถูกขยาย**: "ยิ่งผิดเยอะ ยิ่งโดนโทษเยอะ" [01:16:06] หน่วยของมัน**ไม่ใช่**หน่วยเดิม (เป็น unit²) และ**ไวต่อ outlier**
+- **RMSE = √MSE** ออกแบบมาให้เก็บคุณสมบัติ "ลงโทษ error ใหญ่หนักกว่า" ของ MSE ไว้ *และ*กลับมาอยู่หน่วยเดิมเหมือน MAE [01:19:50] เหมือน MSE คือไวต่อ outlier
+- **กฎง่ายๆ จากอาจารย์** [01:17:31]–[01:17:53]:
+  - ถ้าอยากลงโทษ error ใหญ่มากกว่า error เล็ก ใช้ **MSE (หรือ RMSE)**
+  - ถ้าอยากลงโทษ error ทุกตัวเท่ากัน ใช้ **MAE**
+- **"MAE น้อยกว่า MSE เสมอ"? ไม่จำเป็น** [01:22:58]–[01:23:27]
+  - สไลด์ 97 ใช้ 4 ภาพที่มี error [0, 0, 0, e] ดังนั้น MAE = |e|/4, MSE = e²/4 และ RMSE = |e|/2
+  - **ช่วง target [0, 1]** (|e| สูงสุด = 1): MSE ≤ MAE ทุกจุด
+  - **ช่วง target [−1, 1]** (|e| สูงสุด = 2): MAE > MSE ตอน |e| < 1 และ MSE > MAE เมื่อ |e| > 1
+  - **ช่วงไม่จำกัด** (เช่น |e| ถึง 10): "MSE โตเร็วสุด" (MSE = 25 vs MAE = 2.5 ที่ |e| = 10)
+  - ช่วงของ output มีผลต่อการอ่านค่า metric พวกนี้
+- **สไลด์ 98 (ข้อดีข้อเสีย):**
 
-| Metric | Pros | Limitation | Use when |
+| Metric | ข้อดี | ข้อจำกัด | ใช้เมื่อ |
 |---|---|---|---|
-| MAE | Easy to understand; same unit as the data; more robust to outliers than MSE/RMSE | Doesn't specially punish large errors | You want the typical average error |
-| MSE | Punishes large errors hard; commonly used as a **loss** | Very sensitive to outliers; squared unit is hard to interpret | You want the model to focus on big-error cases |
-| RMSE | Same unit as the data; still reflects large errors | Still sensitive to outliers; ranks models the same as MSE | **Reporting** results in an easy-to-read form |
+| MAE | เข้าใจง่าย; หน่วยเดียวกับข้อมูล; ทน outlier ได้ดีกว่า MSE/RMSE | ไม่ได้ลงโทษ error ใหญ่เป็นพิเศษ | อยากรู้ error เฉลี่ยทั่วๆ ไป |
+| MSE | ลงโทษ error ใหญ่หนัก; นิยมใช้เป็น **loss** | ไวต่อ outlier มาก; หน่วยยกกำลังสองตีความยาก | อยากให้โมเดลโฟกัสเคสที่ error ใหญ่ |
+| RMSE | หน่วยเดียวกับข้อมูล; ยังสะท้อน error ใหญ่ได้ | ยังไวต่อ outlier; จัดอันดับโมเดลเหมือน MSE | **รายงาน**ผลให้อ่านง่าย |
 
-  - Slide note: "MSE and RMSE are not interchangeable in interpretation". **MSE suits optimisation; RMSE suits reporting.**
-- **Always state the unit and the "Possible Range"** [01:29:02]–[01:30:17].
-  - An error of 10 years when predicting age is a big deal.
-  - An error of 10 baht on a salary is not.
-  - An error of 10 on a 0–100 range is 10%; on a range of tens of thousands it is negligible.
+  - หมายเหตุบนสไลด์: "MSE กับ RMSE เอามาตีความแทนกันไม่ได้" **MSE เหมาะกับ optimisation; RMSE เหมาะกับการรายงานผล**
+- **ต้องบอกหน่วยและ "Possible Range" เสมอ** [01:29:02]–[01:30:17]
+  - ทายอายุผิด 10 ปี ถือว่าเยอะมาก
+  - ทายเงินเดือนผิด 10 บาท ไม่ได้เยอะเลย
+  - ผิด 10 บนช่วง 0–100 คือ 10%; แต่บนช่วงหลักหมื่นถือว่าน้อยมาก
 
-**2. Correlation-based (Pearson correlation)** does not measure the size of the gap. It asks whether prediction and ground truth **move in the same direction**.
-- **Weakness of error-based metrics: "Error ต่ำกว่า แต่ Correlation กลับต่ำกว่า"** (slide 99). Ground-truth weights are 46, 48, 50, 52, 54 kg.
-  - **Model A** predicts 50, 51, 50, 51, 50: **MAE 2.40 kg, RMSE 2.90 kg, Pearson r = 0.00**. It nearly always predicts a constant of about 50 kg, so it doesn't follow the trend.
-  - **Model B** predicts 54, 56, 58, 60, 62: **MAE 8.00 kg, RMSE 8.00 kg, Pearson r = 1.00**. It is always 8 kg too high, but the trend matches perfectly (a **shift**).
-  - On MAE alone you'd pick A, yet B captures the behaviour of the data [01:24:35]–[01:25:36].
-  - Slide lesson: "MAE/RMSE measure *how far off*; Pearson r measures *how linearly related*… **Report Error and Correlation together**."
-- **The reverse trap: high r ≠ accurate** (slide 103). Actual values are [10, 20, 30, 40].
-  - **Model A** predicts [11, 19, 31, 39]: **MAE 1, RMSE 1, r ≈ 0.997**.
-  - **Model B** predicts [20, 40, 60, 80] (scale ×2): **MAE 25, RMSE 27.4, r = 1.000**.
-  - "Pearson r สูง ไม่ได้แปลว่าทำนายแม่นเสมอไป": r does not detect **bias or scale error**.
-- A low error doesn't guarantee that the model follows the data trend, so **look at both families and plot the predictions** [01:25:36]–[01:28:22]. "เรากลัวโดนหลอก".
-- **Pearson r (ρ)** measures **linear relationship**, from −1 to +1 (slides 101–102).
-  - Positive r: X and Y move in the same direction. Negative r: they move in opposite directions. The closer to ±1, the stronger the relationship.
-  - **+1**: perfect positive correlation. **0**: no *linear* relationship. **−1**: perfect negative (inverse) correlation.
-  - อาจารย์ noted r = −1 is "easier to fix" than r = 0, because the relationship still exists, just reversed [01:26:31].
-  - Slide 102 interpretation bands:
+**2. Correlation-based (Pearson correlation)** ไม่ได้วัดขนาดของระยะห่าง แต่ถามว่าค่าที่ทายกับ ground truth **ขยับไปทางเดียวกันไหม**
+- **จุดอ่อนของ error-based metric: "Error ต่ำกว่า แต่ Correlation กลับต่ำกว่า"** (สไลด์ 99) น้ำหนักจริงคือ 46, 48, 50, 52, 54 kg
+  - **Model A** ทาย 50, 51, 50, 51, 50: **MAE 2.40 kg, RMSE 2.90 kg, Pearson r = 0.00** มันทายค่าคงที่ประมาณ 50 kg เกือบตลอด เลยไม่ตาม trend
+  - **Model B** ทาย 54, 56, 58, 60, 62: **MAE 8.00 kg, RMSE 8.00 kg, Pearson r = 1.00** สูงเกินไป 8 kg ทุกตัว แต่ trend ตรงเป๊ะ (เป็นการ **shift**)
+  - ถ้าดูแค่ MAE จะเลือก A แต่ B จับพฤติกรรมของข้อมูลได้ [01:24:35]–[01:25:36]
+  - บทเรียนจากสไลด์: "MAE/RMSE วัดว่า*ห่างแค่ไหน*; Pearson r วัดว่า*สัมพันธ์เชิงเส้นแค่ไหน*… **รายงาน Error กับ Correlation คู่กัน**"
+- **กับดักกลับด้าน: r สูง ≠ แม่น** (สไลด์ 103) ค่าจริงคือ [10, 20, 30, 40]
+  - **Model A** ทาย [11, 19, 31, 39]: **MAE 1, RMSE 1, r ≈ 0.997**
+  - **Model B** ทาย [20, 40, 60, 80] (scale ×2): **MAE 25, RMSE 27.4, r = 1.000**
+  - "Pearson r สูง ไม่ได้แปลว่าทำนายแม่นเสมอไป": r จับ **bias หรือ scale error** ไม่ได้
+- error ต่ำไม่ได้รับประกันว่าโมเดลตาม trend ของข้อมูล เลยต้อง**ดูทั้งสองกลุ่ม และพล็อตค่าที่ทายดูด้วย** [01:25:36]–[01:28:22] "เรากลัวโดนหลอก"
+- **Pearson r (ρ)** วัด**ความสัมพันธ์เชิงเส้น** ค่าตั้งแต่ −1 ถึง +1 (สไลด์ 101–102)
+  - r บวก: X กับ Y ไปทางเดียวกัน r ลบ: ไปคนละทาง ยิ่งใกล้ ±1 ยิ่งสัมพันธ์แรง
+  - **+1**: สัมพันธ์บวกสมบูรณ์ **0**: ไม่มีความสัมพันธ์*เชิงเส้น* **−1**: สัมพันธ์ลบ (ผกผัน) สมบูรณ์
+  - อาจารย์บอกว่า r = −1 "แก้ง่ายกว่า" r = 0 เพราะยังมีความสัมพันธ์อยู่ แค่กลับด้าน [01:26:31]
+  - ช่วงการตีความในสไลด์ 102:
 
-| ρ | Meaning |
+| ρ | ความหมาย |
 |---|---|
-| 1.0 | Perfect positive |
-| 0.7–0.9 | Strong positive |
-| 0.3–0.6 | Moderate positive |
-| 0.0–0.2 | Weak positive |
-| 0 | No linear relationship |
-| −0.2–0.0 | Weak negative |
-| −0.6 to −0.3 | Moderate negative |
-| −0.9 to −0.7 | Strong negative |
-| −1.0 | Perfect negative |
+| 1.0 | บวกสมบูรณ์ |
+| 0.7–0.9 | บวกแรง |
+| 0.3–0.6 | บวกปานกลาง |
+| 0.0–0.2 | บวกอ่อน |
+| 0 | ไม่มีความสัมพันธ์เชิงเส้น |
+| −0.2–0.0 | ลบอ่อน |
+| −0.6 to −0.3 | ลบปานกลาง |
+| −0.9 to −0.7 | ลบแรง |
+| −1.0 | ลบสมบูรณ์ |
 
-  - Slide 102 caution: ρ ≈ 0 does **not** mean "no relationship". There may be a **non-linear** one (U-shape, inverted U).
-  - Slide 101 figure: ρ ≈ 0.75 with fitted slope ≈ 0.72. Loss alone measures accuracy, but not agreement between prediction and truth.
-- **Best values** (slide 104): MAE = MSE = RMSE = **0**; Pearson r = **+1**. The two groups "measure different angles, so they should not replace each other; use them together".
-- อาจารย์'s preference: a model with slightly higher MAE but Pearson close to 1 can be the better choice, because it balances both the error and the distribution [01:28:01].
+  - ข้อควรระวังจากสไลด์ 102: ρ ≈ 0 **ไม่ได้**แปลว่า "ไม่มีความสัมพันธ์" อาจมีความสัมพันธ์แบบ **non-linear** อยู่ (รูปตัว U, ตัว U คว่ำ)
+  - รูปในสไลด์ 101: ρ ≈ 0.75 และ slope ที่ fit ได้ ≈ 0.72 loss อย่างเดียววัดความแม่นได้ แต่วัดความสอดคล้องระหว่างค่าที่ทายกับค่าจริงไม่ได้
+- **ค่าที่ดีที่สุด** (สไลด์ 104): MAE = MSE = RMSE = **0**; Pearson r = **+1** สองกลุ่มนี้ "วัดคนละมุม เลยไม่ควรใช้แทนกัน ให้ใช้คู่กัน"
+- ความเห็นของอาจารย์: โมเดลที่ MAE สูงกว่านิดหน่อยแต่ Pearson ใกล้ 1 อาจเป็นตัวเลือกที่ดีกว่า เพราะบาลานซ์ทั้ง error และการกระจายของข้อมูล [01:28:01]
 
 ### 6. RAG: Retrieval-Augmented Generation (พี่ชิน)
 
-**RAG pipeline:**
-1. **Query**: the user's question.
-2. **Retrieve**: fetch the **Top-K** relevant chunks (K = 5 is common).
-3. **Answer**: the LLM answers grounded on that evidence.
-- "Grounding" means feeding the retrieved context to the LLM.
+**ขั้นตอนของ RAG:**
+1. **Query**: คำถามของผู้ใช้
+2. **Retrieve**: ดึง chunk ที่เกี่ยวข้อง **Top-K** อันมา (ส่วนใหญ่ K = 5)
+3. **Answer**: LLM ตอบโดยอิงหลักฐานพวกนั้น
+- "Grounding" คือการป้อน context ที่ดึงมาให้ LLM
 
-**Evaluate the two stages separately.** If you measure only the final answer, you can't tell where the system fails.
-1. **Retrieval**: did we get relevant context? Use Precision@K, Recall@K, MRR, nDCG@K.
-2. **Answering**: is the answer supported by the evidence? Use **LLM-as-a-Judge**.
-- Failure modes: wrong / missing / adding extra.
+**ประเมินสองขั้นแยกกัน** ถ้าวัดแค่คำตอบสุดท้าย จะไม่รู้ว่าระบบพังตรงไหน
+1. **Retrieval**: ได้ context ที่เกี่ยวข้องมาไหม? ใช้ Precision@K, Recall@K, MRR, nDCG@K
+2. **Answering**: คำตอบมีหลักฐานรองรับไหม? ใช้ **LLM-as-a-Judge**
+- แบบที่พังได้: ผิด / ขาด / ใส่เกินมา
 
-**Google analogy:** people only look at the top 3–5 results, never page 2. So **rank matters**: the best document must be near the top [01:33:16]–[01:34:52].
+**เทียบกับ Google:** คนดูแค่ผลลัพธ์ 3–5 อันแรก ไม่เคยไปหน้า 2 เพราะฉะนั้น **ลำดับสำคัญ**: เอกสารที่ดีที่สุดต้องอยู่ใกล้ด้านบน [01:33:16]–[01:34:52]
 
-**The four retrieval metrics:**
-- **Recall@K**: of all relevant documents for the query, the fraction found in the top-K.
-  - It **never decreases as K grows**, but a larger K also lets in more irrelevant documents, so read it together with Precision@K.
-  - It ignores *where* in the top-K the hit is; only whether it was found [01:39:17].
-- **Precision@K**: of the K retrieved documents, the fraction that are relevant. It measures "wasted" retrievals.
-  - It usually **drops as K grows**, and tends to be much lower than Recall@K.
-  - Smaller K can raise it, but if relevant documents aren't ranked at the top you get 0 for that query (a trade-off) [01:41:41]–[01:42:10].
-- **MRR (Mean Reciprocal Rank)** cares only about **the rank of the FIRST relevant document** ("how fast does the first correct answer appear").
-  - Score per query = 1/rank, or 0 if no relevant document is retrieved.
-  - Average over queries.
-  - Good for measuring how quickly search finds the answer; **not** for judging the whole retrieved context.
-- **nDCG@K (normalised Discounted Cumulative Gain)** extends MRR.
-  - It uses **graded relevance** (e.g. 3 = very relevant, 2 = partly, 1 = barely, 0 = not relevant) for **all** retrieved documents.
-  - It discounts lower ranks, then normalises by the **ideal DCG** (the same documents sorted by relevance, best first).
-  - Better than MRR when there are several relevant passages, because the order of all of them counts [01:48:01]–[01:48:18].
-- **Tool:** the Python library **Rank-Eval** (spoken as "Rank Evolved") bundles DCG, MRR, Precision, Recall and more [01:48:35].
+**retrieval metric 4 ตัว:**
+- **Recall@K**: ในเอกสารที่เกี่ยวข้องทั้งหมดของ query นั้น เจอใน top-K กี่ส่วน
+  - **ไม่มีทางลดลงเมื่อ K เพิ่ม** แต่ K ใหญ่ก็ทำให้เอกสารไม่เกี่ยวข้องเข้ามาเยอะขึ้นด้วย เลยต้องอ่านคู่กับ Precision@K
+  - ไม่สนว่าเจอ*ตรงไหน*ใน top-K สนแค่ว่าเจอไหม [01:39:17]
+- **Precision@K**: ในเอกสาร K อันที่ดึงมา เกี่ยวข้องกี่ส่วน วัดว่าดึงมา "เปล่าประโยชน์" แค่ไหน
+  - ปกติ**ลดลงเมื่อ K เพิ่ม** และมักต่ำกว่า Recall@K มาก
+  - K เล็กลงช่วยให้ค่าสูงขึ้นได้ แต่ถ้าเอกสารที่เกี่ยวข้องไม่ได้อยู่บนสุด query นั้นจะได้ 0 (เป็น trade-off) [01:41:41]–[01:42:10]
+- **MRR (Mean Reciprocal Rank)** สนแค่**อันดับของเอกสารที่เกี่ยวข้องอันแรก** ("คำตอบถูกอันแรกโผล่มาเร็วแค่ไหน")
+  - คะแนนต่อ query = 1/rank หรือ 0 ถ้าไม่เจอเอกสารที่เกี่ยวข้องเลย
+  - เฉลี่ยทุก query
+  - ดีสำหรับวัดว่าค้นเจอคำตอบเร็วแค่ไหน แต่**ไม่**เหมาะกับการตัดสิน context ทั้งหมดที่ดึงมา
+- **nDCG@K (normalised Discounted Cumulative Gain)** ต่อยอดจาก MRR
+  - ใช้ **graded relevance** (เช่น 3 = เกี่ยวข้องมาก, 2 = บางส่วน, 1 = นิดหน่อย, 0 = ไม่เกี่ยว) กับเอกสาร**ทุกอัน**ที่ดึงมา
+  - ลดน้ำหนักอันดับล่างๆ แล้ว normalise ด้วย **ideal DCG** (เอกสารชุดเดิมเรียงตาม relevance จากมากไปน้อย)
+  - ดีกว่า MRR ตอนที่มีหลาย passage ที่เกี่ยวข้อง เพราะลำดับของทุกอันมีผล [01:48:01]–[01:48:18]
+- **เครื่องมือ:** Python library **Rank-Eval** (พูดในคลาสว่า "Rank Evolved") รวม DCG, MRR, Precision, Recall และอื่นๆ ไว้ให้ [01:48:35]
 
-**Summary slide** (slide 123):
+**สไลด์สรุป** (สไลด์ 123):
 
-| Metric | What it tells you |
+| Metric | บอกอะไรเรา |
 |---|---|
-| Precision | How **on-target** the retrieved results are ("ตรงโจทย์") |
-| Recall | How **completely** the system finds what it should ("ค้นพบครบ") |
-| MRR | How **fast** the first correct answer appears ("มาเร็ว") |
-| nDCG | How well results are **ordered by relevance** ("เรียงตามระดับความเกี่ยวข้อง") |
-| LLM-as-a-Judge | Whether the final answer is **correct, on-point and helpful** |
+| Precision | ผลที่ดึงมา**ตรงเป้า**แค่ไหน ("ตรงโจทย์") |
+| Recall | ระบบหาสิ่งที่ควรเจอได้**ครบ**แค่ไหน ("ค้นพบครบ") |
+| MRR | คำตอบถูกอันแรกโผล่มา**เร็ว**แค่ไหน ("มาเร็ว") |
+| nDCG | ผลลัพธ์**เรียงตาม relevance** ได้ดีแค่ไหน ("เรียงตามระดับความเกี่ยวข้อง") |
+| LLM-as-a-Judge | คำตอบสุดท้าย**ถูก ตรงประเด็น และมีประโยชน์**ไหม |
 
-**LLM-as-a-Judge:** use an LLM, ideally stronger than the model being tested, to grade answers.
-- History: early ChatGPT used human eval (e.g. 100 questions × 100 people ≈ 10,000 ratings). There are now too many LLMs for that, so evaluation shifted to LLM eval [01:49:39]–[01:50:28].
-- **Inputs:** question, model answer, ground-truth answer, **Criteria / Rubric** (what to look at, and what earns 0, 1, 2, 3 or 4 points) and **Evaluation Steps**.
-- **Output:** a **score + reason** (e.g. why 0.6 out of 1).
-- **พี่ชิน's own experiment:**
-  - Judges: GPT-4.1 and Gemini 2.5 Flash. Model judged: a fine-tuned Qwen.
-  - Criteria: **Correctness, Relevance, Helpfulness** on a 0–1 scale (based on **G-Eval**).
-  - **Dual judges** reduce single-model bias.
-  - Scale: 6 models × 226 questions.
-  - Human experts rated a balanced subset of **40 questions**. The **average MAE between human and LLM ratings was 0.13** (low disagreement means practically reliable), with targeted human review for edge cases.
-- The technique is "not yet a best practice", which is why it was presented for review [01:50:49].
+**LLM-as-a-Judge:** ใช้ LLM (ควรเก่งกว่าโมเดลที่ถูกทดสอบ) มาให้คะแนนคำตอบ
+- ประวัติ: ChatGPT ยุคแรกใช้ human eval (เช่น 100 คำถาม × 100 คน ≈ 10,000 คะแนน) ตอนนี้ LLM มีเยอะเกินจะทำแบบนั้นได้ เลยเปลี่ยนมาใช้ LLM eval [01:49:39]–[01:50:28]
+- **Inputs:** คำถาม, คำตอบของโมเดล, คำตอบ ground-truth, **Criteria / Rubric** (ต้องดูอะไร และแบบไหนได้ 0, 1, 2, 3 หรือ 4 คะแนน) และ **Evaluation Steps**
+- **Output:** **คะแนน + เหตุผล** (เช่น ทำไมได้ 0.6 จาก 1)
+- **การทดลองของพี่ชินเอง:**
+  - Judges: GPT-4.1 และ Gemini 2.5 Flash โมเดลที่ถูกตัดสิน: Qwen ที่ fine-tune แล้ว
+  - Criteria: **Correctness, Relevance, Helpfulness** สเกล 0–1 (อิงจาก **G-Eval**)
+  - ใช้ **judge สองตัว** ช่วยลด bias ของโมเดลตัวเดียว
+  - ขนาด: 6 โมเดล × 226 คำถาม
+  - ผู้เชี่ยวชาญที่เป็นคนให้คะแนนชุดย่อยที่บาลานซ์แล้ว **40 คำถาม** **MAE เฉลี่ยระหว่างคะแนนคนกับ LLM คือ 0.13** (ต่างกันน้อย แปลว่าใช้งานได้จริง) และมีคนตรวจเพิ่มเฉพาะเคสขอบๆ
+- เทคนิคนี้ "ยังไม่ใช่ best practice" เลยเอามานำเสนอให้ดูกัน [01:50:49]
 
 ---
 
-## Formulas & numbers to remember
+## สูตรและตัวเลขที่ต้องจำ
 
 ### Classification
 
-| Metric | Formula |
+| Metric | สูตร |
 |---|---|
 | Accuracy | (TP + TN) / (TP + TN + FP + FN) |
 | Recall = Sensitivity = TPR | TP / (TP + FN) |
 | Precision | TP / (TP + FP) |
 | F1 | 2·P·R / (P + R) = **2TP / (2TP + FP + FN)** |
 | FPR | FP / (FP + TN) |
-| Specificity *(clarification)* | TN / (TN + FP) = 1 − FPR |
-| AUC | area under the ROC curve (TPR vs FPR); 1 = perfect, 0.5 = random, < 0.5 = reversed |
+| Specificity *(อธิบายเพิ่ม)* | TN / (TN + FP) = 1 − FPR |
+| AUC | พื้นที่ใต้ ROC curve (TPR vs FPR); 1 = สมบูรณ์, 0.5 = สุ่ม, < 0.5 = กลับด้าน |
 
-**Worked example: slide COVID matrix** (TP = 80, FN = 20, TN = 885, FP = 15, N = 1000). The slide shows the matrix only; these values are computed here.
+**ตัวอย่างคำนวณ: matrix COVID ในสไลด์** (TP = 80, FN = 20, TN = 885, FP = 15, N = 1000) สไลด์โชว์แค่ matrix; ค่าข้างล่างคำนวณเพิ่มเอง
 - Accuracy = (80 + 885)/1000 = **0.965**
 - Recall = 80/100 = **0.800**
 - Precision = 80/95 = **0.842**
 - F1 = 160/(160 + 15 + 20) = 160/195 = **0.821**
 - Specificity = 885/900 = **0.983**; FPR = 15/900 = **0.017**
 
-**Imbalanced trap** (TP = 0, FN = 100, TN = 900, FP = 0):
+**กับดัก imbalanced** (TP = 0, FN = 100, TN = 900, FP = 0):
 - Accuracy = 900/1000 = **0.90**
 - Recall = 0/100 = **0**
-- Precision = 0/0, undefined (the model never predicts positive).
+- Precision = 0/0 หาค่าไม่ได้ (โมเดลไม่เคยทายว่า positive เลย)
 
 ### Object detection
 
-- **IoU = Area of Overlap / Area of Union**. Union = A + B − Overlap.
-  - Slide example: overlap 85 px and union 100 px give IoU = **0.85**, which is ≥ 0.5, so the detection is correct (if the class is right).
-- **Precision = TP/(TP+FP)**. Birds: 12 detected, 10 correct, so 10/12 = **0.833**.
-- **Recall = TP/(TP+FN)**. 15 real birds, 10 found, 5 missed, so 10/15 = **0.667**.
-- **F1** = 2(0.833)(0.667)/(0.833 + 0.667) = 20/27 = **0.741**.
-- **AP**: slide table for 20 real birds, sweeping the confidence threshold. Precision = TP/(TP+FP); Recall = TP/20.
+- **IoU = Area of Overlap / Area of Union** โดย Union = A + B − Overlap
+  - ตัวอย่างบนสไลด์: overlap 85 px และ union 100 px ได้ IoU = **0.85** ซึ่ง ≥ 0.5 detection นี้เลยถูก (ถ้า class ถูก)
+- **Precision = TP/(TP+FP)** นก: detect ได้ 12 ตัว ถูก 10 ตัว ดังนั้น 10/12 = **0.833**
+- **Recall = TP/(TP+FN)** นกจริง 15 ตัว เจอ 10 พลาด 5 ดังนั้น 10/15 = **0.667**
+- **F1** = 2(0.833)(0.667)/(0.833 + 0.667) = 20/27 = **0.741**
+- **AP**: ตารางในสไลด์ สำหรับนกจริง 20 ตัว ไล่ค่า confidence threshold Precision = TP/(TP+FP); Recall = TP/20
 
 | Conf ≥ | TP | FP | FN | P | R |
 |---|---|---|---|---|---|
@@ -339,28 +339,28 @@ Metrics for six task types: classification, object detection, image segmentation
 | 0.50 | 18 | 14 | 2 | 0.56 | 0.90 |
 | 0.40 | 20 | 20 | 0 | 0.50 | 1.00 |
 
-- Slide result: **AP(Bird) = 0.773**. I checked it: the trapezoidal area under the curve, starting from (R = 0, P = 1), gives 0.7727.
-- **mAP** = mean AP over classes = (Bird 0.773 + Car 0.883 + Dog 0.842)/3 = 2.498/3 = **0.833** (the slide shows the table but not this final number).
+- ผลบนสไลด์: **AP(Bird) = 0.773** ผมเช็กแล้ว: พื้นที่ใต้กราฟแบบ trapezoidal เริ่มจาก (R = 0, P = 1) ได้ 0.7727
+- **mAP** = ค่าเฉลี่ย AP ทุกคลาส = (Bird 0.773 + Car 0.883 + Dog 0.842)/3 = 2.498/3 = **0.833** (สไลด์มีตาราง แต่ไม่ได้โชว์ตัวเลขสุดท้ายนี้)
 
 ### Segmentation
 
-| Metric | Formula |
+| Metric | สูตร |
 |---|---|
 | Pixel Accuracy | (TP + TN) / (TP + TN + FP + FN) |
 | Precision | TP / (TP + FP) |
 | Recall | TP / (TP + FN) |
 | F1 (= Dice) | 2TP / (2TP + FP + FN) |
 | IoU (Jaccard) | TP / (TP + FP + FN) |
-| mIoU, mF1, … | mean of the per-class value (one-vs-all) |
+| mIoU, mF1, … | ค่าเฉลี่ยของค่าแต่ละคลาส (one-vs-all) |
 
-**Binary worked example** (slide, 4×4 = 16 px): TP = 5, FN = 2, FP = 1, TN = 8.
+**ตัวอย่างคำนวณแบบ binary** (สไลด์, 4×4 = 16 px): TP = 5, FN = 2, FP = 1, TN = 8
 - Pixel Accuracy = 13/16 = **0.8125**
 - Precision = 5/6 = **0.833**
 - Recall = 5/7 = **0.714**
 - F1 / Dice = 10/13 = **0.769**
-- IoU = 5/8 = **0.625**. Check: Dice = 2(0.625)/1.625 = 0.769 ✓
+- IoU = 5/8 = **0.625** เช็ก: Dice = 2(0.625)/1.625 = 0.769 ✓
 
-**Multi-class worked example** (slide, 3×3 = 9 px; 0 = background, 1 = cat, 2 = dog):
+**ตัวอย่างคำนวณแบบ multi-class** (สไลด์, 3×3 = 9 px; 0 = พื้นหลัง, 1 = แมว, 2 = หมา):
 
 | Class | TP | FP | FN | TN | IoU | Precision | Recall | F1 |
 |---|---|---|---|---|---|---|---|---|
@@ -371,53 +371,53 @@ Metrics for six task types: classification, object detection, image segmentation
 - Pixel Accuracy = 6/9 = **0.667**
 - **mIoU** = (0.400 + 0.667 + 0.500)/3 = **0.522**
 - mPrecision = **0.722**; mRecall = **0.667**; mF1 = **0.679**
-- Sanity check: each class's TP + FP + FN + TN = 9.
+- เช็กความถูกต้อง: TP + FP + FN + TN ของแต่ละคลาส = 9
 
 ### Video
 
-- **Video classification** (20 videos, class "swimming"): TP = 8, FP = 2, FN = 1, TN = 9.
+- **Video classification** (20 วิดีโอ, คลาส "ว่ายน้ำ"): TP = 8, FP = 2, FN = 1, TN = 9
   - Accuracy = 17/20 = **0.85**
   - Precision = 8/10 = **0.80**
   - Recall = 8/9 = **0.889**
   - F1 = 16/19 = **0.842**
-- **Frame-wise Accuracy** = correct frames / total frames.
-  - Slide: GT is AAAAA BBBBB CCCCC DDDDD; Pred is AAAA BBBBBB CC BB C DDDDD.
-  - 3 frames wrong (frame 5: A→B; frames 13–14: C→B), so 17/20 = **0.85**.
-- **Edit = 1 − D(P,G) / max(N_pred, N_gt)** (slide 65; often reported as a percentage)
-  - GT collapsed = A→B→C→D (N_gt = 4). Pred collapsed = A→B→C→**B→C**→D (N_pred = 6).
-  - D = 2 deletions, so Edit = 1 − 2/6 = **0.667 (66.67%)**.
+- **Frame-wise Accuracy** = frame ที่ถูก / frame ทั้งหมด
+  - สไลด์: GT คือ AAAAA BBBBB CCCCC DDDDD; Pred คือ AAAA BBBBBB CC BB C DDDDD
+  - ผิด 3 frame (frame 5: A→B; frame 13–14: C→B) ดังนั้น 17/20 = **0.85**
+- **Edit = 1 − D(P,G) / max(N_pred, N_gt)** (สไลด์ 65; มักรายงานเป็นเปอร์เซ็นต์)
+  - GT หลังยุบ = A→B→C→D (N_gt = 4) Pred หลังยุบ = A→B→C→**B→C**→D (N_pred = 6)
+  - D = ลบ 2 ครั้ง ดังนั้น Edit = 1 − 2/6 = **0.667 (66.67%)**
 - **Segmental F1@k:**
-  - GT segments: A 1–5, B 6–10, C 11–15, D 16–20.
-  - Pred segments: A 1–4, B 5–10, C 11–12, B 13–14, C 15, D 16–20.
-  - IoU with the GT segment of the same class: A 4/5 = 0.80; B 5/6 = 0.83; C(11–12) 2/5 = 0.40; B(13–14) 0; C(15) 1/5 = 0.20 (but GT C is already matched, so FP anyway); D 5/5 = 1.00.
+  - segment ของ GT: A 1–5, B 6–10, C 11–15, D 16–20
+  - segment ที่ทาย: A 1–4, B 5–10, C 11–12, B 13–14, C 15, D 16–20
+  - IoU กับ segment GT ของคลาสเดียวกัน: A 4/5 = 0.80; B 5/6 = 0.83; C(11–12) 2/5 = 0.40; B(13–14) 0; C(15) 1/5 = 0.20 (แต่ GT C ถูกจับคู่ไปแล้ว เลยเป็น FP อยู่ดี); D 5/5 = 1.00
 
 | | F1@10 | F1@25 | F1@50 |
 |---|---|---|---|
 | TP | 4 | 4 | 3 |
 | FP | 2 | 2 | 3 |
-| FN | 0 | 0 | 1 (GT C has no match ≥ 50%) |
+| FN | 0 | 0 | 1 (GT C ไม่มีตัวไหนทับ ≥ 50%) |
 | Precision | 4/6 = 0.667 | 0.667 | 3/6 = 0.500 |
 | Recall | 4/4 = 1.000 | 1.000 | 3/4 = 0.750 |
 | **F1** | **0.800** | **0.800** | **0.600** |
 
-- **tIoU = |pred ∩ GT| / |pred ∪ GT|** (in time).
-  - Goal: GT 10–20 s, Pred 12–22 s. Intersection 12–20 = 8, union 10–22 = 12, so **0.667**.
-  - Foul: GT 45–52 s, Pred 47–60 s. Intersection 47–52 = 5, union 45–60 = 15, so **0.333**.
-  - At threshold 0.3: both TP. At 0.5: goal TP, foul FP. At 0.7: both FP.
-- **mAP@0.5** = (AP_goal 0.611 + AP_foul 0.146)/2 = 0.757/2 = **0.379 (37.9%)**.
+- **tIoU = |pred ∩ GT| / |pred ∪ GT|** (ในแกนเวลา)
+  - ประตู: GT 10–20 s, Pred 12–22 s ส่วนที่ทับ 12–20 = 8, union 10–22 = 12 ได้ **0.667**
+  - ฟาวล์: GT 45–52 s, Pred 47–60 s ส่วนที่ทับ 47–52 = 5, union 45–60 = 15 ได้ **0.333**
+  - ที่ threshold 0.3: TP ทั้งคู่ ที่ 0.5: ประตู TP, ฟาวล์ FP ที่ 0.7: FP ทั้งคู่
+- **mAP@0.5** = (AP_goal 0.611 + AP_foul 0.146)/2 = 0.757/2 = **0.379 (37.9%)**
 
 ### Regression
 
-| Metric | Formula | Unit / range |
+| Metric | สูตร | หน่วย / ช่วงค่า |
 |---|---|---|
-| MAE | (1/n) Σ \|yᵢ − ŷᵢ\| | original unit, 0 to ∞ |
-| MSE | (1/n) Σ (yᵢ − ŷᵢ)² | unit², 0 to ∞ |
-| RMSE | √MSE | original unit, 0 to ∞ |
-| Pearson ρ (slide 101) | Σ(xᵢ − x̄)(yᵢ − ȳ) / √[Σ(xᵢ − x̄)² · Σ(yᵢ − ȳ)²] | −1 to +1, best = +1 |
+| MAE | (1/n) Σ \|yᵢ − ŷᵢ\| | หน่วยเดิม, 0 ถึง ∞ |
+| MSE | (1/n) Σ (yᵢ − ŷᵢ)² | unit², 0 ถึง ∞ |
+| RMSE | √MSE | หน่วยเดิม, 0 ถึง ∞ |
+| Pearson ρ (สไลด์ 101) | Σ(xᵢ − x̄)(yᵢ − ȳ) / √[Σ(xᵢ − x̄)² · Σ(yᵢ − ȳ)²] | −1 ถึง +1, ดีสุด = +1 |
 
-(The slide writes the means as x̂ and ŷ; they are the means of the actual and predicted values.)
+(สไลด์เขียนค่าเฉลี่ยเป็น x̂ และ ŷ ซึ่งก็คือค่าเฉลี่ยของค่าจริงและค่าที่ทาย)
 
-**Worked example (slides 90–95):**
+**ตัวอย่างคำนวณ (สไลด์ 90–95):**
 
 | | A | B | C | D | E | F | G |
 |---|---|---|---|---|---|---|---|
@@ -429,67 +429,67 @@ Metrics for six task types: classification, object detection, image segmentation
 - MAE = 57/7 = **8.14**
 - MSE = 699/7 = **99.86**
 - RMSE = √99.86 = **9.99**
-- Point G is an **outlier**: one error of 22 contributes 484 of the 699 squared error.
-  - My check: without G, MAE = 35/6 = 5.83 and MSE = 215/6 = 35.83.
-  - So G moves MSE far more than MAE.
+- จุด G เป็น **outlier**: error 22 ตัวเดียวกินไป 484 จาก squared error ทั้งหมด 699
+  - ผมเช็กดู: ถ้าไม่มี G, MAE = 35/6 = 5.83 และ MSE = 215/6 = 35.83
+  - แปลว่า G ดัน MSE ได้มากกว่า MAE เยอะมาก
 
-**Model A vs B** (slide 96: weight prediction from 4 images, total absolute error 4 for both) [01:20:15]–[01:21:28]:
-- Model A errors 1, 1, 1, 1 kg: MAE = 1 kg, MSE = 1 kg², RMSE = 1 kg.
-- Model B errors 0, 0, 0, 4 kg: MAE = 1 kg, MSE = 16/4 = 4 kg², RMSE = 2 kg.
-- Slide: "MAE ของทั้งสองโมเดลเท่ากัน (1 kg) แต่ RMSE ของ Model B สูงกว่าเป็น 2 เท่า".
-- MAE can't tell them apart. MSE strongly penalises B's single big error. RMSE (2) shows the difference in the original unit without blowing it up.
+**Model A vs B** (สไลด์ 96: ทายน้ำหนักจาก 4 ภาพ ผลรวม absolute error = 4 เท่ากันทั้งคู่) [01:20:15]–[01:21:28]:
+- Model A error 1, 1, 1, 1 kg: MAE = 1 kg, MSE = 1 kg², RMSE = 1 kg
+- Model B error 0, 0, 0, 4 kg: MAE = 1 kg, MSE = 16/4 = 4 kg², RMSE = 2 kg
+- สไลด์: "MAE ของทั้งสองโมเดลเท่ากัน (1 kg) แต่ RMSE ของ Model B สูงกว่าเป็น 2 เท่า"
+- MAE แยกสองตัวนี้ไม่ออก MSE ลงโทษ error ใหญ่ตัวเดียวของ B หนักมาก RMSE (2) โชว์ความต่างในหน่วยเดิมโดยไม่ขยายจนเกินจริง
 
-**Error vs correlation** (slide 99; GT = 46, 48, 50, 52, 54 kg):
-- Model A predicts 50, 51, 50, 51, 50.
-  - |e| = 4, 3, 0, 1, 4, so MAE = 12/5 = **2.40**.
-  - e² = 16, 9, 0, 1, 16, so MSE = 42/5 = 8.4 and RMSE = **2.90**.
-  - Pearson r = **0.00**: the prediction deviations (−0.4, 0.6, −0.4, 0.6, −0.4) have zero covariance with the GT deviations (−4, −2, 0, 2, 4).
-- Model B predicts 54, 56, 58, 60, 62.
-  - Every error is 8, so MAE = RMSE = **8.00**.
-  - Pearson r = **1.00**: a pure shift.
+**Error vs correlation** (สไลด์ 99; GT = 46, 48, 50, 52, 54 kg):
+- Model A ทาย 50, 51, 50, 51, 50
+  - |e| = 4, 3, 0, 1, 4 ดังนั้น MAE = 12/5 = **2.40**
+  - e² = 16, 9, 0, 1, 16 ดังนั้น MSE = 42/5 = 8.4 และ RMSE = **2.90**
+  - Pearson r = **0.00**: ส่วนเบี่ยงเบนของค่าที่ทาย (−0.4, 0.6, −0.4, 0.6, −0.4) มี covariance เป็นศูนย์กับส่วนเบี่ยงเบนของ GT (−4, −2, 0, 2, 4)
+- Model B ทาย 54, 56, 58, 60, 62
+  - error เป็น 8 ทุกตัว ดังนั้น MAE = RMSE = **8.00**
+  - Pearson r = **1.00**: เลื่อนไปทั้งเส้นล้วนๆ (pure shift)
 
-**Scale error** (slide 103; actual = [10, 20, 30, 40]):
-- Model B predicts [20, 40, 60, 80], so |e| = 10, 20, 30, 40.
-- MAE = 100/4 = **25**; MSE = (100 + 400 + 900 + 1600)/4 = 750; RMSE = √750 = **27.4**.
-- Yet r = **1.000**.
+**Scale error** (สไลด์ 103; actual = [10, 20, 30, 40]):
+- Model B ทาย [20, 40, 60, 80] ดังนั้น |e| = 10, 20, 30, 40
+- MAE = 100/4 = **25**; MSE = (100 + 400 + 900 + 1600)/4 = 750; RMSE = √750 = **27.4**
+- แต่ r = **1.000**
 
 ### RAG / Retrieval
 
-| Metric | Formula |
+| Metric | สูตร |
 |---|---|
-| Precision@K | (# relevant in top-K) / **K**, averaged over queries |
-| Recall@K | (# relevant in top-K) / **R** (all relevant for that query), averaged over queries |
-| MRR | (1/\|Q\|) Σ 1/rankᵢ, where rankᵢ is the first relevant position (0 if none found) |
+| Precision@K | (# ที่เกี่ยวข้องใน top-K) / **K**, เฉลี่ยทุก query |
+| Recall@K | (# ที่เกี่ยวข้องใน top-K) / **R** (ที่เกี่ยวข้องทั้งหมดของ query นั้น), เฉลี่ยทุก query |
+| MRR | (1/\|Q\|) Σ 1/rankᵢ โดย rankᵢ คือตำแหน่งแรกที่เจอเอกสารเกี่ยวข้อง (0 ถ้าไม่เจอ) |
 | DCG@K | Σᵢ (2^relᵢ − 1) / log₂(i + 1) |
-| nDCG@K | DCG@K / IDCG@K (IDCG = DCG of the ideal descending ordering) |
+| nDCG@K | DCG@K / IDCG@K (IDCG = DCG ของการเรียงแบบ ideal จากมากไปน้อย) |
 
-**Shared example data** (slides 112–114):
+**ข้อมูลตัวอย่างที่ใช้ร่วมกัน** (สไลด์ 112–114):
 
-| Query | Top-5 retrieved | Relevant (GT) | Found in top-5 | Recall@5 | Precision@5 |
+| Query | Top-5 ที่ดึงมา | ที่เกี่ยวข้อง (GT) | เจอใน top-5 | Recall@5 | Precision@5 |
 |---|---|---|---|---|---|
 | Q1 | D7, D2, **D3**, D10, D4 | D3 | D3 | 1/1 = 1.00 | 1/5 = 0.20 |
 | Q2 | D12, **D4**, D8, D1, D9 | D4, D5 | D4 | 1/2 = 0.50 | 1/5 = 0.20 |
-| Q3 | D6, D9, D13, D14, D15 | D20 | none | 0/1 = 0.00 | 0/5 = 0.00 |
+| Q3 | D6, D9, D13, D14, D15 | D20 | ไม่เจอ | 0/1 = 0.00 | 0/5 = 0.00 |
 | Q4 | **D1**, D8, **D2**, D9, D10 | D1, D2, D3 | D1, D2 | 2/3 = 0.67 | 2/5 = 0.40 |
 | Q5 | D4, D6, D7, D8, **D5** | D5 | D5 | 1/1 = 1.00 | 1/5 = 0.20 |
 
-- **Mean Recall@5** = (1.00 + 0.50 + 0.00 + 0.67 + 1.00)/5 = **0.634 ≈ 0.63**.
-- **Mean Precision@5** = (0.20 + 0.20 + 0.00 + 0.40 + 0.20)/5 = **0.20**. It is much lower than Recall@5.
-- พี่ชิน said the right-hand box diagram on the slide was drawn slightly wrong [01:39:08]. The table above is the authoritative data.
+- **Mean Recall@5** = (1.00 + 0.50 + 0.00 + 0.67 + 1.00)/5 = **0.634 ≈ 0.63**
+- **Mean Precision@5** = (0.20 + 0.20 + 0.00 + 0.40 + 0.20)/5 = **0.20** ต่ำกว่า Recall@5 เยอะ
+- พี่ชินบอกว่ารูปกล่องด้านขวาบนสไลด์วาดผิดนิดหน่อย [01:39:08] ให้ยึดตารางข้างบนเป็นหลัก
 
-**MRR** (slide 114, Q1–Q3; in this table Q2's top-5 is D12, **D4**, D8, **D5**, D1):
+**MRR** (สไลด์ 114, Q1–Q3; ในตารางนี้ top-5 ของ Q2 คือ D12, **D4**, D8, **D5**, D1):
 
-| Query | First relevant at rank | Reciprocal rank |
+| Query | เอกสารเกี่ยวข้องอันแรกอยู่อันดับ | Reciprocal rank |
 |---|---|---|
-| Q1 | D3 at rank 3 | 1/3 ≈ 0.333 |
-| Q2 | D4 at rank 2 (D5 at rank 4 is ignored) | 1/2 = 0.5 |
-| Q3 | not in top 5 | 0 |
+| Q1 | D3 อันดับ 3 | 1/3 ≈ 0.333 |
+| Q2 | D4 อันดับ 2 (D5 ที่อันดับ 4 ไม่นับ) | 1/2 = 0.5 |
+| Q3 | ไม่อยู่ใน top 5 | 0 |
 
-- MRR = (0.333 + 0.5 + 0)/3 = 0.833/3 = **0.278**.
-- If Q1's relevant doc were moved to rank 1, Q1 would score 1/1 instead of 1/3 [01:44:06].
+- MRR = (0.333 + 0.5 + 0)/3 = 0.833/3 = **0.278**
+- ถ้าย้ายเอกสารที่เกี่ยวข้องของ Q1 ไปอันดับ 1 Q1 จะได้ 1/1 แทน 1/3 [01:44:06]
 
-**nDCG@5** (slide 115; relevance grades 3 = very, 2 = partly, 1 = barely, 0 = not relevant):
-Retrieved ranking for Q1 (slides 115–116):
+**nDCG@5** (สไลด์ 115; ระดับ relevance 3 = มาก, 2 = บางส่วน, 1 = นิดหน่อย, 0 = ไม่เกี่ยว):
+อันดับที่ดึงมาของ Q1 (สไลด์ 115–116):
 
 | Rank i | rel | 2^rel − 1 | log₂(i+1) | Gain |
 |---|---|---|---|---|
@@ -499,199 +499,199 @@ Retrieved ranking for Q1 (slides 115–116):
 | 4 | 0 | 0 | 2.32 | 0 |
 | 5 | 1 | 1 | 2.58 | 0.39 |
 
-- **DCG@5** ≈ 7 + 0 + 1.5 + 0 + 0.39 = **8.89**.
-- Ideal ordering [3, 2, 1, 0, 0]: **IDCG@5** = 7/1 + 3/1.58496 + 1/2 = 7 + 1.8928 + 0.5 = **9.3928**.
-- **nDCG@5 = 8.89/9.3928 = 0.946**.
-- Slide 116's caption: "early ranks carry heavy weight; late ranks are discounted".
-- Handy logs: log₂2 = 1, log₂3 = 1.585, log₂4 = 2, log₂5 = 2.322, log₂6 = 2.585.
+- **DCG@5** ≈ 7 + 0 + 1.5 + 0 + 0.39 = **8.89**
+- เรียงแบบ ideal [3, 2, 1, 0, 0]: **IDCG@5** = 7/1 + 3/1.58496 + 1/2 = 7 + 1.8928 + 0.5 = **9.3928**
+- **nDCG@5 = 8.89/9.3928 = 0.946**
+- คำบรรยายในสไลด์ 116: "อันดับต้นๆ มีน้ำหนักมาก; อันดับท้ายๆ ถูกลดน้ำหนัก"
+- log ที่ควรจำ: log₂2 = 1, log₂3 = 1.585, log₂4 = 2, log₂5 = 2.322, log₂6 = 2.585
 
 ---
 
-## What the speakers emphasised
+## สิ่งที่ผู้สอนเน้น
 
 **พี่บุ๊ค: Classification**
-- [00:06:42]–[00:07:17] The imbalanced COVID example: 90% accuracy while finding no COVID at all. "ถามว่า โมเดลนี้เป็นโมเดลที่ดีไหม ก็ต้องตอบว่าไม่ครับ"; this is "ข้อจำกัดอย่างหนึ่งของ accuracy", which is why other metrics exist.
-- [00:07:57] Recall "ให้ความสำคัญกับ False Negative"; [00:09:54] Precision "ให้ความสำคัญกับ False Positive". **This is the key contrast.**
-- [00:09:06] Screening (COVID quarantine) means recall matters: you accept some healthy people being flagged.
-- [00:10:54] Confirmatory test means precision matters, so patients aren't treated wrongly.
-- [00:12:20]–[00:13:10] Medical tasks such as cancer detection need **both**, hence F1.
-- [00:13:40] TPR on the ROC curve is the same formula as recall. The top-left corner is the "perfect classifier".
-- [00:14:47]–[00:15:06] You can't easily compare many ROC curves by eye, which is why AUC turns the curve into a single number.
+- [00:06:42]–[00:07:17] ตัวอย่าง COVID แบบ imbalanced: accuracy 90% แต่หาคนเป็น COVID ไม่เจอเลย "ถามว่า โมเดลนี้เป็นโมเดลที่ดีไหม ก็ต้องตอบว่าไม่ครับ"; นี่คือ "ข้อจำกัดอย่างหนึ่งของ accuracy" เลยต้องมี metric ตัวอื่น
+- [00:07:57] Recall "ให้ความสำคัญกับ False Negative"; [00:09:54] Precision "ให้ความสำคัญกับ False Positive" **นี่คือจุดต่างสำคัญ**
+- [00:09:06] การคัดกรอง (กักตัว COVID) แปลว่า recall สำคัญ: ยอมให้คนปกติบางคนโดนเตือนไปด้วย
+- [00:10:54] การตรวจยืนยันแปลว่า precision สำคัญ คนไข้จะได้ไม่ถูกรักษาผิด
+- [00:12:20]–[00:13:10] งานแพทย์อย่างตรวจหามะเร็งต้องการ**ทั้งคู่** เลยใช้ F1
+- [00:13:40] TPR บน ROC curve สูตรเดียวกับ recall มุมซ้ายบนคือ "perfect classifier"
+- [00:14:47]–[00:15:06] เทียบ ROC curve หลายเส้นด้วยตาเปล่ายาก เลยใช้ AUC แปลงเส้นโค้งเป็นตัวเลขตัวเดียว
 
 **พี่ใหม่: Detection & Segmentation**
-- [00:21:31]–[00:21:49] The IoU threshold is the minimum acceptable IoU and depends on how strict you want to be; typically **0.5**. A correct detection needs **IoU ≥ threshold AND the correct class**.
-- [00:23:00] TN is not used in detection because there are too many background regions.
-- [00:27:06]–[00:27:35] High confidence threshold gives high precision and low recall. Lowering it raises recall, raises FP and lowers precision.
-- [00:33:07] In detection the unit is objects; in segmentation the unit is **pixels**.
-- [00:37:54] "ไม่ควรแค่พิจารณาค่าตัวชีวัตรค่าใดค่าหนึ่ง… ต้องพิจารณาหลายๆมุมมอง".
-- [00:38:40] Multi-class: compute one-vs-all per class, then average.
+- [00:21:31]–[00:21:49] IoU threshold คือ IoU ต่ำสุดที่ยอมรับได้ ขึ้นกับว่าอยากเข้มแค่ไหน ปกติ **0.5** detection ที่ถูกต้องต้อง **IoU ≥ threshold และ class ถูก**
+- [00:23:00] ไม่ใช้ TN ใน detection เพราะพื้นหลังมีเยอะเกินไป
+- [00:27:06]–[00:27:35] confidence threshold สูง ได้ precision สูง recall ต่ำ ลด threshold ลง recall ขึ้น FP ขึ้น precision ลง
+- [00:33:07] ใน detection หน่วยคือวัตถุ; ใน segmentation หน่วยคือ **pixel**
+- [00:37:54] "ไม่ควรแค่พิจารณาค่าตัวชีวัตรค่าใดค่าหนึ่ง… ต้องพิจารณาหลายๆมุมมอง"
+- [00:38:40] Multi-class: คิด one-vs-all ทีละคลาส แล้วเฉลี่ย
 
 **พี่ฟิล: Video**
-- [00:44:20]–[00:45:42] "สิ่งที่สำคัญของงานวีดีโอจริง ๆ ก็คือลำดับของเวลา" (temporal dimension). Same frames in reversed order means sitting down vs standing up.
-- [00:49:07] Video classification uses **trimmed** clips; segmentation and localization use **untrimmed** video [00:53:01], [01:02:53].
-- [00:56:00]–[00:56:11] Over-segmentation: the model splits an action into too many pieces. The Edit score catches it.
-- [01:00:59]–[01:01:12] At 50%, GT C gets FN = 1 because the prediction split C into two pieces and neither overlaps ≥ 50%.
-- [01:05:05] tIoU thresholds commonly used: 0.3 / 0.5 / 0.7. Results are reported as **mAP@tIoU** [01:06:56].
-- [01:08:00]–[01:08:10] Localization cares only about the actions of interest, not every frame. "อันนี้คือความแตกต่างกัน".
+- [00:44:20]–[00:45:42] "สิ่งที่สำคัญของงานวีดีโอจริง ๆ ก็คือลำดับของเวลา" (temporal dimension) frame ชุดเดียวกันเรียงกลับด้าน = นั่งลง vs ลุกขึ้น
+- [00:49:07] Video classification ใช้ clip ที่ **trimmed**; segmentation กับ localization ใช้วิดีโอ **untrimmed** [00:53:01], [01:02:53]
+- [00:56:00]–[00:56:11] Over-segmentation: โมเดลหั่น action ออกเป็นหลายชิ้นเกินไป Edit score จับได้
+- [01:00:59]–[01:01:12] ที่ 50% GT C ได้ FN = 1 เพราะโมเดลหั่น C เป็นสองชิ้น และไม่มีชิ้นไหนทับ ≥ 50%
+- [01:05:05] tIoU threshold ที่ใช้บ่อย: 0.3 / 0.5 / 0.7 รายงานผลเป็น **mAP@tIoU** [01:06:56]
+- [01:08:00]–[01:08:10] Localization สนแค่ action ที่สนใจ ไม่ได้สนทุก frame "อันนี้คือความแตกต่างกัน"
 
 **อาจารย์: Regression**
-- [01:10:12] There are two groups: **Error-based** and **Correlation-based**.
-- [01:16:30] "ในงาน Regression สิ่งที่สำคัญก็คือ E (Error)", meaning prediction minus actual.
-- [01:17:07]–[01:17:22] Absolute value and squaring both **remove the sign**, so these metrics measure only magnitude, not direction.
-- [01:17:31]–[01:17:53] **Guideline:** if big and small errors should be punished differently, use MSE; if equally, use MAE.
-- [01:18:39] "เด็กๆต้องรู้ก่อนว่าข้อเสียของมันคืออะไร". MSE is not in the original unit, so RMSE exists to keep MSE's property *and* the original unit [01:19:50]–[01:20:03].
-- [01:21:44] "สิ่งที่เด็ก ๆ ชอบพลาดกัน": regression outputs have units and ranges, unlike classification counts.
-- [01:23:03]–[01:23:27] MAE is not always smaller than MSE; it depends on the value range. "อันนี้คือสิ่งที่เราต้องเข้าใจก่อน… ต้องระวังในการเลือกใช้".
-- [01:23:41] The **weakness of MSE and RMSE is sensitivity to outliers**; MAE is less sensitive.
-- [01:25:36] "เราไม่ควรดูแค่พวก Error Based Matrix" (the shifted-line example, MAE 2.4 vs 8). Also check Pearson correlation and **plot** the predictions: "เรากลัวโดนหลอก" [01:28:17].
-- [01:29:26]–[01:30:17] An error of 10 means different things depending on the **Possible Range**. Always state the unit and the range.
+- [01:10:12] มีสองกลุ่ม: **Error-based** และ **Correlation-based**
+- [01:16:30] "ในงาน Regression สิ่งที่สำคัญก็คือ E (Error)" คือค่าที่ทายลบค่าจริง
+- [01:17:07]–[01:17:22] ทั้งค่าสัมบูรณ์และการยกกำลังสอง**ตัดเครื่องหมายทิ้ง** metric พวกนี้เลยวัดแค่ขนาด ไม่ได้วัดทิศทาง
+- [01:17:31]–[01:17:53] **แนวทาง:** ถ้าอยากลงโทษ error ใหญ่กับเล็กไม่เท่ากัน ใช้ MSE; ถ้าเท่ากัน ใช้ MAE
+- [01:18:39] "เด็กๆต้องรู้ก่อนว่าข้อเสียของมันคืออะไร" MSE ไม่ได้อยู่ในหน่วยเดิม เลยมี RMSE ไว้เก็บคุณสมบัติของ MSE *และ*หน่วยเดิม [01:19:50]–[01:20:03]
+- [01:21:44] "สิ่งที่เด็ก ๆ ชอบพลาดกัน": output ของ regression มีหน่วยและช่วงค่า ไม่เหมือนการนับใน classification
+- [01:23:03]–[01:23:27] MAE ไม่ได้น้อยกว่า MSE เสมอ ขึ้นกับช่วงค่า "อันนี้คือสิ่งที่เราต้องเข้าใจก่อน… ต้องระวังในการเลือกใช้"
+- [01:23:41] **จุดอ่อนของ MSE และ RMSE คือไวต่อ outlier**; MAE ไวน้อยกว่า
+- [01:25:36] "เราไม่ควรดูแค่พวก Error Based Matrix" (ตัวอย่างเส้นเลื่อน MAE 2.4 vs 8) ต้องดู Pearson correlation และ**พล็อต**ค่าที่ทายด้วย: "เรากลัวโดนหลอก" [01:28:17]
+- [01:29:26]–[01:30:17] error 10 มีความหมายต่างกันขึ้นกับ **Possible Range** ต้องบอกหน่วยและช่วงค่าเสมอ
 
 **พี่ชิน: RAG**
-- [01:34:12]–[01:34:52] Users only care about the first page of results, so rank matters.
-- [01:36:13] Evaluate the RAG pipeline at **two points**: retrieval and answering.
-- [01:40:07]–[01:40:27] Increasing K can only raise Recall@K.
-- [01:41:28]–[01:42:10] Precision@K tends to be much lower than Recall and drops as K grows. Reducing K helps, but it is a trade-off.
-- [01:42:24]–[01:42:32] "ลำดับของการได้เอกสารที่อยู่บนๆ… สำคัญหรือไม่ครับ? คำตอบของเรื่องนี้คือค่อนข้างสำคัญ". This leads to MRR and nDCG.
-- [01:42:47] MRR doesn't care how many correct documents were found, only the rank of the first one.
-- [01:48:01]–[01:48:18] nDCG compares better than MRR because it scores the order of all retrieved documents, using graded relevance.
-- [01:51:35]–[01:52:46] LLM-as-a-Judge needs two key tools, a **Criteria / Rubric** and **Evaluation Steps**. It outputs a score with a reason.
-- [01:52:51]–[01:55:27] พี่ชิน was sceptical at first, but in their test human and LLM-judge scores differed by only about 0.13 on average (slide: average MAE 0.13).
+- [01:34:12]–[01:34:52] ผู้ใช้สนแค่หน้าแรกของผลลัพธ์ ลำดับเลยสำคัญ
+- [01:36:13] ประเมิน RAG pipeline ที่ **2 จุด**: retrieval และ answering
+- [01:40:07]–[01:40:27] เพิ่ม K มีแต่จะทำให้ Recall@K สูงขึ้น
+- [01:41:28]–[01:42:10] Precision@K มักต่ำกว่า Recall มาก และลดลงเมื่อ K เพิ่ม ลด K ช่วยได้ แต่เป็น trade-off
+- [01:42:24]–[01:42:32] "ลำดับของการได้เอกสารที่อยู่บนๆ… สำคัญหรือไม่ครับ? คำตอบของเรื่องนี้คือค่อนข้างสำคัญ" นำไปสู่ MRR และ nDCG
+- [01:42:47] MRR ไม่สนว่าเจอเอกสารถูกกี่อัน สนแค่อันดับของอันแรก
+- [01:48:01]–[01:48:18] nDCG ใช้เทียบได้ดีกว่า MRR เพราะให้คะแนนลำดับของเอกสารทุกอันที่ดึงมา โดยใช้ graded relevance
+- [01:51:35]–[01:52:46] LLM-as-a-Judge ต้องมีเครื่องมือหลักสองอย่าง คือ **Criteria / Rubric** และ **Evaluation Steps** output เป็นคะแนนพร้อมเหตุผล
+- [01:52:51]–[01:55:27] ตอนแรกพี่ชินไม่ค่อยเชื่อ แต่ในการทดสอบของเขา คะแนนของคนกับ LLM-judge ต่างกันเฉลี่ยแค่ประมาณ 0.13 (สไลด์: average MAE 0.13)
 
 ---
 
-## Likely exam questions
+## ข้อสอบที่น่าจะออก
 
-**Q1.** A model's confusion matrix: TP = 80, FN = 20, TN = 885, FP = 15. Compute Accuracy, Precision, Recall and F1.
+**Q1.** confusion matrix ของโมเดล: TP = 80, FN = 20, TN = 885, FP = 15 จงคำนวณ Accuracy, Precision, Recall และ F1
 **A:**
 - Accuracy = (80 + 885)/1000 = **0.965**
 - Precision = 80/(80 + 15) = **0.842**
 - Recall = 80/(80 + 20) = **0.80**
 - F1 = 2·80/(2·80 + 15 + 20) = 160/195 = **0.821**
 
-**Q2.** 1,000 patients, 100 with disease. The model predicts "healthy" for everyone. Give Accuracy and Recall, and say why accuracy misleads.
+**Q2.** คนไข้ 1,000 คน เป็นโรค 100 คน โมเดลทายว่า "ปกติ" ทุกคน จงหา Accuracy และ Recall และบอกว่าทำไม accuracy ถึงหลอกเรา
 **A:**
-- TN = 900, FN = 100, TP = FP = 0.
-- Accuracy = 900/1000 = **90%**; Recall = 0/100 = **0**.
-- The data is **imbalanced**, so accuracy is dominated by the majority (negative) class. The model never detects a single patient. Use recall, precision, F1 or AUC instead.
+- TN = 900, FN = 100, TP = FP = 0
+- Accuracy = 900/1000 = **90%**; Recall = 0/100 = **0**
+- ข้อมูล **imbalanced** accuracy เลยถูกคลาสส่วนใหญ่ (negative) ครอบงำ โมเดลหาคนป่วยไม่เจอแม้แต่คนเดียว ให้ใช้ recall, precision, F1 หรือ AUC แทน
 
-**Q3.** For each scenario, pick Precision or Recall: (a) COVID screening before quarantine; (b) confirmatory test before starting chemotherapy; (c) cancer detection where both missing a patient and over-treating are bad.
+**Q3.** แต่ละสถานการณ์ เลือก Precision หรือ Recall: (a) คัดกรอง COVID ก่อนกักตัว; (b) ตรวจยืนยันก่อนเริ่มทำคีโม; (c) ตรวจหามะเร็ง ที่ทั้งพลาดคนไข้และรักษาเกินจำเป็นล้วนไม่ดี
 **A:**
-- (a) **Recall**: missing a case (FN) is costly; false alarms are acceptable.
-- (b) **Precision**: a false positive means unnecessary, harmful treatment.
-- (c) **F1**: it balances both.
+- (a) **Recall**: พลาดเคส (FN) เสียหายหนัก; เตือนผิดยอมรับได้
+- (b) **Precision**: false positive แปลว่าต้องรักษาโดยไม่จำเป็นและเป็นอันตราย
+- (c) **F1**: บาลานซ์ทั้งสองอย่าง
 
-**Q4.** Model X has AUC = 0.93, model Y has AUC = 0.50 and model Z has AUC = 0.30. Interpret each.
+**Q4.** โมเดล X มี AUC = 0.93, โมเดล Y มี AUC = 0.50 และโมเดล Z มี AUC = 0.30 จงตีความแต่ละตัว
 **A:**
-- X separates positives from negatives very well.
-- Y is no better than random guessing.
-- Z separates in the **wrong direction**: its scores are inverted, so flipping its decision would give AUC 0.70.
-- AUC is threshold-independent: it summarises TPR vs FPR across all thresholds.
+- X แยก positive ออกจาก negative ได้ดีมาก
+- Y ไม่ดีไปกว่าการเดาสุ่ม
+- Z แยก**ผิดทิศ**: score กลับหัว ถ้ากลับการตัดสินใจของมันจะได้ AUC 0.70
+- AUC ไม่ขึ้นกับ threshold: สรุป TPR vs FPR ของทุก threshold
 
-**Q5.** A predicted box and a GT box each have area 60 px², and they overlap by 40 px². Compute IoU. Is it a TP at threshold 0.5? At 0.75?
+**Q5.** box ที่ทายกับ box GT มีพื้นที่อย่างละ 60 px² และทับกัน 40 px² จงคำนวณ IoU ถือเป็น TP ที่ threshold 0.5 ไหม? ที่ 0.75 ล่ะ?
 **A:**
-- Union = 60 + 60 − 40 = 80, so IoU = 40/80 = **0.5**.
-- At threshold 0.5: **TP**, since 0.5 ≥ 0.5 (if the class is correct).
-- At 0.75: **FP**.
+- Union = 60 + 60 − 40 = 80 ดังนั้น IoU = 40/80 = **0.5**
+- ที่ threshold 0.5: **TP** เพราะ 0.5 ≥ 0.5 (ถ้า class ถูก)
+- ที่ 0.75: **FP**
 
-**Q6.** A detector outputs 12 "bird" boxes, of which 10 are correct. The image has 15 birds. Find Precision, Recall and F1.
+**Q6.** detector ให้ box "นก" 12 อัน ถูก 10 อัน ในภาพมีนก 15 ตัว จงหา Precision, Recall และ F1
 **A:**
-- TP = 10, FP = 2, FN = 5.
-- P = 10/12 = **0.833**; R = 10/15 = **0.667**; F1 = 20/(20 + 2 + 5) = **0.741**.
+- TP = 10, FP = 2, FN = 5
+- P = 10/12 = **0.833**; R = 10/15 = **0.667**; F1 = 20/(20 + 2 + 5) = **0.741**
 
-**Q7.** The AP values per class are Bird 0.773, Car 0.883, Dog 0.842. What is mAP, and what does AP represent?
+**Q7.** ค่า AP ของแต่ละคลาสคือ Bird 0.773, Car 0.883, Dog 0.842 mAP เท่าไร และ AP หมายถึงอะไร?
 **A:**
-- mAP = (0.773 + 0.883 + 0.842)/3 = **0.833**.
-- AP is the area under the precision–recall curve for one class, obtained by sweeping the confidence threshold. mAP is the mean over classes.
+- mAP = (0.773 + 0.883 + 0.842)/3 = **0.833**
+- AP คือพื้นที่ใต้ precision–recall curve ของคลาสเดียว ได้จากการไล่ confidence threshold mAP คือค่าเฉลี่ยทุกคลาส
 
-**Q8.** A binary tumour segmentation has TP = 5, FN = 2, FP = 1, TN = 8 pixels. Compute Pixel Accuracy, IoU and Dice/F1.
+**Q8.** binary segmentation ของเนื้องอกมี TP = 5, FN = 2, FP = 1, TN = 8 pixel จงคำนวณ Pixel Accuracy, IoU และ Dice/F1
 **A:**
 - Pixel Accuracy = 13/16 = **0.8125**
 - IoU = 5/(5 + 1 + 2) = **0.625**
 - Dice/F1 = 2·5/(2·5 + 1 + 2) = 10/13 = **0.769**
 
-**Q9.** A tumour occupies 2% of an MRI slice. Model A predicts "no tumour" everywhere. What is its pixel accuracy? Which metric should you use instead?
+**Q9.** เนื้องอกกินพื้นที่ 2% ของ MRI slice โมเดล A ทายว่า "ไม่มีเนื้องอก" ทุก pixel pixel accuracy เท่าไร? ควรใช้ metric ไหนแทน?
 **A:**
-- Pixel accuracy is about **98%**, because every background pixel is a TN, yet IoU = Dice = 0 for the tumour class.
-- Use **IoU or Dice (F1)** for the lesion class, or mIoU across classes. These ignore the huge TN count.
+- Pixel accuracy ประมาณ **98%** เพราะ pixel พื้นหลังทุกตัวเป็น TN แต่ IoU = Dice = 0 สำหรับคลาสเนื้องอก
+- ใช้ **IoU หรือ Dice (F1)** กับคลาสรอยโรค หรือ mIoU ทุกคลาส ตัวพวกนี้ไม่สน TN ที่มีเยอะมาก
 
-**Q10.** Multi-class segmentation per-class IoU: background 0.400, cat 0.667, dog 0.500. Compute mIoU and say how per-class values are obtained.
+**Q10.** IoU รายคลาสของ multi-class segmentation: พื้นหลัง 0.400, แมว 0.667, หมา 0.500 จงคำนวณ mIoU และบอกว่าค่ารายคลาสได้มาอย่างไร
 **A:**
-- mIoU = (0.400 + 0.667 + 0.500)/3 = **0.522**.
-- Per-class values come from a **one-vs-all** confusion matrix per class (that class vs everything else). IoU = TP/(TP + FP + FN).
+- mIoU = (0.400 + 0.667 + 0.500)/3 = **0.522**
+- ค่ารายคลาสได้จาก confusion matrix แบบ **one-vs-all** ของแต่ละคลาส (คลาสนั้น vs ที่เหลือทั้งหมด) IoU = TP/(TP + FP + FN)
 
-**Q11.** Temporal action segmentation: GT (collapsed) is A→B→C→D; the prediction (collapsed) is A→B→C→B→C→D. Compute the Edit score and name the problem it reveals.
+**Q11.** Temporal action segmentation: GT (หลังยุบ) คือ A→B→C→D; prediction (หลังยุบ) คือ A→B→C→B→C→D จงคำนวณ Edit score และบอกว่ามันเผยปัญหาอะไร
 **A:**
-- The Levenshtein distance is D = 2 (delete the extra B and C).
-- Edit = 1 − 2/max(6, 4) = 1 − 1/3 = **0.667 (66.67%)**.
-- It reveals **over-segmentation**: the model fragments one action into pieces.
+- Levenshtein distance คือ D = 2 (ลบ B กับ C ที่เกินมา)
+- Edit = 1 − 2/max(6, 4) = 1 − 1/3 = **0.667 (66.67%)**
+- เผยปัญหา **over-segmentation**: โมเดลหั่น action เดียวออกเป็นหลายชิ้น
 
-**Q12.** Fall detection on CCTV. A GT fall is at 10–20 s and the prediction is 12–22 s. Compute tIoU. Is it a TP at tIoU 0.5 and at 0.7? Which task type is this?
+**Q12.** ตรวจจับการล้มจาก CCTV การล้มจริง (GT) อยู่ที่ 10–20 s และ prediction คือ 12–22 s จงคำนวณ tIoU ถือเป็น TP ที่ tIoU 0.5 และ 0.7 ไหม? งานนี้เป็นงานประเภทไหน?
 **A:**
-- Intersection = 12–20 = 8 s; union = 10–22 = 12 s; tIoU = 8/12 = **0.667**.
-- At 0.5: **TP**. At 0.7: **FP**.
-- This is **Temporal Action Localization**: untrimmed video, find (class, start, end) for actions of interest only. Report mAP@tIoU.
+- Intersection = 12–20 = 8 s; union = 10–22 = 12 s; tIoU = 8/12 = **0.667**
+- ที่ 0.5: **TP** ที่ 0.7: **FP**
+- นี่คือ **Temporal Action Localization**: วิดีโอ untrimmed หา (class, start, end) เฉพาะ action ที่สนใจ รายงานเป็น mAP@tIoU
 
-**Q13.** Heart-rate prediction. Actual = [50, 55, 60, 65, 70, 75, 80]; Predicted = [55, 47, 66, 61, 77, 70, 102]. Compute MAE, MSE and RMSE. Which metric is most affected by the last sample?
+**Q13.** ทายอัตราการเต้นหัวใจ Actual = [50, 55, 60, 65, 70, 75, 80]; Predicted = [55, 47, 66, 61, 77, 70, 102] จงคำนวณ MAE, MSE และ RMSE metric ไหนได้รับผลจากตัวอย่างสุดท้ายมากที่สุด?
 **A:**
-- |e| = 5, 8, 6, 4, 7, 5, 22, so MAE = 57/7 = **8.14**.
-- e² = 25, 64, 36, 16, 49, 25, 484, so MSE = 699/7 = **99.86**.
-- RMSE = √99.86 = **9.99**.
-- **MSE** (and RMSE) are most affected: the outlier error of 22 contributes 484 of the 699 squared error. MAE is the least sensitive.
+- |e| = 5, 8, 6, 4, 7, 5, 22 ดังนั้น MAE = 57/7 = **8.14**
+- e² = 25, 64, 36, 16, 49, 25, 484 ดังนั้น MSE = 699/7 = **99.86**
+- RMSE = √99.86 = **9.99**
+- **MSE** (และ RMSE) โดนผลกระทบมากสุด: error ของ outlier ที่เป็น 22 กินไป 484 จาก squared error 699 MAE ไวน้อยที่สุด
 
-**Q14.** Two models each have total absolute error 4 over 4 samples: A has errors (1, 1, 1, 1) and B has errors (0, 0, 0, 4). Compute MAE and RMSE for both. Which metric would you choose if one large error is clinically dangerous?
+**Q14.** สองโมเดลมีผลรวม absolute error = 4 จาก 4 ตัวอย่างเท่ากัน: A มี error (1, 1, 1, 1) และ B มี error (0, 0, 0, 4) จงคำนวณ MAE และ RMSE ของทั้งคู่ ถ้า error ใหญ่ตัวเดียวอันตรายทางคลินิก จะเลือก metric ไหน?
 **A:**
-- MAE: A = 1, B = 1, so MAE doesn't distinguish them.
-- MSE: A = 1, B = 16/4 = 4. RMSE: A = **1**, B = **2**.
-- Choose **RMSE (or MSE)**: it punishes large errors more, and RMSE stays in the original unit.
+- MAE: A = 1, B = 1 MAE เลยแยกสองตัวนี้ไม่ออก
+- MSE: A = 1, B = 16/4 = 4 RMSE: A = **1**, B = **2**
+- เลือก **RMSE (หรือ MSE)**: ลงโทษ error ใหญ่หนักกว่า และ RMSE ยังอยู่ในหน่วยเดิม
 
-**Q15.** Retrieval with K = 5. For three queries, the first relevant document appears at rank 3, at rank 2, and not at all. Compute MRR. Also compute Precision@5 for five queries with 1, 1, 0, 2, 1 relevant documents in the top 5.
+**Q15.** Retrieval ที่ K = 5 มีสาม query ที่เอกสารเกี่ยวข้องอันแรกอยู่อันดับ 3, อันดับ 2 และไม่เจอเลย จงคำนวณ MRR และคำนวณ Precision@5 ของห้า query ที่มีเอกสารเกี่ยวข้องใน top 5 จำนวน 1, 1, 0, 2, 1 อัน
 **A:**
-- MRR = (1/3 + 1/2 + 0)/3 = 0.833/3 = **0.278**.
-- Precision@5 = (1/5 + 1/5 + 0/5 + 2/5 + 1/5)/5 = 1.0/5 = **0.20**.
+- MRR = (1/3 + 1/2 + 0)/3 = 0.833/3 = **0.278**
+- Precision@5 = (1/5 + 1/5 + 0/5 + 2/5 + 1/5)/5 = 1.0/5 = **0.20**
 
-**Q16 (bonus, nDCG).** A retrieved list has graded relevance [2, 1, 0, 0, 2] (slide 111). Compute nDCG@5 using gain 2^rel − 1 and discount log₂(i + 1).
+**Q16 (โบนัส, nDCG).** list ที่ดึงมามี graded relevance [2, 1, 0, 0, 2] (สไลด์ 111) จงคำนวณ nDCG@5 โดยใช้ gain 2^rel − 1 และ discount log₂(i + 1)
 **A:**
-- DCG = 3/1 + 1/1.585 + 0 + 0 + 3/2.585 = 3 + 0.631 + 1.161 = **4.791**.
-- Ideal ordering [2, 2, 1, 0, 0]: IDCG = 3/1 + 3/1.585 + 1/2 = 3 + 1.893 + 0.5 = **5.393**.
-- nDCG = 4.791/5.393 = **0.888**.
+- DCG = 3/1 + 1/1.585 + 0 + 0 + 3/2.585 = 3 + 0.631 + 1.161 = **4.791**
+- เรียงแบบ ideal [2, 2, 1, 0, 0]: IDCG = 3/1 + 3/1.585 + 1/2 = 3 + 1.893 + 0.5 = **5.393**
+- nDCG = 4.791/5.393 = **0.888**
 
-**Q17 (bonus, concept).** A medical RAG chatbot gives wrong answers. How would you locate the problem?
-**A:** Evaluate the two stages separately.
-- **Retrieval** with Precision@K, Recall@K, MRR and nDCG@K: was the right evidence retrieved, and ranked near the top?
-- **Answering** with LLM-as-a-Judge, using a rubric of correctness, relevance and helpfulness, with a ground truth plus evaluation steps, giving a score and a reason.
-- Using dual judges and spot-checking against human experts (as in พี่ชิน's test, average MAE 0.13) helps make the judge's results trustworthy.
+**Q17 (โบนัส, แนวคิด).** chatbot RAG ทางการแพทย์ตอบผิด จะหาว่าปัญหาอยู่ตรงไหนยังไง?
+**A:** ประเมินสองขั้นแยกกัน
+- **Retrieval** ด้วย Precision@K, Recall@K, MRR และ nDCG@K: ดึงหลักฐานที่ถูกมาไหม และอยู่อันดับต้นๆ ไหม?
+- **Answering** ด้วย LLM-as-a-Judge ใช้ rubric เรื่อง correctness, relevance และ helpfulness พร้อม ground truth และ evaluation steps ให้ออกมาเป็นคะแนนพร้อมเหตุผล
+- ใช้ judge สองตัว และสุ่มเช็กเทียบกับผู้เชี่ยวชาญที่เป็นคน (แบบการทดสอบของพี่ชิน ที่ได้ average MAE 0.13) ช่วยให้ผลของ judge เชื่อถือได้
 
 ---
 
-## Common traps
+## กับดักที่เจอบ่อย
 
-1. **High accuracy on imbalanced data ≠ a good model.** Always check recall and precision, especially in medical data where positives are rare. The 90% accuracy, 0 recall example is the classic.
-2. **Mixing up precision and recall.**
-   - Recall's denominator is the *actual* positives (TP + FN), and it is hurt by **FN**.
-   - Precision's denominator is the *predicted* positives (TP + FP), and it is hurt by **FP**.
-   - Screening means recall; confirmation means precision.
-3. **F1 is the harmonic mean, not the arithmetic mean.** With P = 1.0 and R = 0.1, F1 = 0.18, not 0.55. The shortcut **F1 = 2TP/(2TP + FP + FN)** avoids rounding errors.
-4. **TPR = Recall.** ROC plots TPR (y) against **FPR** (x), not against precision. AUC < 0.5 means "reversed", not "terrible but random".
-5. **A detection counts as TP only if IoU ≥ threshold AND the class is right.** A box with good IoU but the wrong class is an **FP**, and so is a duplicate or low-IoU box. TN is not used in detection.
-6. **Union = A + B − overlap.** Don't divide by A + B (that gives half of Dice, not IoU).
-7. **AP is per class; mAP is the mean over classes** (and, in video, it is reported at a specific tIoU, e.g. mAP@0.5).
-8. **Pixel accuracy is inflated by background.** Use IoU or Dice for small structures. Dice (= F1) is always ≥ IoU, so don't compare a Dice from one paper with an IoU from another.
-9. **Multi-class segmentation metrics are per-class one-vs-all, then averaged.** The pixel accuracy, by contrast, is computed once over all pixels.
-10. **Segmental F1@k: each GT segment can be a TP only once.** Extra fragments are FP. Higher k is stricter: @50 is the strictest and @10 the most lenient.
-11. **The Edit score uses collapsed segment sequences and divides by the LONGER sequence** (max of N_pred and N_gt), not by the GT length.
-12. **Video task confusion:**
-    - Classification: trimmed clip, one label.
-    - Action segmentation: every frame gets a label.
-    - Action localization: only the actions of interest, as (class, start, end).
-13. **MSE is not in the original unit (it's unit²); RMSE is.** MSE and RMSE are sensitive to outliers; MAE is not as sensitive.
-14. **"MAE < MSE always" is false.** When errors are below 1 (small output ranges such as 0–1), MSE < MAE.
-15. **A low error doesn't mean a good model, and a high r doesn't mean an accurate one.**
-    - Slide 99: MAE 2.40 with r = 0, against MAE 8 with r = 1 (a constant shift).
-    - Slide 103: r = 1.000 with MAE 25 (scale ×2). r cannot see bias or scale error.
-    - Report both families and plot the predictions.
-16. **Pearson r = −1 is a perfect inverse correlation, not "no correlation".** r = 0 means no *linear* relationship; a non-linear relationship (e.g. a U-shape) may still exist.
-17. **Error values have no meaning without the unit and the possible range.** Report something like "10 bpm on a 40–200 range", not just "error = 10".
-18. **Recall@K never decreases as K grows**, while Precision@K usually falls. A big Recall@K at large K can hide poor ranking.
-19. **MRR uses only the FIRST relevant document**; the others are ignored. It scores 0 if nothing relevant is retrieved. nDCG uses graded relevance for all positions.
-20. **nDCG = DCG/IDCG**, which is ≤ 1. Don't invert it. (The spoken explanation at [01:47:40] said it the other way round; the slide shows 8.89/9.3928 = 0.946.) The ideal ordering sorts the *same* relevance grades in descending order.
-21. **Evaluating a RAG system only by its final answer hides where it failed.** Score retrieval and answering separately.
+1. **accuracy สูงบนข้อมูล imbalanced ≠ โมเดลดี** ต้องเช็ก recall และ precision เสมอ โดยเฉพาะข้อมูลแพทย์ที่ positive มีน้อย ตัวอย่างคลาสสิกคือ accuracy 90% แต่ recall 0
+2. **สับสน precision กับ recall**
+   - ตัวหารของ recall คือ positive *จริง* (TP + FN) และเสียเพราะ **FN**
+   - ตัวหารของ precision คือ positive *ที่ทาย* (TP + FP) และเสียเพราะ **FP**
+   - คัดกรอง (screening) ใช้ recall; ตรวจยืนยัน (confirmation) ใช้ precision
+3. **F1 คือ harmonic mean ไม่ใช่ค่าเฉลี่ยธรรมดา (arithmetic mean)** ถ้า P = 1.0 และ R = 0.1 จะได้ F1 = 0.18 ไม่ใช่ 0.55 ใช้ทางลัด **F1 = 2TP/(2TP + FP + FN)** จะไม่มีปัญหาปัดเศษ
+4. **TPR = Recall** ROC พล็อต TPR (y) เทียบกับ **FPR** (x) ไม่ใช่เทียบกับ precision AUC < 0.5 แปลว่า "กลับด้าน" ไม่ใช่ "แย่แต่สุ่ม"
+5. **detection เป็น TP ได้ก็ต่อเมื่อ IoU ≥ threshold และ class ถูก** box ที่ IoU ดีแต่ class ผิดคือ **FP** box ซ้ำหรือ IoU ต่ำก็เป็น FP เหมือนกัน detection ไม่ใช้ TN
+6. **Union = A + B − overlap** อย่าหารด้วย A + B (จะได้ครึ่งหนึ่งของ Dice ไม่ใช่ IoU)
+7. **AP คิดต่อคลาส; mAP คือค่าเฉลี่ยทุกคลาส** (และในงานวิดีโอ จะรายงานที่ tIoU ค่าหนึ่ง เช่น mAP@0.5)
+8. **Pixel accuracy สูงเกินจริงเพราะพื้นหลัง** ใช้ IoU หรือ Dice กับโครงสร้างเล็กๆ Dice (= F1) ≥ IoU เสมอ เลยอย่าเอา Dice จาก paper หนึ่งไปเทียบกับ IoU จากอีก paper
+9. **metric ของ multi-class segmentation คิดแบบ one-vs-all ทีละคลาส แล้วค่อยเฉลี่ย** ส่วน pixel accuracy คิดทีเดียวจาก pixel ทั้งหมด
+10. **Segmental F1@k: segment ของ GT แต่ละอันเป็น TP ได้แค่ครั้งเดียว** ชิ้นที่เกินเป็น FP k ยิ่งสูงยิ่งเข้ม: @50 เข้มที่สุด @10 หลวมที่สุด
+11. **Edit score ใช้ลำดับ segment ที่ยุบแล้ว และหารด้วยลำดับที่ยาวกว่า** (max ของ N_pred กับ N_gt) ไม่ได้หารด้วยความยาวของ GT
+12. **สับสนประเภทงานวิดีโอ:**
+    - Classification: clip ที่ trimmed, label เดียว
+    - Action segmentation: ทุก frame ได้ label
+    - Action localization: เฉพาะ action ที่สนใจ เป็น (class, start, end)
+13. **MSE ไม่ได้อยู่ในหน่วยเดิม (เป็น unit²); RMSE อยู่ในหน่วยเดิม** MSE และ RMSE ไวต่อ outlier; MAE ไวน้อยกว่า
+14. **"MAE < MSE เสมอ" ผิด** ถ้า error ต่ำกว่า 1 (ช่วง output เล็ก เช่น 0–1) จะได้ MSE < MAE
+15. **error ต่ำไม่ได้แปลว่าโมเดลดี และ r สูงไม่ได้แปลว่าแม่น**
+    - สไลด์ 99: MAE 2.40 กับ r = 0 เทียบกับ MAE 8 กับ r = 1 (เลื่อนคงที่)
+    - สไลด์ 103: r = 1.000 แต่ MAE 25 (scale ×2) r มองไม่เห็น bias หรือ scale error
+    - รายงานทั้งสองกลุ่ม และพล็อตค่าที่ทายดู
+16. **Pearson r = −1 คือสัมพันธ์ผกผันสมบูรณ์ ไม่ใช่ "ไม่สัมพันธ์"** r = 0 แปลว่าไม่มีความสัมพันธ์*เชิงเส้น* อาจยังมีความสัมพันธ์แบบ non-linear (เช่น รูปตัว U) อยู่
+17. **ค่า error ไม่มีความหมายถ้าไม่บอกหน่วยและช่วงค่าที่เป็นไปได้** ให้รายงานแบบ "10 bpm บนช่วง 40–200" ไม่ใช่แค่ "error = 10"
+18. **Recall@K ไม่มีทางลดลงเมื่อ K เพิ่ม** ส่วน Precision@K มักลดลง Recall@K สูงๆ ที่ K ใหญ่อาจซ่อนการจัดอันดับที่แย่ไว้
+19. **MRR ใช้แค่เอกสารเกี่ยวข้องอันแรก** อันอื่นไม่นับ ถ้าดึงอะไรที่เกี่ยวข้องมาไม่ได้เลยจะได้ 0 nDCG ใช้ graded relevance กับทุกตำแหน่ง
+20. **nDCG = DCG/IDCG** ซึ่ง ≤ 1 อย่ากลับเศษกับส่วน (ตอนอธิบายที่ [01:47:40] พูดกลับด้าน; สไลด์แสดง 8.89/9.3928 = 0.946) การเรียงแบบ ideal คือเอาระดับ relevance *ชุดเดิม*มาเรียงจากมากไปน้อย
+21. **ประเมินระบบ RAG จากคำตอบสุดท้ายอย่างเดียว จะไม่รู้ว่าพังตรงไหน** ให้คะแนน retrieval กับ answering แยกกัน

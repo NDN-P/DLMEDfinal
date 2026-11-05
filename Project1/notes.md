@@ -1,64 +1,64 @@
 # Project 1 — Thai Character & Number Recognition
 
-Source: the two spec images in this folder (`download.jpg` = data dictionary, `download (1).jpg` = test set & submission guide)
-and the two CSV files (`6ab4…0aaf.txt` = class table, `6ab4…0ab0.txt` = submission sheet template, encoded in Windows-874).
-This is exam **Q1** ("โปรเจค 1 ที่ทำ"). Our group finished and passed it.
+ที่มา: รูปรายละเอียด 2 รูปใน folder นี้ (`download.jpg` = data dictionary, `download (1).jpg` = test set และวิธีส่ง)
+และไฟล์ CSV 2 ไฟล์ (`6ab4…0aaf.txt` = ตารางคลาส, `6ab4…0ab0.txt` = แบบฟอร์มส่งคำตอบ, encoding Windows-874)
+อันนี้คือข้อสอบ **Q1** ("โปรเจค 1 ที่ทำ") กลุ่มเราทำเสร็จและผ่านแล้ว
 
-> **Fill in your group's own details** before the exam: model, input size, augmentation, validation accuracy, test score.
-> The exam asks about *what you did*, so these matter more than anything generic below.
+> **เติมรายละเอียดของกลุ่มตัวเอง** ก่อนสอบ: โมเดล, input size, augmentation, validation accuracy, test score
+> ข้อสอบถามว่า *เราทำอะไรไป* เรื่องพวกนี้เลยสำคัญกว่าเนื้อหาทั่วไปข้างล่าง
 
-## The task
-- **Image classification, 72 classes, one label per image** → multiclass (not multilabel, not segmentation).
-- Input: one cropped image of a single Thai character, vowel/tone mark or Thai digit (`.jpg`).
-- Output: a 3-digit **class_id**.
+## โจทย์
+- **Image classification 72 คลาส, ภาพละ 1 label** → multiclass (ไม่ใช่ multilabel, ไม่ใช่ segmentation)
+- Input: ภาพที่ crop มาแล้ว มีตัวอักษรไทย 1 ตัว สระ/วรรณยุกต์ หรือเลขไทย (`.jpg`)
+- Output: **class_id** 3 หลัก
 
-## class_id structure
-First digit = type, digits 2–3 = index within the type (example: 205 = type 2, item 05 = ี).
+## โครงสร้าง class_id
+หลักแรก = ประเภท, หลัก 2–3 = ลำดับในประเภทนั้น (ตัวอย่าง: 205 = ประเภท 2 ลำดับ 05 = ี)
 
-| Type | Classes | class_id | Training folders |
+| ประเภท | จำนวนคลาส | class_id | Folder ที่ใช้ train |
 |---|---|---|---|
-| 1 Thai consonants (พยัญชนะ, incl. ฤ) | 41 | 101–141 | `./161` … `./206` |
-| 2 Vowels, tone marks, symbols (สระ วรรณยุกต์ เครื่องหมาย) | 21 | 201–221 | `./207` … `./236` |
-| 3 Thai digits ๐–๙ | 10 | 301–310 | `./240` … `./249` |
+| 1 พยัญชนะไทย (พยัญชนะ, รวม ฤ) | 41 | 101–141 | `./161` … `./206` |
+| 2 สระ, วรรณยุกต์, สัญลักษณ์ (สระ วรรณยุกต์ เครื่องหมาย) | 21 | 201–221 | `./207` … `./236` |
+| 3 เลขไทย ๐–๙ | 10 | 301–310 | `./240` … `./249` |
 
-- Folder names are the character's TIS-620 code (161 = ก, 249 = ๙), so codes with no folder (165 ฅ, 166 ฆ, 172 ฌ, 174 ฎ, 198 ฦ …) are not in the dataset.
-- The model outputs an index 0–71, which must be **mapped back to class_id** with the table. Writing the raw index is scored as wrong.
+- ชื่อ folder คือรหัส TIS-620 ของตัวอักษร (161 = ก, 249 = ๙) รหัสที่ไม่มี folder (165 ฅ, 166 ฆ, 172 ฌ, 174 ฎ, 198 ฦ …) แปลว่าไม่มีใน dataset
+- โมเดลให้ output เป็น index 0–71 ต้อง **map กลับเป็น class_id** ด้วยตาราง ถ้าเขียน index ดิบ ๆ ไปจะถือว่าผิด
 
-## Test and submission
-| Item | Value |
+## Test และการส่ง
+| หัวข้อ | ค่า |
 |---|---|
-| Test set | about 500 images, `./test_dataset/ts_img_001` … |
-| Format | all `.jpg` |
-| Image size | about **7×11 px up to 180×177 px** (W×H), so sizes and aspect ratios vary a lot |
-| Time limit | **30 minutes** for inference |
-| Submission | Google Sheet, one column per group (10 groups); fill only your own column |
-| Scoring | prediction = gt_class_id → 1 point; wrong → 0; **blank or not finished in time → 0** |
+| Test set | ประมาณ 500 ภาพ, `./test_dataset/ts_img_001` … |
+| Format | `.jpg` ทั้งหมด |
+| ขนาดภาพ | ประมาณ **7×11 px ถึง 180×177 px** (W×H) ขนาดและสัดส่วนต่างกันมาก |
+| เวลา | **30 นาที** สำหรับ inference |
+| การส่ง | Google Sheet กลุ่มละ 1 คอลัมน์ (10 กลุ่ม) กรอกแค่คอลัมน์ของตัวเอง |
+| การให้คะแนน | ทำนาย = gt_class_id → 1 คะแนน; ผิด → 0; **เว้นว่างหรือทำไม่ทัน → 0** |
 
-So the score is simply **accuracy over ~500 images**, and an unfinished run costs as much as a wrong answer.
+สรุปคะแนนก็คือ **accuracy จาก ~500 ภาพ** และรันไม่เสร็จก็เสียคะแนนเท่ากับตอบผิด
 
-## Points to be able to explain (with the lecture they come from)
-- **Output layer:** 72 nodes, softmax, cross-entropy (`nn.CrossEntropyLoss` takes logits; prediction = argmax). Ch 9 and Ch 10.
-- **Resize:** pad to a square first, then resize, so proportions are kept. Ch 10 P1 `[01:17:20]` uses Thai characters as the example: characters that differ by proportion (with or without a tail) get confused if stretched.
-  Tiny images (7×11 marks such as ่ ้) get blurry when upscaled. The thin strokes are what tell them apart.
-- **Grayscale:** colour carries no meaning. Use 1 channel, or duplicate to 3 channels for an ImageNet-pretrained backbone.
-- **Augmentation** (train only). Ch 8 `[00:41:04]` uses Thai characters as the example:
-  - **no colour change**: letters aren't distinguished by colour
-  - **no left-right flip**: real text is never mirrored; ใ/ไ and ด/ต would change meaning
-  - **no up-down flip**: ุ ↔ ิ positions would swap meaning
-  - **do rotate/tilt slightly and shift/scale slightly**: handwriting and scanning vary like this
-- **Similar-looking classes** (check them in the confusion matrix):
+## เรื่องที่ต้องอธิบายได้ (พร้อมบอกว่ามาจาก lecture ไหน)
+- **Output layer:** 72 nodes, softmax, cross-entropy (`nn.CrossEntropyLoss` รับ logits; ทำนาย = argmax) Ch 9 และ Ch 10
+- **Resize:** pad ให้เป็นสี่เหลี่ยมจัตุรัสก่อนแล้วค่อย resize สัดส่วนจะได้ไม่เพี้ยน Ch 10 P1 `[01:17:20]` ยกตัวอย่างตัวอักษรไทย: ตัวที่ต่างกันแค่สัดส่วน (มีหาง/ไม่มีหาง) จะสับสนกันถ้าโดนยืด
+  ภาพเล็กมาก (เครื่องหมายขนาด 7×11 อย่าง ่ ้) จะเบลอเวลาขยาย ทั้งที่เส้นบาง ๆ คือสิ่งที่ใช้แยกพวกนี้ออกจากกัน
+- **Grayscale:** สีไม่มีความหมาย ใช้ 1 channel หรือ copy เป็น 3 channels ถ้าใช้ backbone ที่ pretrained จาก ImageNet
+- **Augmentation** (แค่ train) Ch 8 `[00:41:04]` ยกตัวอย่างตัวอักษรไทย:
+  - **ห้ามเปลี่ยนสี**: ตัวอักษรไม่ได้แยกกันด้วยสี
+  - **ห้าม flip ซ้าย-ขวา**: ตัวหนังสือจริงไม่เคยกลับด้าน ใ/ไ และ ด/ต จะเปลี่ยนความหมาย
+  - **ห้าม flip บน-ล่าง**: ตำแหน่ง ุ ↔ ิ จะสลับความหมายกัน
+  - **ทำได้: หมุน/เอียงนิดหน่อย และเลื่อน/ย่อขยายนิดหน่อย**: ลายมือและการสแกนจริงก็ต่างกันแบบนี้
+- **คลาสที่หน้าตาคล้ายกัน** (เช็คใน confusion matrix):
   - ข/ฃ, ช/ซ, ด/ต, ถ/ภ, บ/ป, ผ/ฝ/พ/ฟ, ศ/ส, ห/ฬ, ท/ฑ
   - า/ๅ, ิ/ี/ึ/ื, ุ/ู, ่/้/๊, ั/็, ใ/ไ
-  - ๔/๕ and ๓/๑
-- **Inference:** `model.eval()` and `torch.no_grad()`. Use exactly the same preprocessing as validation. Batch the images, and write a CSV with the class_id column ready to paste into the sheet. Test the full pipeline before the 30-minute window. Ch 10.
-- **Validation:** split before augmenting. Choose the model on validation accuracy, and use the confusion matrix to find which pairs to fix. Ch 10 and Ch 14.
+  - ๔/๕ และ ๓/๑
+- **Inference:** `model.eval()` และ `torch.no_grad()` ใช้ preprocessing เหมือนตอน validation ทุกอย่าง ทำภาพเป็น batch แล้วเขียน CSV ที่มีคอลัมน์ class_id พร้อม paste ลง sheet ทดสอบ pipeline ทั้งหมดก่อนช่วง 30 นาที Ch 10
+- **Validation:** แบ่งข้อมูลก่อนทำ augmentation เลือกโมเดลจาก validation accuracy และใช้ confusion matrix หาว่าคู่ไหนต้องแก้ Ch 10 และ Ch 14
 
-## Our group (fill in)
+## กลุ่มเรา (เติมเอง)
 - Model / backbone:
-- Input size and preprocessing:
-- Augmentation used:
+- Input size และ preprocessing:
+- Augmentation ที่ใช้:
 - Training (epochs, optimizer, lr):
 - Validation accuracy:
-- Test score (out of ~500):
-- Main confusions and what we tried:
-- Who did what:
+- Test score (จาก ~500):
+- สับสนคู่ไหนบ่อย และลองแก้ยังไง:
+- ใครทำอะไร:
