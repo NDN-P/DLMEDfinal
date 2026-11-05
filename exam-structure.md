@@ -1,11 +1,11 @@
 # Final exam structure
 
-## From friend-reminder.md (the teacher's briefing)
+## The teacher's briefing (from a friend's notes)
 **7 written questions, answer all.** When you enter the exam, the teacher explains **within the first 5 minutes** how to write the answers. Come late and answer in the wrong format = no points.
 
 | # | Question topic | Study from |
 |---|---|---|
-| 1 | The project you did (โปรเจค 1) | Your own project. If that's DLMED: `DLMED/results/RESULTS.md` (task, input→output, why, architecture, results) |
+| 1 | The project you did (โปรเจค 1) | Your own project: be able to explain task, input → output, why, architecture and results |
 | 2 | Case study: how to apply the knowledge | Pick task type → output layer/activation/loss → architecture → metric for a medical scenario. Ch 9 (output layers), Ch 10 (pipeline, data leakage), Ch 8 (transfer learning, augmentation), Ch 14 (which metric), Ch 15 (CNN vs Transformer: "depends on dataset/application") |
 | 3 | Video | `Chapter 13/notes.md`: spatial vs temporal, CNN→LSTM vs ConvLSTM vs 3D conv vs two-stream, LSTM gates, 3D-conv output size |
 | 4 | Image segmentation | `Chapter 12/notes.md`: semantic/instance/panoptic, encoder-decoder, U-Net (skip = concat), 1×1 output conv, output channels = classes, Dice/IoU |
@@ -17,8 +17,3 @@ No standalone question on Ch 8, 9, 14 (metrics) or 15 (Transformers), but they f
 
 ## Did the recordings match?
 The friend's list isn't in any of the 9 recordings: I searched the Whisper transcripts and YouTube captions for สอบ, ข้อสอบ, ปลายภาค, คะแนน, final and exam. The Ch 14 recording is stopped right after the TA talks (`[01:56:43]` "stop ให้หน่อยนะครับ"), so the briefing was most likely given after that and never recorded. Nothing in the recordings contradicts the friend's list. Its topics match chapters 10–13 exactly, and the teacher's comments in Ch 11 `[01:15:52]` about seniors' hands-on project exams fit the project + coding questions.
-
-## Project presentation (also from friend-reminder.md)
-- Submit the clip on the 12th or 14th. Present to พี่ฟิว (TA), ~15 min of questions.
-- พี่ฟิว checks: who did what; what the work is (input, output, purpose); whether each member really understands it; whether the slides match the actual work; whether you understand the submitted code; code review and correctness. The teacher gives the other scores.
-- **Submit:** architecture code, inference code, model weights, results (images/videos/etc.). **Training code not required.**

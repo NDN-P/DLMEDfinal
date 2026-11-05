@@ -29,4 +29,4 @@ Full notes are in each folder's `notes.md`. **Exam = 7 written questions: projec
 - Expect "why" questions, not just "what".
 
 ## Exam format
-From friend-reminder.md: see `exam-structure.md`.
+See `exam-structure.md`.

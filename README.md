@@ -26,5 +26,3 @@ Exam questions 3–7 come from Chapters 10–13; Chapters 8, 9, 14 and 15 feed t
 Lecture audio, slide PDFs and full transcripts stay local (size, and they are the teacher's material).
 To re-create the transcripts: download audio with `yt-dlp --js-runtimes node -f "bestaudio[ext=m4a]" -o "Chapter N/lecture.m4a" <url>`,
 then run [`transcribe.py`](transcribe.py) (faster-whisper large-v3 on a CUDA GPU; ~2.5 h for all lectures on an RTX 5070 Laptop).
-
-Related project repo: [NDN-P/DLMED](https://github.com/NDN-P/DLMED) (exam question 1).
