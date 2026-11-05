@@ -18,7 +18,7 @@ Read [Chapter 12/notes.md](Chapter%2012/notes.md):
 - [ ] Nearest-neighbour and bilinear interpolation
 - [ ] Common traps. **Slide p.41 is wrong**: more padding gives a *smaller* output.
 
-Check: mock Q5 plus the extra practice at the end of the answer key. Write out the full matrix every time.
+Check: mock Q5 plus "แบบฝึกหัดเสริม" (3 extra problems at the end of the mock exam; worked answers at the end of the answer key). Write out the full matrix every time.
 
 ## 2. Q7: Coding
 Read [Chapter 10/notes.md](Chapter%2010/notes.md):
