@@ -6,7 +6,8 @@ Study material for the final exam of *Deep Learning in Medicine* (KMITL).
 1. [exam-structure.md](exam-structure.md): the exam's 7 written questions, each mapped to what to study
 2. [exam-hints.md](exam-hints.md): in-class quiz answers, errors on the slides, recurring themes
 3. `Chapter N/notes.md`: per-chapter notes with concepts, formulas, what the teacher emphasised (with timestamps), likely questions and traps
-4. [mock-exam.md](mock-exam.md) → [mock-exam-answers.md](mock-exam-answers.md): practice exam in the real format; all numbers checked in Python
+4. [Project1/notes.md](Project1/notes.md): Project 1 spec and what to explain (exam Q1)
+5. [mock-exam.md](mock-exam.md) → [mock-exam-answers.md](mock-exam-answers.md): practice exam in the real format; all numbers checked in Python
 
 Exam questions 3–7 come from Chapters 10–13; Chapters 8, 9 and 14 feed the case-study question. **Chapter 15 (Transformers) is not on the exam.**
 
@@ -31,6 +32,8 @@ Exam questions 3–7 come from Chapters 10–13; Chapters 8, 9 and 14 feed the c
 | `lecture*.th-orig.srt` | YouTube's Thai auto-captions (rougher than the Whisper transcript) |
 | `notes.md` | study notes |
 | `instruction` | course notes (Chapter 10: link to the course notebooks and datasets) |
+
+`Project1/` holds the Project 1 spec images, the class table (`6ab4…0aaf.txt`) and the submission sheet template (`6ab4…0ab0.txt`, Windows-874 encoding).
 
 Lecture audio is not in the repo (734 MB, on YouTube). To re-create the transcripts, download the audio with
 `yt-dlp --js-runtimes node -f "bestaudio[ext=m4a]" -o "Chapter N/lecture.m4a" <url>`, then run

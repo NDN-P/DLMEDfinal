@@ -2,22 +2,54 @@
 
 ใช้คู่กับ `mock-exam.md` ทุกข้อมี **จุดให้คะแนน (marking points)** และ **ที่มาในโน้ต** (ที่มา:)
 ตัวเลขที่คำนวณทุกค่า (transposed conv, IoU, NMS, 3D conv, shape, metrics, LSTM) ตรวจด้วย Python แล้ว (เทียบ transposed conv กับ `torch.nn.functional.conv_transpose2d` และ NMS กับ `torchvision.ops.nms`)
-ข้อ 1 (โปรเจค 1) ยังไม่มีเฉลย รอข้อมูลโปรเจค
+ข้อ 1 อิงจาก spec ของโปรเจค 1 (`Project1/`) ส่วนโมเดลและผลของกลุ่มต้องเติมเอง
 
 ---
 
-## ข้อ 1. โปรเจค 1: Segmentation ตัวอักษรไทย (15)
+## ข้อ 1. โปรเจค 1: Thai Character & Number Recognition (15)
 
-> **ยังไม่มีเฉลย** รอข้อมูลโปรเจค 1
+> ส่วนที่เป็น "ของกลุ่มเรา" (โมเดล, ผล) ให้เติมจาก `Project1/notes.md` → Our group (fill in) ก่อนสอบ
 
-เนื้อหาจากคาบเรียนที่เกี่ยวกับงานตัวอักษรไทย (ใช้ได้เลย):
-- **Data augmentation** (Chapter 8 `[00:41:04]`): งานรู้จำตัวอักษรไทย **ไม่ต้องปรับสี** (ตัวอักษรไม่ได้แยกกันด้วยสี)
-  **ไม่ flip ซ้าย-ขวา** (ภาพจริงแทบไม่มี) flip บน-ล่างเฉพาะถ้าภาพจริงกลับหัวได้ แต่ **หมุนและเอียงควรทำ**
-  หลักคือ augment เฉพาะความแปรปรวนที่เกิดจริงและไม่เปลี่ยนความหมายของตัวอักษร
-- **Resize** (Chapter 10 P1 `[01:17:20]`–`[01:18:20]`): resize ตรง ๆ ทำให้สัดส่วน (proportion) เพี้ยน
-  ตัวอักษรที่ต่างกันที่สัดส่วน (เช่น ตัวที่มีหางยาวกับตัวที่ไม่มี) จะดูคล้ายกันจน classify ผิดเพิ่มขึ้น
-  ให้ **pad ด้วย 0 จนเป็นสี่เหลี่ยมจัตุรัสก่อน แล้วค่อย resize** เพื่อคงสัดส่วน
-- Segmentation ตัวอักษรใช้ความรู้ Chapter 12: output channels = จำนวนคลาส, U-Net + skip connection, วัดผลด้วย Dice/IoU (Chapter 14)
+### 1.1 (4)
+- **ประเภทงาน** (1): **multiclass classification** 72 คลาส ภาพหนึ่งมีคำตอบเดียว (ไม่ใช่ multilabel, ไม่ใช่ segmentation เพราะไม่ต้องบอกตำแหน่ง pixel)
+- **Input / Output** (1): input = ภาพตัวอักษร 1 ตัว (crop มาแล้ว); output = class_id 3 หลัก
+- **Output layer** (1): **72 output nodes**, **softmax**, loss = **cross-entropy** (`nn.CrossEntropyLoss` รับ logits, softmax อยู่ใน loss แล้ว); ผลทำนาย = argmax
+- **Mapping** (1): โมเดลให้ index 0–71 ต้อง **แปลงกลับเป็น class_id** ตามตาราง (เช่น ถ้าเรียงคลาสตาม class_id: index 0 → 101 ก, index 41 → 201 ฯ, index 62 → 301 ๐) ถ้ากรอก index ตรง ๆ จะผิดทั้งหมด
+
+### 1.2 (4)
+- **ขนาด** (1.5): **pad ให้เป็นสี่เหลี่ยมจัตุรัสก่อนแล้วค่อย resize** (เช่น 64×64) เพื่อคงสัดส่วน; resize ตรง ๆ ทำให้ตัวที่ต่างกันที่สัดส่วน (มีหาง/ไม่มีหาง, สระบนที่แบนยาว) ถูกยืดจนดูเหมือนกัน; ภาพเล็ก (วรรณยุกต์ 7×11) ขยายแล้วเบลอ จึงไม่ควรใช้ input เล็กเกินไป
+- **Channel** (0.5): สีไม่มีความหมาย ใช้ grayscale; ถ้าใช้ ImageNet pretrained ให้ **duplicate เป็น 3 channels** และใช้ normalization เดียวกันทั้ง train/val/test
+- **Augmentation** (2): ใช้ตอน train เท่านั้น
+  - **ทำ:** หมุน/เอียงเล็กน้อย (±10–15°), เลื่อน/ย่อ-ขยายเล็กน้อย เพราะลายมือและการ crop จริงแปรปรวนแบบนี้
+  - **ห้าม flip ซ้าย-ขวา:** ข้อความจริงไม่กลับด้าน และ ใ/ไ, ด/ต เปลี่ยนความหมาย
+  - **ห้าม flip บน-ล่าง:** ุ กับ ิ (สระล่าง/สระบน) สลับตำแหน่งกัน
+  - **ไม่ต้องปรับสี:** ตัวอักษรไม่ได้แยกกันด้วยสี
+  - **ไม่หมุนมาก:** หมุนมากทำให้ ่ กับ ้ หรือ ๑ กับ ๓ ปนกัน
+
+### 1.3 (4)
+- **คู่ที่สับสน** (2):
+  - พยัญชนะ: ข/ฃ, ช/ซ, ด/ต, ถ/ภ, บ/ป, ผ/ฝ, พ/ฟ, ศ/ส, ห/ฬ
+  - สระ/วรรณยุกต์: **า/ๅ** (แทบเหมือนกัน), ิ/ี/ึ/ื, ุ/ู, ่/้/๊, ั/็, ใ/ไ
+  - ตัวเลข: ๔/๕, ๑/๓
+  - ต่างกันแค่หาง/จุด/ขีดเล็ก ๆ
+- **ตรวจหา** (1): **confusion matrix** บน validation set (ดูช่องนอกแนวทแยงที่มีค่าสูง), ดูภาพที่ทายผิด
+- **แก้** (1):
+  - input ใหญ่ขึ้นพอให้เห็นรายละเอียดเล็ก และไม่ทำ augmentation ที่ลบรายละเอียดนั้น
+  - เพิ่มข้อมูลหรือ class weight ให้คลาสที่ผิดบ่อย
+  - ใช้ pretrained backbone + fine-tune
+  - ensemble หรือ test-time augmentation แบบเบา ๆ (ถ้าเวลา 30 นาทีพอ)
+
+### 1.4 (3)
+- **Metric** (1): 1 คะแนนต่อภาพที่ถูก = **accuracy** บน test set (~500 ภาพ); ภาพที่ไม่ได้กรอกนับเป็นผิด จึงต้องกรอกให้ครบทุกภาพ
+- **ขั้นตอน inference** (1):
+  - โหลด weights → `model.eval()` → `torch.no_grad()`
+  - preprocessing **เหมือน validation ทุกขั้น** (pad → resize → normalize, ไม่ augment)
+  - ทำเป็น batch บน GPU → argmax → map เป็น class_id
+  - เขียน CSV เรียงตาม `gt_path` → วางลงคอลัมน์ของกลุ่ม
+  - ซ้อมรันทั้ง pipeline ล่วงหน้า
+- **ของกลุ่มเรา** (1): โมเดลที่ใช้ + เหตุผล, validation accuracy, คะแนน test, ข้อผิดพลาดที่พบ (เติมจาก `Project1/notes.md`)
+
+ที่มา: `Project1/notes.md` · `Chapter 8/notes.md` → Data Augmentation (ตัวอย่างตัวอักษรไทย `[00:41:04]`), Transfer Learning · `Chapter 9/notes.md` → Master table (multiclass) · `Chapter 10/notes.md` → 10. Multiclass vs multilabel, 11. Fitting images (pad ก่อน resize `[01:17:20]`), 7. Validation / testing / inference (`eval`, `no_grad`) · `Chapter 14/notes.md` → 1. Classification (accuracy, confusion matrix)
 
 ---
 
